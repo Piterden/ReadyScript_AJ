@@ -1,0 +1,232 @@
+/** CSS для режима отладки*/
+.module-wrapper {
+    position:relative;    
+    overflow:hidden;
+    min-height:32px;
+    zoom:1;
+}
+
+.module-wrapper .module-border {
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    display:none;
+}
+
+.module-wrapper .module-content {
+    opacity:0.7;
+    filter:Alpha(Opacity=70);
+}
+
+.module-wrapper.hover .module-border,
+.module-wrapper.over .module-border {
+    position:absolute;
+    display:block;
+    z-index:2;
+}
+
+.module-wrapper.hover .module-border-left,
+.module-wrapper.over .module-border-left {
+    border-left:1px dotted red;
+    top:0;
+    bottom:0;
+    left:0;
+    right:auto;
+    width:0;
+}
+
+.module-wrapper.hover .module-border-right,
+.module-wrapper.over .module-border-right {
+    border-right:1px dotted red;
+    top:0;
+    bottom:0;
+    right:0;
+    left:auto;
+    width:0;
+}
+
+.module-wrapper.hover .module-border-top,
+.module-wrapper.over .module-border-top {
+    border-top:1px dotted red;
+    bottom:auto;
+    top:0;
+    left:0;
+    right:0;
+    height:0;
+}
+
+.module-wrapper.hover .module-border-bottom,
+.module-wrapper.over .module-border-bottom {
+    border-bottom:1px dotted red;
+    top:auto;
+    bottom:0;
+    left:0;
+    right:0;
+    height:0;
+}
+
+.module-wrapper.hover .module-content,
+.module-wrapper.over .module-content {
+    opacity:1;
+    filter:Alpha(Opacity=100);
+}
+
+.module-tools {
+    display:none;
+    position:absolute;
+    left:3px;
+    top:3px;
+    z-index:200;
+    opacity:0.9;
+    filter:Alpha(Opacity=90);
+    background: #424242;
+    padding:3px;
+    white-space:nowrap;
+}
+
+.module-wrapper.over .module-tools {
+    display:block;
+}
+
+.module-tools img {
+    display:block;
+}
+
+.module-tools .dragblock {
+    float:left;
+    width:7px;
+    height:20px;
+    margin-right:1px;
+    background: url(../../img/debug/draghandle.gif) repeat-y left top;
+    cursor:move;
+}
+
+.module-tools a.debug-icon {
+    margin-right:1px; 
+    float:left;
+    padding:2px;
+    width:16px;
+    height:16px;
+}
+
+.module-tools a:hover.debug-icon {
+    background-color: #989898;
+}
+
+/** Иконки **/
+
+.debug-icon-edit {
+    background: url(../../img/debug/edit.png) no-repeat center center;
+}
+
+.debug-icon-info {
+    background: url(../../img/debug/info.png) no-repeat center center;
+}
+
+.debug-icon-options {
+    background: url(../../img/debug/options.png) no-repeat center center;
+}
+
+.debug-icon-create {
+    background: url(../../img/debug/add.png) no-repeat center center;
+}
+
+.debug-icon-blockoptions {
+    background: url(../../img/debug/settings.png) no-repeat center center;
+}
+
+.module-debug-info-vars {
+    border-collapse: collapse;
+    width:100%;
+}
+
+.module-debug-info-vars thead th {
+    padding:7px;
+    text-align:left;
+    background: #e2e2e2;    
+}
+
+.module-debug-info-vars tbody td {
+    padding:2px;
+}
+
+.module-debug-info-vars tbody td {
+    border-top: 1px solid #E2E2E2;
+    border-bottom: 1px solid #E2E2E2;
+}
+
+.module-debug-body {
+    background: #fafafa;
+    font-family: Arial;
+    font-size:14px;
+}
+
+.module-debug-info-vars .var-type {
+    color: #4c3678;
+}
+
+.module-debug-title {
+    text-align:center;
+}
+
+#debug-context-box {
+    position:absolute;
+    z-index:4;
+}
+
+#debug-context-box .debug-context-back {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: #383838;
+    opacity:0.8;
+    z-index:1;
+}
+
+#debug-context-box .debug-context-corner {
+    width:11px;
+    height:5px;
+    background: url(../../img/debug/contextcorner.png) no-repeat top left;
+    position:absolute;
+    top:-5px;
+    left:10px;
+    display:block;
+}
+
+#debug-context-box .debug-context-items {
+    list-style:none;
+    padding:0;
+    margin:0;
+    z-index:2;
+    position:relative;
+}
+
+#debug-context-box .debug-context-items li a{
+    line-height:20px;
+    color: white;
+    display:block;
+    padding:8px;    
+}
+
+#debug-context-box .debug-context-items li a:hover {
+    background-color: #989898;
+}
+
+#debug-context-box li a.debug-action-edit {
+    background: url(../../img/debug/edit.png) no-repeat 10px center;
+    padding-left:32px;
+}
+
+#debug-context-box li a.debug-action-delete {
+    background: url(../../img/debug/delete.png) no-repeat 10px center;
+    padding-left:32px;
+}
+
+#debug-context-box li a.debug-action-create {
+    background: url(../../img/debug/add.png) no-repeat 10px center;
+    padding-left:32px;
+}

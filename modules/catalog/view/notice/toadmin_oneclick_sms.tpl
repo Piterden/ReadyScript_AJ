@@ -1,0 +1,1 @@
+На сайте {$url->getDomainStr()} заказан товар с артикулом №{$data->oneclick.product.barcode}. {$data->oneclick.name}. Телефон: {$data->oneclick.phone}

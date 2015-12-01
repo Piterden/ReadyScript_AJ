@@ -1,0 +1,49 @@
+.tabs {
+    
+}
+.tabs .nodisp {
+    display:none;
+}
+
+.tabs .tab, .tabs .tab_disable {
+    float:left;
+    background: #d5e2e9;
+    width:100px;
+    height:28px;    
+    line-height:28px;
+    margin-left:2px;
+    margin-top:10px;
+    text-align:center;
+    cursor: default;
+    font-weight:bold;
+    color:#808080;
+    cursor:pointer;
+    
+    border-radius:3px 3px 0 0;
+    -moz-border-radius:3px 3px 0 0;
+    -webkit-border-radius: 3px 3px 0 0; /* Safari, Chrome */
+    -khtml-border-radius: 3px 3px 0 0; /* KHTML */        
+}
+
+.tabs .first {
+    margin-left:5px;
+}
+
+.tabs .line {
+    clear:both;
+    height:3px;
+    font-size:0px;
+    background: #739eca;
+}
+
+.tabs .tab_disable.act,
+.tabs .tab.act {
+    background: #739eca;
+    width:100px;
+    color:#fff;
+}
+
+.tabs .frame {
+    padding:1px 0;
+    
+}

@@ -1,0 +1,33 @@
+iframe#frame {
+    border: none; 
+    overflow:hidden; 
+    min-height:250px;
+    background:none;
+    min-width: 100%; 
+    width: 100px;
+    *width: 100%; 
+}
+
+#mp-loader {
+    text-align:center;
+    position:absolute;
+    width:100%;
+}
+
+#mp-loader .mp-loading,
+#mp-loader .mp-loading img {
+    vertical-align:middle;
+    font-size:45px;
+}
+
+#mp-loader .mp-loading i {
+    font-style:normal;
+    color:#808080;
+}
+
+#mp-loader .mp-subtext {
+    padding-left:64px;
+    font-size:16px;
+    margin-top:-10px;
+    color:#C0C0C0;
+}

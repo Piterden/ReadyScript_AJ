@@ -1,0 +1,1 @@
+{if $cell->getValue() == 1}Да{else}Нет{/if}

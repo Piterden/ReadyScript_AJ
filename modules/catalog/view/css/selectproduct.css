@@ -1,0 +1,349 @@
+
+.admin-style .select-product-dialog .ui-dialog-content{
+    background: url(../../../../resource/img/adminstyle/minitree/dot.gif) repeat-y 321px 0px;
+}
+
+.admin-style .select-product-dialog {
+    z-index:1005;
+}
+
+.admin-style .selectProduct a:hover {
+    text-decoration:none;
+}
+
+#productDialog {
+    margin-top:15px;
+    padding:0;
+}
+
+.admin-style .selectProduct .column-left {
+    float:left;
+    width:320px;
+    overflow:auto;
+    background: #FCFDFD;
+}
+
+.admin-style .selectProduct .column-right {
+    margin-left:330px;   
+    min-height:300px;
+    overflow:auto;
+    _height:300px;
+}
+
+.admin-style .selectProduct .admin-category {
+    padding:15px;
+}
+
+.admin-style .admin-category ul{
+    padding:0;
+    margin:0;
+    list-style:none;
+    
+}
+
+.admin-style .admin-category ul li {
+    padding-left:16px;
+    line-height:19px;
+    white-space: nowrap;
+}
+
+.admin-style .filter img,
+.admin-style .admin-category ul li img {
+    border: 0;
+}
+.admin-style .admin-category ul li * {
+    vertical-align: middle;
+}
+
+.admin-style .admin-category ul ul {
+    display:none;
+}
+
+.admin-style .admin-category ul a.act,
+.admin-style .admin-category ul a.act:hover
+{
+    color: white;
+    background: #3f3f3f;
+}
+
+.admin-style .admin-category ul li a {
+    padding:2px;
+    cursor:pointer;
+}
+
+.admin-style .admin-category ul li a:hover {
+    background: #b4d9e4;
+    color: black;
+}
+
+.admin-style .admin-category ul {
+    background:url(../../../../resource/img/adminstyle/minitree/line.gif) repeat-y left top;
+}
+
+.admin-style .admin-category ul .plus {
+    background:url(../../../../resource/img/adminstyle/minitree/plus.gif) no-repeat left top;
+}
+.admin-style .admin-category ul .endplus {
+    background:#FCFDFD url(../../../../resource/img/adminstyle/minitree/plus_end.gif) no-repeat left top;
+}
+.admin-style .admin-category ul .minus {
+    background:url(../../../../resource/img/adminstyle/minitree/minus.gif) no-repeat left top;
+}
+.admin-style .admin-category ul .endminus {
+    background:#FCFDFD url(../../../../resource/img/adminstyle/minitree/minus_end.gif) no-repeat left top;
+}
+.admin-style .admin-category ul .branch {
+    background:url(../../../../resource/img/adminstyle/minitree/branch.gif) no-repeat left top;
+}
+.admin-style .admin-category ul .end {
+    background:#FCFDFD url(../../../../resource/img/adminstyle/minitree/end.gif) no-repeat left top;
+}
+
+.admin-style .selectProduct .filter {
+    display:block;
+    padding:5px;
+    margin: 0 20px 0 5px;
+    zoom:1;
+    background: #767f8c;
+}
+
+.admin-style .selectProduct .filter td {
+    color: white;
+    font-size:12px;
+}
+
+.admin-style .selectProduct .filter .set-filter {
+    border:none;
+    background: #3AABD1 url(../../../../resource/img/adminstyle/search.png) no-repeat center center;
+    height:20px;
+    width:20px;
+    cursor:pointer;
+}
+
+.admin-style .selectProduct .filter .clear-filter {
+    border:none;
+    background: #3AABD1 url(../../../../resource/img/adminstyle/close.png) no-repeat center center;
+    height:20px;
+    width:20px;
+    display:block;
+}
+
+.admin-style .selectProduct .filter .set-filter:hover,
+.admin-style .selectProduct .filter .clear-filter:hover {
+    background-color: #3f3f3f;
+}
+
+
+.admin-style .selectProduct .filter td {
+    white-space: nowrap;
+}
+
+.admin-style .selectProduct .filter input {
+    width:85%;
+}
+
+.admin-style .product-list {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.admin-style .selected-container ul li .value {
+    color: #525252;
+    font-size:14px;
+}
+
+.admin-style .product-list thead th {
+    text-align: left;
+    background: #e2e2e2;
+    font-weight:normal;
+    padding:4px;
+    color: black;
+}
+
+.admin-style .product-list tbody td {
+    border-top:1px solid white;
+    border-bottom:1px solid white;
+    padding:2px;
+}
+
+.admin-style .product-list tbody .title {
+    font-size:14px;
+}
+
+.admin-style .product-list tbody .no{
+    font-size:11px;
+}
+
+.admin-style .product-list .chk {
+    text-align:center;
+    width:20px;
+}
+
+.admin-style .product-list .checked {
+    background: #3AABD1;    
+}
+
+.admin-style .product-list tbody .barcode{
+    font-size:11px;
+}
+
+.admin-style .product-list thead .textright {
+    text-align:right;
+}
+
+/**
+* Пагинатор
+*/
+.admin-style .selectProduct .mini-paginator {
+    height:27px;
+    line-height:27px;
+    margin-top:10px;
+    font-size:12px;
+}
+
+.admin-style .selectProduct .before-table {
+    margin:5px 0;
+}
+
+.admin-style .selectProduct .mini-paginator input {
+    margin-bottom:-2px;
+    width:40px;
+}
+.admin-style .selectProduct .mini-paginator .pag_left {
+    background:url('../../../../resource/img/adminstyle/pag_left.gif') no-repeat right center;
+    width:15px;
+    padding-left: 10px;
+    text-decoration:none;
+}
+.admin-style .selectProduct .mini-paginator .pag_right {
+    background:url('../../../../resource/img/adminstyle/pag_right.gif') no-repeat left center;
+    width:15px;
+    padding-left: 10px;
+    text-decoration:none;            
+}
+
+.admin-style .selectProduct tbody .over {
+    background: #b4d9e4;
+}
+
+.admin-style .select-button {
+    margin:10px 0;
+    height:16px;
+    line-height:32px;
+    padding:8px;
+    color: white;
+    background:#71B422 url(../img/addproduct.gif) no-repeat 7px center;
+    padding-left:31px;
+}
+
+.admin-style .select-button:hover {
+    background-color: #5a9613;
+    color: white;
+}
+
+.admin-style .selected-container {
+    padding:10px 0;
+    max-height:300px;
+    overflow:auto;
+}
+
+.admin-style .selected-container ul {
+    padding:0;
+    margin:0;
+    list-style:none;    
+}
+
+.admin-style .selected-container ul li {
+    /*height:20px;*/
+    line-height:20px;
+}
+
+.admin-style .selected-container .remove {
+    font-weight:bold;
+    color: red;
+    cursor:pointer;
+    padding:2px 3px;
+    margin-right:10px;
+}
+
+.admin-style .selected-container .remove:hover {
+    background: #d13a3a;
+    color: white;
+}
+
+.admin-style .selected-container .group_icon {
+    width:9px;
+    height:10px;
+    display:inline-block;
+    background: url(../img/folder.gif) no-repeat center center;
+    margin-right:10px;
+}
+
+.admin-style .selected-container .product_icon {
+    width:9px;
+    height:10px;
+    display:inline-block;
+    background: url(../img/good.gif) no-repeat center center;
+    margin-right:10px;
+}
+
+.admin-style .productblock {
+    position:relative;
+    margin-right:20px;
+}
+
+/* Иконка загрузки */
+
+.admin-style .productblock .loader {
+    display:none;
+    position:absolute; 
+    left:0px; 
+    top:0px;
+    width:100%;
+    height:100%;
+}
+
+.admin-style .productblock .loader .overlay {
+    position:absolute; 
+    z-index:200; 
+    left:0px; 
+    top:0px;
+    width:100%;
+    height:100%;
+    background: #FFFFFF;    
+    opacity: .85;
+    filter:Alpha(Opacity=85);
+    z-index:1;
+}
+
+.admin-style .productblock .loader .loooading {
+    z-index:2;
+    width:120px;
+    height:30px;
+    position:absolute;
+    left:50%;
+    top:0;
+    margin-left:-60px;
+}
+
+.admin-style .productblock .loader .loooading .back {
+    position:absolute;
+    width:100%;
+    height:30px;
+    opacity:0.5;
+    background: black;
+}
+
+.admin-style .productblock .loader .loooading span {
+    display:block;
+    line-height:30px;
+    text-align:center;
+    color: white;
+    position:relative;
+}
+
+.admin-style .no-goods {
+    font-size:20px;
+    color: #C0C0C0;
+    text-align:center;
+}

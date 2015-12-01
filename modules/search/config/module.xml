@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Поиск</name>
+        <description multilanguage="true">Дополняет систему функциями поиска данных</description>
+        <version>2.0.0.7</version>
+        <author>ReadyScript lab.</author>
+        <is_system>1</is_system>
+        <searchtype>like</searchtype>        
+    </defaultValues>
+</config>

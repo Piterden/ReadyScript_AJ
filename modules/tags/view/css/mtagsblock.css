@@ -1,0 +1,44 @@
+.tags .notags {
+    margin: 10px;
+    color: #D0D0D0;
+    font-size:18px;
+    text-align:center;    
+}
+
+.taglist {
+    overflow:hidden;
+    list-style: none;
+    padding:10px 0;
+    margin:0;
+}
+
+.taglist li {
+    float:left;
+    display:block;
+    height:25px;
+    overflow:hidden;
+}
+
+.taglist li .padd {
+    padding:3px;
+}
+
+.taglist .tagdel {
+    color: #ff0000;
+}
+
+/* блок-форма */
+.grayblock {
+    border:3px solid #E0E0E0;
+    padding:10px;
+}
+
+.grayblock form {
+    display:block;
+    margin:0;
+    padding:10px;
+}
+
+.grayblock .add-btn {
+    margin-left:30px;
+}

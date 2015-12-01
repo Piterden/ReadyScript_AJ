@@ -1,0 +1,62 @@
+#tooltip {
+    position: absolute;
+    z-index: 3000;
+}
+#tooltip h3, #tooltip div {
+    margin: 0;
+}
+#tooltip .body {
+    background-color: #efcd70;
+    border-bottom: 1px solid #c69d2d;
+    font-size: 12px;
+    opacity: 0.95;
+    padding: 5px;
+}
+#tooltip .corner {
+    background: url("../../img/adminstyle/hint_corner.png") no-repeat scroll left top rgba(0, 0, 0, 0);
+    color: black;
+    display: block;
+    height: 7px;
+    left: 5px;
+    opacity: 0.95;
+    position: absolute;
+    top: -6px;
+    width: 15px;
+}
+#tooltip.viewport-right .corner {
+    left: auto;
+    right: 5px;
+}
+#tooltip.viewport-bottom .body {
+    border-bottom: medium none;
+    border-top: 1px solid #c69d2d;
+}
+#tooltip.viewport-bottom .corner {
+    background: url("../../img/adminstyle/hint_corner_down.png") no-repeat scroll left top rgba(0, 0, 0, 0);
+    bottom: -6px;
+    top: auto;
+}
+#tooltip .shadow {
+    display: none;
+}
+
+.debug {
+    position: absolute;
+    z-index: 3000;
+    border-bottom: 1px solid #C69D2D;
+    background-color: #EFCD70;
+    padding: 5px;
+    text-align: left;
+}
+
+.debug .body {
+    background: #EFCD70;
+    border:none;
+    box-shadow:none;
+}
+
+.debug .shadow {
+    display:none;
+}
+
+.debug h3, .debug div { margin: 0; }

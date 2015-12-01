@@ -1,0 +1,73 @@
+.years-list {
+    padding:7px;
+    margin-top:1px;
+    overflow:hidden;
+    zoom:1;
+}
+
+.years-list input {
+    vertical-align:middle;
+    position:relative;
+    top:-1px;
+}
+
+.years-list .year-div {
+    float:left;
+    width:55px;
+}
+
+.year-line-but {
+    text-align:center;
+    background: #efefef;
+    margin-top:5px;
+}
+
+.year-line-but a {
+    font-size:9px;
+    background: #C0C0C0;
+    padding: 0 10px;
+    color: black;
+}
+
+#placeholder {
+    margin:5px 10px 10px;
+}
+
+#flottooltip {
+    padding:8px;
+    background-color: #EFCD70;
+    opacity: 0.90;
+    position:absolute;
+    display:none;
+    font-size:12px;
+}
+
+.sellWidget .statusSelector {
+    margin:5px 15px 5px;
+    text-align:right;
+}
+
+.sellWidget .statusSelector a {
+    margin-left:20px;
+    border-bottom:1px dotted #aaa;
+}
+
+.sellWidget .statusSelector a:hover {
+    border-bottom:none;
+}
+
+.sellWidget .statusSelector .act {
+    font-weight:bold;
+    border-bottom:none;
+    background:url(../img/act.png) no-repeat left center;
+    padding-left:15px;
+}
+
+.sellWidget .sellShowType {
+    float:left; 
+    margin-left:-4px;
+}
+
+.sellWidget .sellShowType a {
+    margin-left:0;
+}

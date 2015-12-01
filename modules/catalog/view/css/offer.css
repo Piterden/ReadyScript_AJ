@@ -1,0 +1,583 @@
+.admin-style .main-offer .main-offer-back {
+    border-bottom:1px solid #aaa;
+    border-top:1px solid #aaa;
+    background-color: #f0f0f0;
+}
+
+.admin-style .offer-container thead td {
+    font-weight:bold;
+}
+
+.admin-style .offer-container {
+    width:100%;
+    min-width: 860px;
+    border-collapse:collapse;
+    margin-bottom:20px;
+}
+
+.admin-style .offer-container table{
+    width: 100%;
+    border-collapse:collapse;
+}
+
+.admin-style .offer-container thead{
+    font-weight: bold;
+}
+
+
+.admin-style .offer-container td,
+.admin-style .offer-container th {
+    vertical-align:top;
+    padding:10px 0;    
+    text-align:left;
+}
+
+.admin-style .offer-container td.col1 {
+    
+}
+
+.admin-style .offer-container td.col2 {
+   padding-left: 20px;
+   
+}
+
+.admin-style .offer-container td.col3 {
+   padding: 10px 20px;
+}
+
+.admin-style .offer-container td.col4 {
+   
+}
+
+.admin-style .offer-container td.col5 {
+   padding: 0px;
+}
+
+.admin-style .offer-container .label {
+   margin:5px 0 3px;
+   font-size:12px;
+}
+
+.admin-style .offer-container .offer-list .sortable-placeholder {
+   height: 191px;
+   border: 1px dashed gray;
+}
+
+.admin-style .offer-container .title-td input {
+    width:90%;
+}
+
+.admin-style .offer-container .keyval-td {
+    padding:10px 0px;
+}
+
+.admin-style .offer-container .keyvalTable{
+    width: 92%;
+}
+
+.admin-style .offer-container .sort-td {
+    cursor: move;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: middle;
+    width: 15px;
+}
+
+.admin-style .offer-container .sort {
+    height: 16px;
+    width: 15px;
+    background: url(../../../../resource/img/adminstyle/drag_table.gif) no-repeat left top;
+}
+
+.admin-style .offer-container .over .sort {
+    background-position: -15px 0;
+}
+
+
+.admin-style .offer-container .offerItem.in-drag > .sort-td {
+    background: #687280;
+}
+
+.admin-style .offer-container .offerItem.in-drag > .sort-td .sort {
+    background-position: -30px 0;
+}
+
+.admin-style .offer-container .vtable td{
+    padding:3px;
+    vertical-align:middle;
+    text-align: left;
+}
+
+.admin-style .offer-container .vtable .c2 {
+    border-left:1px solid #ACACAC;
+    white-space:nowrap;
+}
+.admin-style .offer-container .item-tools {
+    vertical-align: middle;
+}
+
+.admin-style .offer-container .item-tools a {
+    visibility: hidden;
+    vertical-align:middle;
+}
+
+.admin-style .offer-container .over .item-tools a {
+    visibility:visible;
+}
+
+
+.admin-style .offer-container .item-tools .delete {
+    font-size:11px;
+    color: #ca2847;
+    padding:3px;
+    position:relative;
+    top:50%;
+    left:20%;
+    margin-top: -16px;
+    margin-left: -42px;
+}
+
+.admin-style .offer-container .item-tools .delete:hover {
+    background: #d13a3a;
+    color: white;
+}
+
+.admin-style .offer-container .main-offer .images-row {
+    overflow: hidden;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.admin-style .offer-images-line {
+    overflow: hidden;
+}
+
+
+.admin-style .offer-images-line a {
+    display: inline-block;
+    float: left;
+    width:32px;
+    height:32px;
+    line-height: 29px;
+    text-align: center;
+    background-color: white;
+    border: 2px solid #c0c0c0;
+    margin-left: 3px;
+    margin-bottom: 3px;
+    cursor: pointer;
+}
+
+.admin-style .offer-images-line a.act,
+.admin-style .offer-images-line a.act:hover {
+    border:2px solid #f36306;
+}
+.admin-style .offer-images-line a:hover {
+    border:2px solid #51afc3;
+}
+
+.admin-style .offer-images-line a img {
+    vertical-align: middle;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+ 
+.admin-style .offer-container .titlecode td{
+    padding:0;
+    vertical-align:middle;
+}
+
+.admin-style .offer-container .mainOffer td {
+    background: #F0F0F0;
+}
+
+.admin-style .offer-container .unit{
+   margin-top: 10px; 
+}
+
+.admin-style .oneprice-data {
+    white-space:nowrap;
+}
+
+
+
+
+/**
+* Многомерные комплектации
+*/
+
+
+.admin-style #multioffer-wrap.hide #multi-check-wrap{
+    display: none;
+}
+
+.admin-style #multioffer-wrap.hide .multioffer-wrap{
+    display: none;
+}
+
+.admin-style #multioffer-wrap .multioffer-warning{
+    display: none;
+}
+
+.admin-style #multioffer-wrap.hide .multioffer-warning{
+    color: gray;
+    font-size: 12px;
+    display: block;
+}
+
+.admin-style .multioffer-warning{
+    margin-bottom: 6px;
+    margin-left: 3px;
+}
+
+.admin-style .multioffer-wrap,
+.admin-style .multioffer-wrapME{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid silver;
+    position: relative;
+}
+
+.admin-style .multioffer-wrap .item,
+.admin-style .multioffer-wrapME .item
+{
+    margin-bottom: 10px;
+    
+}
+
+.admin-style .multioffer-wrap td,
+.admin-style .multioffer-wrapME td
+{
+    vertical-align: top;
+}
+
+.admin-style .multioffer-wrap .row .is_photo,
+.admin-style .multioffer-wrapME .rowME .is_photo
+{
+    vertical-align: bottom;
+    font-size: 12px;
+    width: 85px;
+}
+
+.admin-style .multioffer-wrap .row .is_photo input,
+.admin-style .multioffer-wrapME .rowME .is_photo input,
+.admin-style .multioffer-wrap .row .is_photo span,
+.admin-style .multioffer-wrapME .rowME .is_photo span {
+    vertical-align:middle;
+}
+
+.admin-style .multioffer-wrap .no_photo_row{
+    display: inline-block;
+    font-size: 12px;
+    width: 88px;
+    position: absolute;
+    top:15px;
+    left:13px;
+}
+
+.admin-style .multioffer-wrap .no_photo_row span {
+    vertical-align:middle;
+}
+
+.admin-style .multioffer-wrapME .no_photo_row{
+    top:24px;
+    font-size:12px;
+}
+
+.admin-style .formbox .no_photo_row input{
+    line-height: inherit;
+    height: inherit;
+    vertical-align:middle;
+}
+
+.admin-style .multioffer-wrap .row .key,
+.admin-style .multioffer-wrapME .rowME .key
+{
+    padding-right:10px;
+}
+
+.admin-style .multioffer-wrap .row .key input,
+.admin-style .multioffer-wrapME .rowME .key input
+{
+    width: 300px;
+}
+
+.admin-style .multioffer-wrap .row.error .key input,
+.admin-style .multioffer-wrapME .rowME.error .key input
+{
+    border:1px solid red;
+}
+
+.admin-style .multioffer-wrap .row .title,
+.admin-style .multioffer-wrapME .rowME .title
+{
+    font-size: 12px;
+    margin: 5px 0 3px; 
+}
+
+.admin-style .multioffer-wrap .row select,
+.admin-style .multioffer-wrapME .rowME select
+{
+    min-width: 200px;
+    display: block;
+    margin-top: 5px;
+}
+
+.admin-style .multioffer-wrap .row select option.hide,
+.admin-style .multioffer-wrapME .rowME select option.hide
+{
+    display: none;
+}
+
+
+.admin-style .multioffer-wrap  .keyval-container,
+.admin-style .multioffer-wrapME  .keyval-container
+{
+    margin-bottom: 10px;
+}
+
+.admin-style .multioffer-wrap .add-level,
+.admin-style .multioffer-wrapME .add-levelME
+{
+    background: url(../img/plusgreen.gif) no-repeat left center;
+    padding-left:20px;
+    margin-left:7px;    
+    margin-top:20px;
+    
+}
+
+.admin-style .multioffer-wrap .bottom-bar,
+.admin-style .multioffer-wrapME .bottom-bar
+{
+    margin-top: 10px;
+}
+
+.admin-style .multioffer-wrap .mbutton,
+.admin-style .multioffer-wrapME .mbutton
+{
+    background: none repeat scroll 0 0 #E2E2E2;
+    border: medium none;
+    color: #3F3F3F;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 30px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+
+
+.admin-style .multioffer-wrap .create-complexs,
+.admin-style .multioffer-wrapME .create-complexs
+{
+    display:none;   
+}
+
+.admin-style .multioffer-wrap .delete-level-td,
+.admin-style .multioffer-wrapME .delete-level-td
+{
+    vertical-align: bottom;
+}
+
+.admin-style .multioffer-wrap a.delete-level,
+.admin-style .multioffer-wrapME a.delete-levelME
+{
+    color: #CA2847;
+    font-size: 11px;
+    padding: 3px;
+    display: inline-block;
+    margin-bottom: 9px;
+}
+
+.admin-style .multioffer-wrap a.delete-level:hover,
+.admin-style .multioffer-wrapME a.delete-levelME:hover
+{
+    color:white;
+    background-color: #CA2847;
+}
+
+.admin-style a.editMO,
+.admin-style a.how-to
+{
+    color: #CA2847;
+    font-size: 12px;
+}
+
+.admin-style a.editMO:hover,
+.admin-style a.how-to:hover
+{
+    color:black;
+}
+
+.admin-style .offerImagesToggle {
+    border-bottom:1px dashed #3a8dce;
+    color:#3a8dce;
+}
+
+.admin-style .tools-top {
+    overflow:hidden;
+    padding:10px 0;
+}
+
+.admin-style .offer-block .paginator {
+    float:left;
+     margin-top:0;         
+}
+
+.admin-style .offer-block .paginator .page,
+.admin-style .offer-block .paginator .perpage {
+     border: 2px solid #e2e2e2;
+     height: 22px;
+     line-height: 22px;
+}
+
+.admin-style .tools-top .add-offer {
+    background: url(../img/plusgreen.gif) no-repeat left center;
+    padding-left:20px;    
+    float:right;
+    line-height:30px;
+}
+
+.admin-style .filter-line {
+    margin:5px 0;
+    padding:5px 0;
+    border:1px solid transparent;
+}
+
+.admin-style .filter-line.open {
+    border-color:silver;
+}
+
+.admin-style .filter-line .openfilter {
+    margin-right:30px;
+    line-height:31px;
+}
+
+.admin-style .filter-line .part {
+    background: #f4963c none repeat scroll 0 0;
+    color: white;
+    line-height: 31px;
+    padding: 7px 8px;
+}
+.admin-style .filter-line .clean {
+    background: rgba(0, 0, 0, 0) url("../../../../resource/img/adminstyle/partclose.png") no-repeat scroll center center;
+    display: inline-block;
+    height: 11px;
+    margin-left: 10px;
+    width: 10px;
+}
+.admin-style .filter-line .clean_all .clean {
+    margin-left: 0;
+}
+.admin-style .filter-parts .clean_all {
+    background-color: #dc7021;
+}
+
+.admin-style .filter-line .filter-form {
+    display:none;
+}
+
+.admin-style .filter-line.open .filter-form {
+    display:block;
+    margin-left:5px;
+}
+
+.admin-style .filter-top {
+    border-bottom:1px solid #d5d5d5;
+    padding-bottom:10px;
+}
+
+.admin-style .filter-form .key {
+    font-size: 12px;
+    line-height: 30px;
+    padding-right: 15px;
+    width: 94px;
+}
+
+.admin-style .filter-form .val {
+    padding: 7px 0;
+    vertical-align: top;
+}
+
+
+.admin-style .tools-bottom {
+    border-top:1px solid #eee;
+    margin-top:10px;
+    padding-top:10px;
+}
+
+.admin-style .tools-bottom .paginator {
+    float:right;
+}
+
+.admin-style .photolink-dialog {
+    z-index:1003;
+}
+
+.admin-style .offers-photo-select-dialog{
+    display: block;
+    background-color: white;
+}
+
+.admin-style .offers-photo-select-dialog .title{
+   font-weight:bold; 
+   margin-bottom: 5px;
+}
+
+.admin-style .offers-photo-select-dialog .photo-select{
+   width: 100%; 
+   height:420px;
+   display: block;
+   margin-bottom: 20px;
+}
+
+
+.admin-style .offers-photo-select-dialog .add{
+   background: none repeat scroll 0 0 #71b422;
+   color: white;
+   float: left;
+   font-size: 16px;
+   line-height: 33px;
+   margin-right: 10px;
+   padding: 0 10px;
+}
+
+.admin-style .offers-photo-select-dialog .params-row{
+   border:1px dashed #95DCF7;
+   padding: 10px;       
+   margin-bottom: 20px;
+}
+
+.admin-style .offers-photo-select-dialog .params-row .items{
+   margin-top: 3px; 
+   margin-bottom: 2px; 
+}
+
+.admin-style .offers-photo-select-dialog .params-row .items .item{
+   margin-bottom: 10px; 
+   margin-right: 10px; 
+   display: inline-block;
+}
+
+.admin-style .offers-photo-select-dialog .param-title{
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.admin-style .offer-photo-clear {
+    float:right;
+    line-height:33px;
+}
+
+.admin-style .offers-photo-select-dialog .gray {
+    color:gray;
+    font-size:12px;
+    margin-bottom:5px;
+    display:block;
+}
+
+.one-price {
+    font-size:13px;
+    white-space:nowrap;
+}

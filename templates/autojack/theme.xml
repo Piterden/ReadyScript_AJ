@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<theme scriptType="shop" scriptMajorVersion="2" themeType="pc">
+    <general>
+        <author>Yellowmarker WS</author>
+        <name>Auto-jack shop theme</name>
+        <description>Theme without constructor</description>
+        <version>1.0.0.1</version>
+    </general>
+</theme>

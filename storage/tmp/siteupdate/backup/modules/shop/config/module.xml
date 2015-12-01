@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Магазин</name>
+        <description multilanguage="true">Модуль предоставляет возможность оформлять и администрировать заказы, управлять корзиной</description>
+        <version>2.0.0.120</version>
+        <author>ReadyScript lab.</author>
+        <is_system>1</is_system>
+        
+        <check_quantity>0</check_quantity>
+        <basketminlimit>0</basketminlimit>
+        <dependfrom>catalog</dependfrom>
+        <discount_code_len>10</discount_code_len>
+        <user_orders_page_size>10</user_orders_page_size>
+        <require_address>1</require_address>
+        <use_personal_account>1</use_personal_account>
+        <reservation>0</reservation>
+        <allow_concomitant_count_edit>0</allow_concomitant_count_edit>
+        <use_generated_order_num>0</use_generated_order_num>
+        <generated_ordernum_mask>{n}</generated_ordernum_mask>
+        <generated_ordernum_numbers>6</generated_ordernum_numbers>
+    </defaultValues>
+</config>

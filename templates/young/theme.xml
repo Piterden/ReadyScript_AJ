@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<theme scriptType="shop" scriptMajorVersion="2" themeType="pc">
+    <general>
+        <author>ReadyScript lab.</author>
+        <name>Детская</name>
+        <description>Адаптивная тема, созданная по сетке gs960 в четырех цветовых вариациях</description>
+        <version>1.0.0.52</version>
+    </general>
+    <shades>
+        <shade>
+            <id>yellow</id>
+            <title>Желтый</title>
+            <color>#fccb65</color>
+        </shade>
+        <shade>
+            <id>pastel</id>
+            <title>Пастельный</title>
+            <color>#f6b8cb</color>
+        </shade>
+        <shade>
+            <id>violet</id>
+            <title>Фиолетовый</title>
+            <color>#8962b5</color>
+        </shade>
+        <shade>
+            <id>green</id>
+            <title>Зеленый</title>
+            <color>#48aa5a</color>
+        </shade>        
+    </shades>
+</theme>

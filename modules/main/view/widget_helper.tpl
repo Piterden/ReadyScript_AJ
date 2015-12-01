@@ -1,0 +1,1 @@
+ <i>Виджет</i>: {$item.full_title}<br /><i>Описание</i>: {$item.full_description}<br />{if !empty($item.module)}<i>Модуль</i>: {$item.module}<br />{/if}

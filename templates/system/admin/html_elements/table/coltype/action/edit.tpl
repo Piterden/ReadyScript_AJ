@@ -1,0 +1,1 @@
+<a href="{$cell->getHref($tool->getHrefPattern())}" title="{$tool->getTitle()}" class="tool {$tool->getClass()}" {$cell->getLineAttr($tool)}></a>

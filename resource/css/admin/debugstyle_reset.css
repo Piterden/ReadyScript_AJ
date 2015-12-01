@@ -1,0 +1,59 @@
+/* Сбрасываем стили для элементов из административной панели */
+.admin-style * {
+    color: #3f3f3f;
+    padding:0;
+    margin:0;    
+    line-height:normal;
+    background:none;
+    border:none;
+    font-family: Arial, Tahoma;
+    font-weight:normal;
+    font-size:14px;
+}
+
+.admin-style span {
+    display:inline;
+}
+
+.admin-style input[type="text"] {
+    background-color: white;
+    padding:2px;
+    border:1px solid #aaa;
+}
+
+.admin-style select {
+    border:1px solid #aaa;
+}
+
+.admin-style strong {
+    font-weight:bold;
+}
+
+.admin-style p {
+    display:block;
+    margin:12px 0;
+}
+.admin-style a {
+    display:inline;
+    text-decoration:none;
+    cursor:pointer;    
+    border:none;
+    font-size:14px;
+    margin:0;
+    padding:0;
+}
+
+.admin-style div {
+    display:block;
+    margin:0;
+}
+
+.admin-style .viewport {
+    margin:0 auto;
+    width:85%;
+    min-height:100%;
+}
+
+.admin-style table td {
+    vertical-align:middle;
+}

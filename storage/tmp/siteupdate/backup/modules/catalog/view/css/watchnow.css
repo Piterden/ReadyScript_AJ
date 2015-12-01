@@ -1,0 +1,68 @@
+.widget .last-watch {
+    padding:3px 7px;
+    position:relative;
+}
+
+.widget .last-watch .prev,
+.widget .last-watch .next {
+    position: absolute;
+    top:60px;
+    width:24px;
+    height:24px;
+    border:1px solid #e2e2e2;
+}
+
+.widget .last-watch .prev {
+    left:7px;    
+    background:url(../../../../resource/img/adminstyle/prev.png) no-repeat center center;    
+}
+
+.widget .last-watch .next {
+    right:7px;    
+    background:url(../../../../resource/img/adminstyle/next.png) no-repeat center center;    
+}
+
+.widget .last-watch .prev:hover {
+    background:url(../../../../resource/img/adminstyle/prev_act.png) no-repeat center center;
+    border-color: #bee1ed;    
+}
+
+.widget .last-watch .next:hover {
+    background:url(../../../../resource/img/adminstyle/next_act.png) no-repeat center center;
+    border-color: #bee1ed;    
+}
+
+.widget .last-watch .picture {
+    border:1px solid #e2e2e2;
+    margin:0 33px;
+    height:150px;
+    text-align:center;
+    overflow:hidden;
+}
+
+.widget .description {
+    margin:10px 0;
+    text-align:center;
+    color: #3d4754;
+}
+
+.widget .description a {
+    text-decoration: underline;
+}
+
+.widget .description .title {
+    font-size:14px;
+}
+
+.widget .description .path,
+.widget .description .time,
+.widget .description .login
+ {
+    font-size:10px;
+}
+
+.widget .last-watch .empty {
+    text-align:center;
+    padding-top:35px;
+    color: #808080;
+}
