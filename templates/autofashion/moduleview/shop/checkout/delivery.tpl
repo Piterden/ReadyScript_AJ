@@ -33,7 +33,6 @@
                     {/if}
                 {$item.description}</p>
                 <div class="additionalInfo">{$item->getAddittionalHtml()}</div>
-                {$order->getExtraKeyPair('request_code')}
             </div>
         </li>
         {/foreach}

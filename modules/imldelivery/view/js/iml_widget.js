@@ -8,7 +8,7 @@ function initIML_Map(region) {
         url: url,
         data: { 
             action: 'getSdByRegion',
-            params: {'region': region}
+            params: {region: region}
          },
         dataType: "json",
         success: function (data) {
@@ -36,7 +36,7 @@ function initIML_Map(region) {
                         arrObj[i1].Address + '<br />' +
                         'Оплата картой: ' + paymentCardStr + '<br />' +
                         'Время работы: ' + arrObj[i1].WorkMode +
-                        '<br /><button onclick="GetPVZ(' + arrObj[i1].RequestCode + ');" >Выбрать</button>'
+                        '<br /><button onclick="GetPVZ(' + arrObj[i1].RequestCode + ',\'' + region + '\');return false;" >Выбрать</button>'
                 }, {
                     preset: 'islands#violetStretchyIcon'
                 });
@@ -45,7 +45,7 @@ function initIML_Map(region) {
                 myMap.geoObjects.add(myPlacemark);
 
                 // создание списка пунктов самовывоза рядом с картой
-                var li_html = '<li onclick="GetPVZ(' + arrObj[i1].RequestCode + ');"><span style="font-weight: bold">' + arrObj[i1].Name + '</span>' + '<br />' +
+                var li_html = '<li onclick="GetPVZ(' + arrObj[i1].RequestCode + ',\'' + region + '\');"><span style="font-weight: bold">' + arrObj[i1].Name + '</span>' + '<br />' +
                             arrObj[i1].Address + '<br />' +
                             'Оплата картой: ' + paymentCardStr + '<br />' +
                             'Время работы: ' + arrObj[i1].WorkMode + '<br />' +
@@ -54,98 +54,90 @@ function initIML_Map(region) {
 
                 i1++;
             });
+
+            var params = getDefaultParams(region);
+            addExtraLine(params);
         }
     });
-
-    addExtraLine('region_to', region);
-    addExtraLine('request_code', null);
-    updatePrice();
+    
 };
 
-function GetPVZ(code) {
-    addExtraLine('request_code', code);
-    updatePrice();
-};
+function getDefaultParams (code,region) {
+    var $dataElement = $('#selectRegionCombo');
+    var params = {
+        service_id:     $dataElement.attr('data-service-id'),
+        region_id_from: $dataElement.attr('data-region-from'),
+        region_to:      region,
+        request_code:   '1'
+    };
+    return params;
+}
 
 ymaps.ready().done(function () {
-
-    var url = $('#selectRegionCombo').attr('data-ajax-action');
-    $.ajax({
-        url: url,
-        data: {action: 'getSdRegions'},
-        success: function (data) {
-            data = JSON.parse(data);
-            $.each(data.getSdRegions, function(index, val) {
-                //console.log($('#selectRegionCombo'));
-                $('#selectRegionCombo')
-                .append('<option value='+index+'>'+val+'</option>')
-            });
-        }
-    });
-
-    initIML_Map('МОСКВА');
+    ajaxRequest('getSdRegions', [], function (data) {
+        $.each(data.getSdRegions, function(index, val) {
+            $('#selectRegionCombo').append('<option value="'+index+'">'+val+'</option>');
+        });
+    })
+    getExtraLine('iml_region_to');
 });
 
+function GetPVZ (code,region) {
+    var params = getDefaultParams(region);
+    addExtraLine(params);
+};
 
-function addExtraLine (key, value) {
-    var url = $('#selectRegionCombo').attr('data-ajax-action');
-    $.ajax({
-        url: url,
-        type: 'POST',
-        dataType: 'json',
-        data: {action: 'addExtraLine', params: {
-            key: key,
-            value: value
-        }},
-    })
-    .done(function(data) {
-        //console.log(data);
-    })
-    .fail(function() {
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
+function addExtraLine (params) {
+    ajaxRequest('addExtraLine', params, updatePrice);
 }
 
 function getExtraLine (key) {
-    var url = $('#selectRegionCombo').attr('data-ajax-action');
-    $.ajax({
-        url: url,
-        type: 'POST',
-        dataType: 'json',
-        data: {action: 'getExtraLine', params: {
-            key: key
-        }},
-    })
-    .done(function(data) {
-        //console.log(data);
-    })
-    .fail(function() {
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
+    ajaxRequest('getExtraLine', key, getExtraLineCallback);
+}
+
+function getExtraLineCallback (data) {
+    initIML_Map(data.getExtraLine.iml_region_to.value || 'МОСКВА');
+    $('#selectRegionCombo').val(data.getExtraLine.iml_region_to.value);
+    //console.log(data.getExtraLine.iml_region_to.value);
 }
 
 function updatePrice () {
-    var url = $('#selectRegionCombo').attr('data-ajax-action');
+    var $dataElement = $('#selectRegionCombo');
+    var params = {
+        service_id: $dataElement.attr('data-service-id'),
+        region_id_from: $dataElement.attr('data-region-from')
+    };
+    ajaxRequest('getDeliveryCostAjax', params, updatePriceCallback);
+}
+
+function updatePriceCallback (data) {
+    var deliveryId = $dataElement.parents('li').attr('data-delivery-id');
+    var $priceBlock = $('.price', '#delivery_'+deliveryId);
+    //console.log(data.getDeliveryCostAjax);
+    if (Number.isInteger(data.getDeliveryCostAjax)) {
+        $priceBlock.empty().html('<span class="help"></span>'+data.getDeliveryCostAjax);
+    } else {
+        var error = data.getDeliveryCostAjax;
+        $.each(error, function(index, val) {
+            $priceBlock.empty().html('<strong>'+val.Code+'</strong><span class="text-error">'+val.Mess+'</span>');
+        });
+    }
+}
+
+function ajaxRequest (action, params, callback) {
+    var $dataElement = $('#selectRegionCombo');
+    var url = $dataElement.attr('data-ajax-action');
+    var deliveryId = $dataElement.parents('li').attr('data-delivery-id');
     $.ajax({
         url: url,
         type: 'POST',
         dataType: 'json',
-        data: {action: 'getDeliveryCostAjax'},
+        data: {action: action, params: params},
     })
-    .done(function(data) {
-        console.log(data.getDeliveryCostAjax);
-    })
+    .done(callback)
     .fail(function() {
-        console.log("error");
     })
     .always(function() {
-        console.log("complete");
     });
     
 }
