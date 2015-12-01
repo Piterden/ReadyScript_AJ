@@ -49,7 +49,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $cache_api_requests = array(),  // Кэш запросов к серверу рассчета 
         $cache_currencies   = null,  // Валюты
         $delivery_currency  = null;  // Текущая Валюта
-        
+
     /**
     * Возвращает название расчетного модуля (типа доставки)
     * 
@@ -415,15 +415,9 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param  array|null $filters
      * @return array
      */
-    public function getCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
+    function getCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
     {
         $extra = $order->getExtraInfo();
-        if ($this->service_id === null) {
-            $this->service_id = $this->getOption('service_id');
-        }
-        if ($this->region_id_from === null) {
-            $this->region_id_from = $this->getOption('region_id_from');
-        }
 
         $content = array(
             'Job' => $this->getOption('service_id'),            // услуга
@@ -445,7 +439,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     * @param \Shop\Model\Orm\Address $address - Адрес доставки
     * @return double
     */
-    public function getDeliveryCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null, $use_currency = true)
+    function getDeliveryCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null, $use_currency = true)
     {
         //return '';
         if(!$address) { 

@@ -100,7 +100,6 @@ function addExtraLine (key, value) {
     })
     .done(function(data) {
         //console.log(data);
-        
     })
     .fail(function() {
         console.log("error");
