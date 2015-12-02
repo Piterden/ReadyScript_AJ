@@ -63,16 +63,16 @@
             <div>
                 {static_call var=list callback=['\Shop\Model\DeliveryType\Cdek\CdekInfo','getAllTariffs']}
                 <select class="tariffList selectAllBeforeSubmit" name="data[tariffTypeList][]" multiple="multiple"> 
-                   {$selected=$elem.tariffTypeList} 
-                   {if !empty($list)}
-                      {foreach $list as $group=>$tariffList}
-                        {foreach $tariffList as $code=>$title}
-                            {if in_array($code, $selected)}
-                                <option value="{$code}" data-group="{$group}">{$title}</option>
-                            {/if}
-                        {/foreach}
-                      {/foreach} 
-                   {/if}
+                    {$selected=$elem.tariffTypeList} 
+                    {if !empty($list)}
+                       {foreach $list as $group=>$tariffList}
+                         {foreach $tariffList as $code=>$title}
+                             {if in_array($code, $selected)}
+                                 <option value="{$code}" data-group="{$group}">{$title}</option>
+                             {/if}
+                         {/foreach}
+                       {/foreach} 
+                    {/if}
                 </select>
             </div>
         </td>

@@ -97,18 +97,30 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     function getFormObject()
     {
         $properties = new \RS\Orm\PropertyIterator(array(
-            'max_weight' => new Type\String(array(
-                'description' => t('Максимальный вес, грамм'),
-            )),
             'region_id_from' => new Type\String(array(
                 'description' => t('Регион, откуда осуществляется отправка'),
                 'hint' => t('Все регионы, с которыми работает IML'),
                 'list' => array(array('\Imldelivery\Model\DeliveryType\Iml','staticGetRegions')),
             )),
-            'service_id' => new Type\String(array(
-                'description' => t('Услуга доставки'),
-                'hint' => t('Все услуги, предоставляемые IML'),
-                'list' => array(array('\Imldelivery\Model\DeliveryType\Iml','staticGetServices')),
+            'service_id_all' => new Type\Integer(array(
+                'description' => t('Услуги этого способа доставки'),
+                'maxLength' => 11,
+                'visible' => false,
+                'List' => array(array('\Imldelivery\Model\DeliveryType\Iml','staticGetServices')),
+                'ChangeSizeForList' => false,
+                'attr' => array(array(
+                    'size' => 16
+                ))
+            )),
+            'service_id' => new Type\ArrayList(array(
+                'description' => t('Список всех услуг'),
+                'maxLength' => 1000,
+                'runtime' => false,
+                'attr' => array(array(
+                    'multiple' => true
+                )),
+                'template' => '%imldelivery%/form/delivery/iml/services_list.tpl',
+                'listFromArray' => array(array())
             )),
             'timeout' => new Type\Integer(array(
                 'description' => t('Время ожидания ответа IML, сек'),
