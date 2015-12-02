@@ -1,29 +1,14 @@
-ymaps.ready().done(function () {
-    var dataDiv = $('[class^="imlContainer"]');
-    //var deliveryId = $('')
-    var imlData = dataDiv.attr('data-iml-info');
-    imlData = JSON.parse(imlData);
-    //console.log(data);
-    ajaxRequest('getSdRegions', [], function (data) {
-        $.each(data.getSdRegions, function(index, val) {
-            $('[id^="selectRegionCombo"]').append('<option value="'+index+'">'+val+'</option>');
-        });
-    })
-    initIML_Map(imlData);
-    //getExtraLine('iml_region_to');
-});
-function initIML_Map(imlData) {
+function initIML_Map(region) {
     $('#map').empty();
     var myMap;
-    //var url = '';
-    var url = $('[class^="imlContainer"]').attr('data-ajax-action');
+    var url = $('#selectRegionCombo').attr('data-ajax-action');
 
     $.ajax({
         type: 'POST',
         url: url,
         data: { 
             action: 'getSdByRegion',
-            params: {region: imlData.region}
+            params: {region: region}
          },
         dataType: "json",
         success: function (data) {
@@ -70,7 +55,7 @@ function initIML_Map(imlData) {
                 i1++;
             });
 
-            var params = getDefaultParams(code,region);
+            var params = getDefaultParams(region);
             addExtraLine(params);
         }
     });
@@ -78,18 +63,24 @@ function initIML_Map(imlData) {
 };
 
 function getDefaultParams (code,region) {
-    var dataDiv = $('[class^="imlContainer"]');
-    var imlData = dataDiv.attr('data-iml-info');
-    imlData = JSON.parse(imlData);var $dataElement = $('[class^="imlContainer"]');
-    //console.log($dataElement.data);
+    var $dataElement = $('#selectRegionCombo');
     var params = {
-        service_id:     imlData.serviceId,
-        region_id_from: imlData.regionIdFrom,
+        service_id:     $dataElement.attr('data-service-id'),
+        region_id_from: $dataElement.attr('data-region-from'),
         region_to:      region,
-        request_code:   code
+        request_code:   '1'
     };
     return params;
 }
+
+ymaps.ready().done(function () {
+    ajaxRequest('getSdRegions', [], function (data) {
+        $.each(data.getSdRegions, function(index, val) {
+            $('#selectRegionCombo').append('<option value="'+index+'">'+val+'</option>');
+        });
+    })
+    getExtraLine('iml_region_to');
+});
 
 function GetPVZ (code,region) {
     var params = getDefaultParams(region);
@@ -105,14 +96,13 @@ function getExtraLine (key) {
 }
 
 function getExtraLineCallback (data) {
-    //if (!data.getExtraLine.iml_region_to.value) {data.getExtraLine.iml_region_to.value = 'МОСКВА'};
-    initIML_Map('МОСКВА');
-    $('[class^="imlContainer"]').val(data.getExtraLine.iml_region_to.value);
+    initIML_Map(data.getExtraLine.iml_region_to.value || 'МОСКВА');
+    $('#selectRegionCombo').val(data.getExtraLine.iml_region_to.value);
     //console.log(data.getExtraLine.iml_region_to.value);
 }
 
 function updatePrice () {
-    var $dataElement = $('[class^="imlContainer"]');
+    var $dataElement = $('#selectRegionCombo');
     var params = {
         service_id: $dataElement.attr('data-service-id'),
         region_id_from: $dataElement.attr('data-region-from')
@@ -135,7 +125,7 @@ function updatePriceCallback (data) {
 }
 
 function ajaxRequest (action, params, callback) {
-    var $dataElement = $('[class^="imlContainer"]');
+    var $dataElement = $('#selectRegionCombo');
     var url = $dataElement.attr('data-ajax-action');
     var deliveryId = $dataElement.parents('li').attr('data-delivery-id');
     $.ajax({
