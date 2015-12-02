@@ -109,7 +109,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'List' => array(array('\Imldelivery\Model\DeliveryType\Iml','staticGetServices')),
                 'ChangeSizeForList' => false,
                 'attr' => array(array(
-                    'size' => 16
+                    'size' => 16,
+                    'multiple' => true
                 ))
             )),
             'service_id' => new Type\ArrayList(array(
@@ -259,19 +260,6 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     }
 
     /**
-     * Получает цену на доставку до пункта самовывоза
-     * 
-     * @param  array $params 
-     * @return string|number
-     */
-    public function getDeliveryCostAjax($params)
-    {
-        $order = \Shop\Model\Orm\Order::currentOrder();
-        $address = $order->getAddress();
-        return $this->getDeliveryCost($order, $address);
-    }
-
-    /**
      * Запрос получает статус и состояние заказа(ов)
      * 
      * @param  array|null $filters
@@ -390,7 +378,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $content = array(
             'Test' => 'True', // для тестового режима, иначе не указывайте
             'CustomerOrder' => $user['id'] ? $user['id'] : $order['id'],
-            'Job' => $this->getOption('service_id',0), // из справочника услуг
+            'Job' => $extra['iml_service_id']['value'], // из справочника услуг
             'Contact' => $user['name'],
             'RegionCodeFrom' => $this->getOption('region_id_from',0), // из справочника регионов
             'RegionCodeTo' => $extra['iml_region_to']['value'], // из справочника регионов
@@ -453,6 +441,18 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         return $this->postApiRequest(self::URL_API_GETPRICE, self::API_LOGIN, self::API_PASS, $content);
     }
 
+    /**
+     * Получает цену на доставку до пункта самовывоза
+     * 
+     * @param  array $params 
+     * @return string|number
+     */
+    public function getDeliveryCostAjax($params)
+    {
+        $order = \Shop\Model\Orm\Order::currentOrder();
+        $address = $order->getAddress();
+        return $this->getDeliveryCost($order, $address);
+    }
 
     /**
     * Возвращает стоимость доставки для заданного заказа. Только число.
@@ -544,11 +544,13 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
     {
         $order = \Shop\Model\Orm\Order::currentOrder();
+        $extra = $order->getExtraInfo();
 
         $view = new \RS\View\Engine();
         $view->assign(array(
-            'region_id_from'     => $this->getOption('region_id_from'),     //Регион 
-            'service_id'         => $this->getOption('service_id'),         //Услуга 
+            'region_id_to'       => $extra['iml_region_to']['value'],       //Регион куда
+            'region_id_from'     => $this->getOption('region_id_from'),     //Регион откуда
+            'service_id'         => $this->getOption('service_id'),         //Услуги этого типа доставки
             'delivery_cost'      => $this->getDeliveryCost($order),         //Текущий объект цены доставки
             'order'              => $order,                                 //Текущий недоофрмленный заказ
             'delivery'           => $delivery,                              //Текущий объект доставки

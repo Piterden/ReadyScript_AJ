@@ -36,7 +36,7 @@ function initIML_Map(region) {
                         arrObj[i1].Address + '<br />' +
                         'Оплата картой: ' + paymentCardStr + '<br />' +
                         'Время работы: ' + arrObj[i1].WorkMode +
-                        '<br /><button onclick="GetPVZ(' + arrObj[i1].RequestCode + ',\'' + region + '\');return false;" >Выбрать</button>'
+                        '<br /><button onclick="setSd(' + arrObj[i1].RequestCode + ',\'' + region + '\');return false;" >Выбрать</button>'
                 }, {
                     preset: 'islands#violetStretchyIcon'
                 });
@@ -45,7 +45,7 @@ function initIML_Map(region) {
                 myMap.geoObjects.add(myPlacemark);
 
                 // создание списка пунктов самовывоза рядом с картой
-                var li_html = '<li onclick="GetPVZ(' + arrObj[i1].RequestCode + ',\'' + region + '\');"><span style="font-weight: bold">' + arrObj[i1].Name + '</span>' + '<br />' +
+                var li_html = '<li onclick="setSd(' + arrObj[i1].RequestCode + ',\'' + region + '\');"><span style="font-weight: bold">' + arrObj[i1].Name + '</span>' + '<br />' +
                             arrObj[i1].Address + '<br />' +
                             'Оплата картой: ' + paymentCardStr + '<br />' +
                             'Время работы: ' + arrObj[i1].WorkMode + '<br />' +
@@ -79,26 +79,16 @@ ymaps.ready().done(function () {
             $('#selectRegionCombo').append('<option value="'+index+'">'+val+'</option>');
         });
     })
-    getExtraLine('iml_region_to');
+    initIML_Map('САНКТ-ПЕТЕРБУРГ');
 });
 
-function GetPVZ (code,region) {
+function setSd (code,region) {
     var params = getDefaultParams(region);
     addExtraLine(params);
-};
+}
 
 function addExtraLine (params) {
     ajaxRequest('addExtraLine', params, updatePrice);
-}
-
-function getExtraLine (key) {
-    ajaxRequest('getExtraLine', key, getExtraLineCallback);
-}
-
-function getExtraLineCallback (data) {
-    initIML_Map(data.getExtraLine.iml_region_to.value || 'МОСКВА');
-    $('#selectRegionCombo').val(data.getExtraLine.iml_region_to.value);
-    //console.log(data.getExtraLine.iml_region_to.value);
 }
 
 function updatePrice () {

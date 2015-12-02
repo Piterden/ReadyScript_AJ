@@ -152,6 +152,9 @@ ul.topMenu {
     margin-left: 26px;
     position: relative;
 }
+.headerIconsBlock > div.userAuthBlock {
+    margin-left: 0;
+}
 
 /* Header UserAuth Block */
 
@@ -2769,8 +2772,15 @@ footer .copyright {
     }
     .logoBlock .slogan {
         font-size: 12px;
+        margin-left: 6px;
+        white-space: nowrap;
     }
-
+    .userAuthBlock .authorized .my, .userAuthBlock .authorized .user {
+        margin-right: 0;
+    }
+    .headerIconsBlock > div {
+        margin-left: 15px;    
+    }
 }
 
 /* Medium Devices, Desktops */
