@@ -72,7 +72,7 @@ function initIML_Map(imlData) {
     
 };
 
-function setSd (code,region) {
+function setSd (imlData) {
     var params = getDefaultParams(region);
     addExtraLine(params);
 }
@@ -123,5 +123,5 @@ function ajaxRequest (action, params, callback) {
 }
 
 function bindHandlers () {
-    
+    $(imlData);
 }

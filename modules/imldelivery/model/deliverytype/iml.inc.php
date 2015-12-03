@@ -40,15 +40,13 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         URL_CALENDAR                =   'http://list.iml.ru/calendar?type=json',
         URL_SERVICE                 =   'http://list.iml.ru/service?type=json';
     
-    protected
-        $service_id            = null, // Текущая услуга
-        $region_id_from        = null; // Услуги доставки IML
+    //protected
+        //$service_id            = null, // Текущая услуга
+        //$region_id_from        = null; // Услуги доставки IML
         //$carries          = null; // Агрегаторы доставки существующие в sheepla
 
     private
-        $cache_api_requests = array(),  // Кэш запросов к серверу рассчета 
-        $cache_currencies   = null,  // Валюты
-        $delivery_currency  = null;  // Текущая Валюта
+        $cache_api_requests = array();  // Кэш запросов к серверу рассчета 
 
     /**
     * Возвращает название расчетного модуля (типа доставки)
@@ -429,6 +427,9 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     {
         $extra = $order->getExtraInfo();
         $imlData = $extra['iml_data']['data'];
+        if (!$imlData) {
+            return false;
+        }
 
         $cost = array();
         foreach ($imlData['service_id'] as $code => $service) {
@@ -471,8 +472,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         if(!$address) { 
             $address = $order->getAddress();
         }
-
         $cost = $this->getImlCost($order, $address);
+        if (!$cost) {
+            return -1;
+        }
 
         reset($cost);
         $first_key = key($cost);
@@ -484,6 +487,16 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 //$this->addError(t('Ошибка '.$error.'. '.$error));
             }
             return $cost[$first_key];
+        }
+    }
+
+    function getDeliveryCostText(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
+    {
+        $cost = $this->getDeliveryCost($order, $address);
+        if ($cost < 0) {
+            return '';
+        } else {
+            return ($cost) ? \RS\Helper\CustomView::cost($cost).' '.$order->getMyCurrency()->stitle : 'бесплатно';
         }
     }
 
@@ -552,6 +565,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     */
     function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
     {
+        //return var_dump($this);
         $request = \RS\Http\Request::commonInstance();
         if (!$order) {
             $order = \Shop\Model\Orm\Order::currentOrder();
@@ -571,13 +585,32 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
         ) + \RS\Module\Item::getResourceFolders($this)); 
 
-        if ($request->isAjax()) {
-            
+        if ($request->isAjax() && $this->getOption('show_map') == 1) {
+            $action = $request->request('action', TYPE_STRING, '');
+            $params = $request->request('params', TYPE_ARRAY, '');
+
+            switch ($action) {
+
+                case 'loadMap':
+                    return $view->fetch('%imldelivery%/delivery/iml/map.tpl');;
+                    break;
+
+                default:
+                    $output = $this->$action($params);
+                    $view->assign(array(
+                        $action => $output,
+                        'action' => $action
+                    ));
+                    return $view->fetch('%imldelivery%/delivery/iml/ajax_data.tpl');
+                    break;
+
+            }
         }
 
         if ($this->getOption('show_map') == 1) {
-            return $view->fetch('%imldelivery%/delivery/widget.tpl');
+            return $view->fetch('%imldelivery%/delivery/iml/widget.tpl');
         }
+        
     }
 
     /**
