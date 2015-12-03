@@ -254,14 +254,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     public function addExtraLine(array $params)
     {
         $order = \Shop\Model\Orm\Order::currentOrder();
-        foreach ($params as $param => $value) {
-            $order->addExtraInfoLine(
-                'IML '.$param,
-                $value,
-                array($param => $value),
-                'iml_'.$param
-            );
-        }
+        $order->addExtraInfoLine('Данные IML','',$params,'iml_data');
+        return $order->getExtraInfo();
     }
 
     /**
@@ -434,21 +428,25 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     function getImlCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
     {
         $extra = $order->getExtraInfo();
+        $imlData = $extra['iml_data']['data'];
 
-        $content = array(
-            'Job' => $extra['iml_service_id']['value'],                 // услуга
-            'RegionFrom' => $extra['iml_region_id_from']['value'],      // регион отправки
-            'RegionTo' => $extra['iml_region_to']['value'],             // регион получения
-            'Volume' => '1',                                            // кол-во мест  
-            'Weigth' => $order->getWeight() ? $order->getWeight() : '1',// вес(кг)
-            'SpecialCode' => $extra['iml_request_code']['value']        // код пункта самовывоза(см. справочник пунктов самовывоза)
-        );
-
-        return $this->postApiRequest(self::URL_API_GETPRICE, self::API_LOGIN, self::API_PASS, $content);
+        $cost = array();
+        foreach ($imlData['service_id'] as $code => $service) {
+            $content = array(
+                'Job' => $code,                 // услуга
+                'RegionFrom' => $imlData['region_id_from'],      // регион отправки
+                'RegionTo' => $imlData['region_id_to'],             // регион получения
+                'Volume' => '1',                                            // кол-во мест  
+                'Weigth' => $order->getWeight() ? $order->getWeight() : '1',// вес(кг)
+                'SpecialCode' => $imlData['request_code']        // код пункта самовывоза(см. справочник пунктов самовывоза)
+            );
+            $cost[$code] = $this->postApiRequest(self::URL_API_GETPRICE, self::API_LOGIN, self::API_PASS, $content);
+        }
+        return $cost;
     }
 
     /**
-     * Получает цену на доставку до пункта самовывоза
+     * Получает цену на доставку до пунктов самовывоза
      * 
      * @param  array $params 
      * @return string|number
@@ -457,7 +455,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     {
         $order = \Shop\Model\Orm\Order::currentOrder();
         $address = $order->getAddress();
-        return $this->getDeliveryCost($order, $address);
+        return $this->getImlCost($order, $address);
+        //return $order->getExtraInfo();
     }
 
     /**
@@ -469,18 +468,22 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     */
     function getDeliveryCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null, $use_currency = true)
     {
-        //return '';
         if(!$address) { 
             $address = $order->getAddress();
         }
+
         $cost = $this->getImlCost($order, $address);
-        if (isset($cost['Price'])) {
-            return $cost['Price'];
+
+        reset($cost);
+        $first_key = key($cost);
+
+        if (isset($cost[$first_key]['Price'])) {
+            return $cost[$first_key]['Price'];
         } else {
-            foreach ($cost as $error) {
+            foreach ($cost[$first_key] as $error) {
                 //$this->addError(t('Ошибка '.$error.'. '.$error));
             }
-            return $cost;
+            return $cost[$first_key];
         }
     }
 
@@ -551,13 +554,15 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     {
         $order = \Shop\Model\Orm\Order::currentOrder();
         $extra = $order->getExtraInfo();
+        $imlData = $extra['iml_data']['data'];
 
         $view = new \RS\View\Engine();
         $view->assign(array(
-            'region_id_to'       => $extra['iml_region_to']['value'],       //Регион куда
+            'region_id_to'       => $imlData['region_id_to'],       //Регион куда
             'region_id_from'     => $this->getOption('region_id_from'),     //Регион откуда
             'service_ids'        => json_encode($this->getActiveServices()),             //Услуги этогй доставки
-            'delivery_cost'      => json_encode($this->getDeliveryCost($order)),         //Текущий объект цены доставки
+            'delivery_cost_json' => json_encode($this->getImlCost($order)),         //Текущий объект цены доставки
+            'delivery_cost'      => $this->getImlCost($order),         //Текущий объект цены доставки
             'order'              => $order,                                 //Текущий недоофрмленный заказ
             'delivery'           => $delivery,                              //Текущий объект доставки
             'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
@@ -580,35 +585,35 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $extra = $order->getExtraInfo();
         if (!isset($extra['iml_order_response'])){ // Если заказ не создан
             //Создадим заказ
-            $created_order = $this->createImlOrder($order,$address); 
+            //$created_order = $this->createImlOrder($order,$address); 
             //Если ответа дождались, то запишем номер заказа
-            if ($created_order){
-                if ($created_order['Result'] == 'OK') {
-                    $order->addExtraInfoLine(
-                        'IML ответ на создание заказа',
-                        $created_order['Result'],
-                        $created_order['Order'],
-                        'iml_order_response'
-                    );
-                } elseif ($created_order['Result'] == 'Error') {
-                    $order->addExtraInfoLine(
-                        'IML ошибка создания заказа',
-                        $created_order['Result'],
-                        $created_order['Errors'],
-                        'iml_order_error'
-                    );
-                }
-            } else { //Иначе
-                $order->addExtraInfoLine(
-                    'IML API не отвечает',
-                    'Error',
-                    array(
-                        0 => 'Что-то с сетью'
-                    ),
-                    'iml_api_error'
-                );
-            }
-            $extra = $order->getExtraInfo();      
+//            if ($created_order){
+//                if ($created_order['Result'] == 'OK') {
+//                    $order->addExtraInfoLine(
+//                        'IML ответ на создание заказа',
+//                        $created_order['Result'],
+//                        $created_order['Order'],
+//                        'iml_order_response'
+//                    );
+//                } elseif ($created_order['Result'] == 'Error') {
+//                    $order->addExtraInfoLine(
+//                        'IML ошибка создания заказа',
+//                        $created_order['Result'],
+//                        $created_order['Errors'],
+//                        'iml_order_error'
+//                    );
+//                }
+//            } else { //Иначе
+//                $order->addExtraInfoLine(
+//                    'IML API не отвечает',
+//                    'Error',
+//                    array(
+//                        0 => 'Что-то с сетью'
+//                    ),
+//                    'iml_api_error'
+//                );
+//            }
+            //$extra = $order->getExtraInfo();      
         }  
                
         //Запишем данные в таблицу, чтобы не вызывать повторного сохранения

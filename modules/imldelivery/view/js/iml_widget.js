@@ -76,8 +76,7 @@ function setSd (code,region) {
 }
 
 function addExtraLine (imlData) {
-    console.log(imlData);
-    params = {
+    var params = {
         region_id_from  : imlData.regionIdFrom,
         region_id_to    : imlData.regionIdTo,
         service_id      : imlData.serviceId,
@@ -86,27 +85,22 @@ function addExtraLine (imlData) {
     ajaxRequest('addExtraLine', params, updatePrice);
 }
 
-function updatePrice () {
-    var $dataElement = $('[class^="imlContainer"]');
-    var params = {
-        service_id: $dataElement.attr('data-service-id'),
-        region_id_from: $dataElement.attr('data-region-from')
-    };
-    ajaxRequest('getDeliveryCostAjax', params, updatePriceCallback);
+function updatePrice (data) {
+    ajaxRequest('getDeliveryCostAjax', [], afterUpdatePrice);
 }
 
-function updatePriceCallback (data) {
-    var deliveryId = $dataElement.parents('li').attr('data-delivery-id');
-    var $priceBlock = $('.price', '#delivery_'+deliveryId);
-    //console.log(data.getDeliveryCostAjax);
-    if (Number.isInteger(data.getDeliveryCostAjax)) {
-        $priceBlock.empty().html('<span class="help"></span>'+data.getDeliveryCostAjax);
-    } else {
-        var error = data.getDeliveryCostAjax;
-        $.each(error, function(index, val) {
-            $priceBlock.empty().html('<strong>'+val.Code+'</strong><span class="text-error">'+val.Mess+'</span>');
-        });
-    }
+function afterUpdatePrice (data) {
+    console.log(data.getDeliveryCostAjax);
+    
+    //var $priceBlock = $('.price', '#delivery_'+deliveryId);
+    //if (Number.isInteger(data.getDeliveryCostAjax)) {
+    //    $priceBlock.empty().html('<span class="help"></span>'+data.getDeliveryCostAjax);
+    //} else {
+    //    var error = data.getDeliveryCostAjax;
+    //    $.each(error, function(index, val) {
+    //        $priceBlock.empty().html('<strong>'+val.Code+'</strong><span class="text-error">'+val.Mess+'</span>');
+    //    });
+    //}
 }
 
 function ajaxRequest (action, params, callback) {
@@ -123,5 +117,9 @@ function ajaxRequest (action, params, callback) {
     })
     .always(function() {
     });
+    
+}
+
+function bindHandlers () {
     
 }

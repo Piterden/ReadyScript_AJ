@@ -3,14 +3,14 @@
 {assign var=ajaxUrl value=$router->getUrl("imldelivery-front-ajaxctrl")}
 
 <div class="imlContainer_{$delivery.id}" data-iml-info='{
-    "url"           :"{$ajaxUrl}",
-    "deliveryId"    :"{$delivery.id}", 
-    "serviceId"     :{$service_ids},
-    "selectId"      :"#selectRegionCombo_{$delivery.id}", 
-    "listId"        :"#sdlist_{$delivery.id}", 
-    "regionIdFrom"  :"{$region_id_from}", 
-    "regionIdTo"    :"{$region_id_to}", 
-    "deliveryCost"  :{$delivery_cost} 
+    "url"               :"{$ajaxUrl}",
+    "deliveryId"        :"{$delivery.id}", 
+    "serviceId"         :{$service_ids},
+    "selectId"          :"#selectRegionCombo_{$delivery.id}", 
+    "listId"            :"#sdlist_{$delivery.id}", 
+    "regionIdFrom"      :"{$region_id_from}", 
+    "regionIdTo"        :"{$region_id_to}", 
+    "deliveryCostJson"  :{$delivery_cost_json}
 }'>
     <select id="selectRegionCombo_{$delivery.id}"></select>
     <div class="mapWrapper">
