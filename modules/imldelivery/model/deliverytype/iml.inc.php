@@ -598,7 +598,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 default:
                     $output = $this->$action($params);
                     $view->assign(array(
-                        $action => $output,
+                        'output' => json_encode($output),
                         'action' => $action
                     ));
                     return $view->fetch('%imldelivery%/delivery/iml/ajax_data.tpl');
