@@ -1,3 +1,4 @@
+var imlDataArray = [];
 ymaps.ready().done(function() {
     //console.log(this);
     var $dataDiv = $('[class^="imlContainer"]');
@@ -6,8 +7,9 @@ ymaps.ready().done(function() {
             $('[id^="selectRegionCombo"]').append('<option value="'+index+'">'+val+'</option>');
         });
     })
-    $dataDiv.each(function() {
+    $dataDiv.each(function(i) {
         var imlData = JSON.parse($(this).attr('data-iml-info'));
+        imlDataArray[i] = imlData;
         initIML_Map(imlData);
     });
 });
@@ -90,7 +92,7 @@ function updatePrice (data) {
 }
 
 function afterUpdatePrice (data) {
-    console.log(data.getDeliveryCostAjax);
+    console.log(imlDataArray);
     
     //var $priceBlock = $('.price', '#delivery_'+deliveryId);
     //if (Number.isInteger(data.getDeliveryCostAjax)) {

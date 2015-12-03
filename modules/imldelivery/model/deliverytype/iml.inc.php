@@ -552,7 +552,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     */
     function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
     {
-        $order = \Shop\Model\Orm\Order::currentOrder();
+        $request = \RS\Http\Request::commonInstance();
+        if (!$order) {
+            $order = \Shop\Model\Orm\Order::currentOrder();
+        }
         $extra = $order->getExtraInfo();
         $imlData = $extra['iml_data']['data'];
 
@@ -567,6 +570,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'delivery'           => $delivery,                              //Текущий объект доставки
             'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
         ) + \RS\Module\Item::getResourceFolders($this)); 
+
+        if ($request->isAjax()) {
+            
+        }
 
         if ($this->getOption('show_map') == 1) {
             return $view->fetch('%imldelivery%/delivery/widget.tpl');

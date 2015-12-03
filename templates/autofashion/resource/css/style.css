@@ -2656,6 +2656,16 @@ label[for="changePass"] {
     color: #000;
 }
 
+/* Checkout */
+
+ul.checkoutSteps {
+    float: right;
+}
+ul.checkoutSteps li {
+    display: inline-block;
+    margin-left: 30px;
+}
+
 /* Footer */
 
 .preFooter {
