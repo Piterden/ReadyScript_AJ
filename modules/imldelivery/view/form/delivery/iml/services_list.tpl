@@ -67,7 +67,7 @@
 					{if !empty($list)}
 						{foreach $list as $code => $title}
 							{if in_array($code, $selected)}
-								<option value="{$code}" data-group="{$group}">{$title}</option>
+								<option value="{$code}">{$title}</option>
 							{/if}
 						{/foreach} 
 					{/if}

@@ -102,7 +102,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'hint' => t('Все регионы, с которыми работает IML'),
                 'list' => array(array('\Imldelivery\Model\DeliveryType\Iml','staticGetRegions')),
             )),
-            'service_id_all' => new Type\Integer(array(
+            'service_id_all' => new Type\String(array(
                 'description' => t('Услуги этого способа доставки'),
                 'maxLength' => 11,
                 'visible' => false,
@@ -122,6 +122,12 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 )),
                 'template' => '%imldelivery%/form/delivery/iml/services_list.tpl',
                 'listFromArray' => array(array())
+            )),
+            'show_map' => new Type\Integer(array(
+                'description' => t('Показывать карту'),
+                'maxLength' => 1,
+                'default' => 0,
+                'CheckboxView' => array(1,0),
             )),
             'timeout' => new Type\Integer(array(
                 'description' => t('Время ожидания ответа IML, сек'),
@@ -161,7 +167,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * 
      * @return array [id]|string => [name]|string
      */
-    static function staticGetDeliveryStatus()
+    static function staticGetDeliveryStatuses()
     {
         $iml = new Iml;
         $list = $iml->getApiRequest(self::URL_HELP_DELIVERYSTATUS, self::API_LOGIN, self::API_PASS);
@@ -183,7 +189,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     /**
      * Справочник пунктов самовывоза
      * 
-     * @return array [id]|string => [name]|string
+     * @return array 
      */
     function getSelfDeliveryList()
     {
@@ -193,7 +199,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     }
 
     /**
-     * Получает массив регионов с пунктами самовывоза
+     * Получает массив регионов, в которых есть пункты самовывоза
      * 
      * @return array [code] => [name]
      */
@@ -229,6 +235,17 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         return $arr;
     }
 
+    public function getActiveServices()
+    {
+        $services = $this->getOption('service_id');
+        $servicesList = self::staticGetServices();
+        $arr = array();
+        foreach ($services as $service) {
+            $arr[$service] = $servicesList[$service];
+        }
+        return $arr;
+    }
+
     /**
      * Добавляет доп данные в объект заказа
      * 
@@ -239,7 +256,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $order = \Shop\Model\Orm\Order::currentOrder();
         foreach ($params as $param => $value) {
             $order->addExtraInfoLine(
-                'IML Extra Data',
+                'IML '.$param,
                 $value,
                 array($param => $value),
                 'iml_'.$param
@@ -248,24 +265,12 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     }
 
     /**
-     * Получает экстра данные из заказа
-     * 
-     * @param  mixed $params
-     * @return  array
-     */
-    public function getExtraLine($params)
-    {
-        $order = \Shop\Model\Orm\Order::currentOrder();
-        return $order->getExtraInfo($params);
-    }
-
-    /**
      * Запрос получает статус и состояние заказа(ов)
      * 
      * @param  array|null $filters
      * @return array
      */
-    function getStatuses(array $filters = null)
+    function getImlStatuses(array $filters = null)
     {
         $content = array(
             'Test' => 'True',                       // для тестового режима, иначе не указывайте
@@ -291,7 +296,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param  array|null $filters
      * @return array
      */
-    function getOrders(array $filters = null)
+    function getImlOrders(array $filters = null)
     {
         $content =array(
             'Test' => 'True', // для тестового режима, иначе не указывайте
@@ -317,7 +322,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param  array|null $filters
      * @return array
      */
-    function createOrder(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
+    function createImlOrder(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
     {
         if(!$address) $address = $order->getAddress();
         $catalog_config = \RS\Config\Loader::byModule('catalog');
@@ -329,6 +334,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $payment       = $order->getPayment();
         $user          = $order->getUser();
         $extra         = $order->getExtraInfo();
+        $cartItemsArray    = array();
 
         $cart     = $order->getCart();
         $products = $cart->getProductItems();
@@ -342,7 +348,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             $barcode           = $product->getBarCode($item['cartitem']['offer']);
             $offer_title       = $product->getOfferTitle($item['cartitem']['offer']);
 
-            $GoodItems[] = array(
+            $cartItemsArray[] = array(
                 'productNo'=> $barcode,
                 'productName' => $product->title,
                 'productVariant' => $offer_title,
@@ -359,7 +365,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
         // Заполняем доставку
         if ($delivery_cost > 0) {
-            $GoodItems[] = array(
+            $cartItemsArray[] = array(
                 'productNo'=> $extra['iml_service_id']['value'],
                 'productName' => $services[$extra['iml_service_id']['value']],
                 'productVariant' => '',
@@ -389,7 +395,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'ValuatedAmount' => '14.2', // разделитель '.' (точка)
             'Weight' => $order->getWeight(), // разделитель '.' (точка)
             'Comment' => $order['comments'],
-            'GoodItems' => $GoodItems      //не обязательно, если есть позиции заказа
+            'GoodItems' => $cartItemsArray      //не обязательно, если есть позиции заказа
         );
 
         //  Test – тестовый режим, 'True' для тестового режима, иначе не указывайте
@@ -425,7 +431,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param  array|null $filters
      * @return array
      */
-    function getCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
+    function getImlCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
     {
         $extra = $order->getExtraInfo();
 
@@ -467,7 +473,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         if(!$address) { 
             $address = $order->getAddress();
         }
-        $cost = $this->getCost($order, $address);
+        $cost = $this->getImlCost($order, $address);
         if (isset($cost['Price'])) {
             return $cost['Price'];
         } else {
@@ -550,14 +556,16 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $view->assign(array(
             'region_id_to'       => $extra['iml_region_to']['value'],       //Регион куда
             'region_id_from'     => $this->getOption('region_id_from'),     //Регион откуда
-            'service_id'         => $this->getOption('service_id'),         //Услуги этого типа доставки
-            'delivery_cost'      => $this->getDeliveryCost($order),         //Текущий объект цены доставки
+            'service_ids'        => json_encode($this->getActiveServices()),             //Услуги этогй доставки
+            'delivery_cost'      => json_encode($this->getDeliveryCost($order)),         //Текущий объект цены доставки
             'order'              => $order,                                 //Текущий недоофрмленный заказ
             'delivery'           => $delivery,                              //Текущий объект доставки
             'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
         ) + \RS\Module\Item::getResourceFolders($this)); 
 
-        return $view->fetch('%imldelivery%/delivery/widget.tpl');
+        if ($this->getOption('show_map') == 1) {
+            return $view->fetch('%imldelivery%/delivery/widget.tpl');
+        }
     }
 
     /**
@@ -572,7 +580,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $extra = $order->getExtraInfo();
         if (!isset($extra['iml_order_response'])){ // Если заказ не создан
             //Создадим заказ
-            $created_order = $this->createOrder($order,$address); 
+            $created_order = $this->createImlOrder($order,$address); 
             //Если ответа дождались, то запишем номер заказа
             if ($created_order){
                 if ($created_order['Result'] == 'OK') {

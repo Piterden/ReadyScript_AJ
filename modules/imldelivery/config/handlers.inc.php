@@ -14,6 +14,7 @@ class Handlers extends \RS\Event\HandlerAbstract
     function init()
     {
         $this
+            ->bind('orm.init.shop.order')
             ->bind('delivery.gettypes')
             ->bind('getroute')  //событие сбора маршрутов модулей
             ->bind('getmenus'); //событие сбора пунктов меню для административной панели
@@ -61,5 +62,10 @@ class Handlers extends \RS\Event\HandlerAbstract
     {        
         $list[] = new \Imldelivery\Model\DeliveryType\Iml();
         return $list;
+    }
+
+    public static function ormInitShopOrder($order)
+    {
+        
     }
 }

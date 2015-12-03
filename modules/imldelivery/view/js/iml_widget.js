@@ -1,42 +1,52 @@
-function initIML_Map(region) {
-    $('#map').empty();
+ymaps.ready().done(function() {
+    //console.log(this);
+    var $dataDiv = $('[class^="imlContainer"]');
+    ajaxRequest('getSdRegions', [], function (data) {
+        $.each(data.getSdRegions, function(index, val) {
+            $('[id^="selectRegionCombo"]').append('<option value="'+index+'">'+val+'</option>');
+        });
+    })
+    $dataDiv.each(function() {
+        var imlData = JSON.parse($(this).attr('data-iml-info'));
+        initIML_Map(imlData);
+    });
+});
+function initIML_Map(imlData) {
+    $('#map_'+imlData.deliveryId).empty();
     var myMap;
-    var url = $('#selectRegionCombo').attr('data-ajax-action');
+    if (imlData.regionIdTo == '') {
+        imlData.regionIdTo = imlData.regionIdFrom;
+    };
+    //console.log(imlData);
 
     $.ajax({
         type: 'POST',
-        url: url,
+        url: imlData.url,
         data: { 
             action: 'getSdByRegion',
-            params: {region: region}
+            params: {region: imlData.regionIdTo}
          },
         dataType: "json",
         success: function (data) {
-            var i1 = 0;
-            var arrObj = [];
+            //console.log(data);
             data = data.getSdByRegion;
-            $('#sdlist').empty();
+            $(imlData.listId).empty();
 
-            myMap = new ymaps.Map('map', {
+            myMap = new ymaps.Map('map_'+imlData.deliveryId, {
                 center: [Number(data[0].Latitude), Number(data[0].Longitude)],
                 zoom: 10
             });
-            //console.log(data);
-            $.each(data, function () {
-                inner = this;
-                arrObj[i1] = inner;
+            imlData.current_sd = data[0].RequestCode;
 
-                var paymentCardStr = "Да";
-                if (arrObj[i1].PaymentCard == 0) { paymentCardStr = "Нет"; }
-
+            $.each(data, function (i,el) {
                 // создание объекта для карты
-                var myPlacemark = new ymaps.Placemark([Number(arrObj[i1].Latitude), Number(arrObj[i1].Longitude)], {
+                var myPlacemark = new ymaps.Placemark([Number(el.Latitude), Number(el.Longitude)], {
                     iconContent: 'IML',
-                    balloonContent: '<span style="font-weight: bold">' + arrObj[i1].Name + '</span>' + '<br />' +
-                        arrObj[i1].Address + '<br />' +
-                        'Оплата картой: ' + paymentCardStr + '<br />' +
-                        'Время работы: ' + arrObj[i1].WorkMode +
-                        '<br /><button onclick="setSd(' + arrObj[i1].RequestCode + ',\'' + region + '\');return false;" >Выбрать</button>'
+                    balloonContent: '<span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
+                        el.Address + '<br />' +
+                        'Оплата картой: ' + el.PaymentCard + '<br />' +
+                        'Время работы: ' + el.WorkMode +
+                        '<br /><button onclick="setSd(' + el.RequestCode + ',\'' + imlData + '\');return false;" >Выбрать</button>'
                 }, {
                     preset: 'islands#violetStretchyIcon'
                 });
@@ -45,54 +55,39 @@ function initIML_Map(region) {
                 myMap.geoObjects.add(myPlacemark);
 
                 // создание списка пунктов самовывоза рядом с картой
-                var li_html = '<li onclick="setSd(' + arrObj[i1].RequestCode + ',\'' + region + '\');"><span style="font-weight: bold">' + arrObj[i1].Name + '</span>' + '<br />' +
-                            arrObj[i1].Address + '<br />' +
-                            'Оплата картой: ' + paymentCardStr + '<br />' +
-                            'Время работы: ' + arrObj[i1].WorkMode + '<br />' +
+                var li_html = '<li onclick="setSd(' + el.RequestCode + ',\'' + imlData + '\');"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
+                            el.Address + '<br />' +
+                            'Оплата картой: ' + el.PaymentCard + '<br />' +
+                            'Время работы: ' + el.WorkMode + '<br />' +
                     '   ---   </li>';
-                $('#sdlist').append(li_html);
+                $(imlData.listId).append(li_html);
 
-                i1++;
             });
 
-            var params = getDefaultParams(region);
-            addExtraLine(params);
+            addExtraLine(imlData);
         }
     });
     
 };
-
-function getDefaultParams (code,region) {
-    var $dataElement = $('#selectRegionCombo');
-    var params = {
-        service_id:     $dataElement.attr('data-service-id'),
-        region_id_from: $dataElement.attr('data-region-from'),
-        region_to:      region,
-        request_code:   '1'
-    };
-    return params;
-}
-
-ymaps.ready().done(function () {
-    ajaxRequest('getSdRegions', [], function (data) {
-        $.each(data.getSdRegions, function(index, val) {
-            $('#selectRegionCombo').append('<option value="'+index+'">'+val+'</option>');
-        });
-    })
-    initIML_Map('САНКТ-ПЕТЕРБУРГ');
-});
 
 function setSd (code,region) {
     var params = getDefaultParams(region);
     addExtraLine(params);
 }
 
-function addExtraLine (params) {
+function addExtraLine (imlData) {
+    console.log(imlData);
+    params = {
+        region_id_from  : imlData.regionIdFrom,
+        region_id_to    : imlData.regionIdTo,
+        service_id      : imlData.serviceId,
+        request_code    : imlData.current_sd
+    };
     ajaxRequest('addExtraLine', params, updatePrice);
 }
 
 function updatePrice () {
-    var $dataElement = $('#selectRegionCombo');
+    var $dataElement = $('[class^="imlContainer"]');
     var params = {
         service_id: $dataElement.attr('data-service-id'),
         region_id_from: $dataElement.attr('data-region-from')
@@ -115,9 +110,8 @@ function updatePriceCallback (data) {
 }
 
 function ajaxRequest (action, params, callback) {
-    var $dataElement = $('#selectRegionCombo');
-    var url = $dataElement.attr('data-ajax-action');
-    var deliveryId = $dataElement.parents('li').attr('data-delivery-id');
+    var imlData = JSON.parse($('[class^="imlContainer"]').attr('data-iml-info'));
+    var url = imlData.url;
     $.ajax({
         url: url,
         type: 'POST',
