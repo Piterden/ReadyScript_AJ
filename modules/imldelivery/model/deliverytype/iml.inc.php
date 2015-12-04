@@ -432,6 +432,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         }
 
         $cost = array();
+        //var_dump($imlData);
         foreach ($imlData['service_id'] as $code => $service) {
             $content = array(
                 'Job' => $code,                 // услуга

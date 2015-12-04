@@ -24,31 +24,44 @@
 </div>
 <script>
 jQuery(document).ready(bindHandlers);
+
+/**
+ * Начальные значения. Подгружаются через Smarty.
+ * @type {*Object*}
+ */
 var defaultData = {
-        "deliveryId"        :"{$delivery.id}", 
-        "serviceId"         :{$service_ids},
-        "selectId"          :"#selectRegionCombo_{$delivery.id}", 
-        "listId"            :"#sdlist_{$delivery.id}", 
-        "regionIdFrom"      :"{$region_id_from}", 
-        "regionIdTo"        :"{$region_id_to}", 
-        "deliveryCostJson"  :{$delivery_cost_json},
+        "delivery_id"        :"{$delivery.id}", 
+        "service_id"         :{$service_ids},
+        "select_id"          :"#selectRegionCombo_{$delivery.id}", 
+        "list_id"            :"#sdlist_{$delivery.id}", 
+        "region_id_from"      :"{$region_id_from}", 
+        "region_id_to"        :"{$region_id_to}", 
+        "delivery_cost_json"  :{$delivery_cost_json},
         "loading"           :"<div class='loading'></div>"
     },
+    /**
+     * IML коллекция
+     * @type {*Object*}
+     */
     IML = {
-        imlData                 :   defaultData,
-        initIML_Map             :   initIML_Map,
-        getSdByRegionRender   :   getSdByRegionRender,
-        setSd                   :   setSd,
-        addExtraLine            :   addExtraLine,
-        updatePrice             :   updatePrice,
-        afterUpdatePrice        :   afterUpdatePrice,
-        ajaxRequest             :   ajaxRequest,
-        bindHandlers            :   bindHandlers,
-        showMapModal            :   showMapModal,
-        loadRegions             :   loadRegions,
-        extractData             :   extractData
+        imlData : defaultData,
+        showMapModal : showMapModal,
+        initIML_Map : initIML_Map,
+        loadRegions : loadRegions,
+        extractData : extractData,
+        getSdByRegionRender : getSdByRegionRender,
+        saveDataToOrder : saveDataToOrder,
+        priceUpdateRequest : priceUpdateRequest,
+        priceUpdateRender : priceUpdateRender,
+        ajaxRequest : ajaxRequest,
+        bindHandlers : bindHandlers
     };
 
+/**
+ * Показывает модальное окно с картой
+ * @param  {*object*} data    Ответ сервера
+ * @return
+ */
 function showMapModal (data) {
     $('body > .loading').remove();
     $('#mapModal').modal('show');
@@ -60,47 +73,67 @@ function showMapModal (data) {
     //console.log($mapContainer);
 }
 
-function initIML_Map (regionIdTo) {
+/**
+ * Подгружает карту из API Ya.Maps
+ * @param  {*string*} region_id_to Код региона куда делать доставку
+ * @return
+ */
+function initIML_Map (region_id_to) {
     
-    IML.imlData.regionIdTo = regionIdTo || IML.imlData.regionIdFrom;
+    IML.imlData.region_id_to = region_id_to || IML.imlData.region_id_from;
     var imlData = IML.imlData;
 
-    $('#map_'+imlData.deliveryId).empty();
+    $('#map_'+imlData.delivery_id).empty();
     var myMap;
 
     //console.log(imlData);
     var params = {
-        region : imlData.regionIdTo
+        region : imlData.region_id_to
     }
     IML.ajaxRequest('getSdByRegion', params, IML.getSdByRegionRender);
 };
 
+/**
+ * Грузит список доступных регионов в select
+ * @return
+ */
 function loadRegions () {
     ajaxRequest('getSdRegions', [], function (data) {
-        $selectRegionList = $(IML.imlData.selectId);
+        $selectRegionList = $(IML.imlData.select_id);
         $.each(extractData(data), function(id, val) {
             $selectRegionList.append('<option value="'+id+'">'+val+'</option>');
         });
-        $selectRegionList.val(IML.imlData.regionIdTo || IML.imlData.regionIdFrom);
+        $selectRegionList.val(IML.imlData.region_id_to || IML.imlData.region_id_from);
     })
 }
 
+/**
+ * Вынимает сожержимое контейнера .additionalInfo
+ * @param  {*object*} response
+ * @return {*object*} Ответ без оберток, данные получать через Smarty
+ */
 function extractData (response) {
     var $response = $('<html />').html(response.html);
-    var dataObject = JSON.parse($response.find('#delivery_'+IML.imlData.deliveryId+' .additionalInfo').html());
+    var dataObject = JSON.parse($response.find('#delivery_'+IML.imlData.delivery_id+' .additionalInfo').html());
     return dataObject.response;
 }
 
+/**
+ * Получает пункты самовывоза в одном регионе
+ * Создает HTML карты
+ * @param  {*object*} data response
+ * @return
+ */
 function getSdByRegionRender (data) {
     var data = extractData(data);
     var imlData = IML.imlData;
-    $(imlData.listId).empty();
+    $(imlData.list_id).empty();
 
-    myMap = new ymaps.Map('map_'+imlData.deliveryId, {
+    myMap = new ymaps.Map('map_'+imlData.delivery_id, {
         center: [Number(data[0].Latitude), Number(data[0].Longitude)],
         zoom: 10
     });
-    IML.imlData.currentSd = data[0].RequestCode;
+    IML.imlData.request_code = data[0].RequestCode;
 
     $.each(data, function (i,el) {
         // создание объекта для карты
@@ -110,7 +143,7 @@ function getSdByRegionRender (data) {
                 el.Address + '<br />' +
                 'Оплата картой: ' + el.PaymentCard + '<br />' +
                 'Время работы: ' + el.WorkMode +
-                '<br /><button class="balloonSelectSd" data-code="'+el.RequestCode+'" id="bal_sd_'+imlData.deliveryId+'_'+el.RequestCode+'">Выбрать</button>'
+                '<br /><button class="balloonSelectSd" data-code="'+el.RequestCode+'" id="bal_sd_'+imlData.delivery_id+'_'+el.RequestCode+'">Выбрать</button>'
         }, {
             preset: 'islands#violetStretchyIcon'
         });
@@ -119,42 +152,30 @@ function getSdByRegionRender (data) {
         myMap.geoObjects.add(myPlacemark);
         //console.log(el);
         // создание списка пунктов самовывоза рядом с картой
-        var li_html = '<li class="selectSd" data-code="'+el.RequestCode+'" id="sd_'+imlData.deliveryId+'_'+el.RequestCode+'"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
+        var li_html = '<li class="selectSd" data-code="'+el.RequestCode+'" id="sd_'+imlData.delivery_id+'_'+el.RequestCode+'"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
                     el.Address + '<br />' +
                     'Оплата картой: ' + el.PaymentCard + '<br />' +
                     'Время работы: ' + el.WorkMode + '<br /></li>';
-        $(imlData.listId).append(li_html);
+        $(imlData.list_id).append(li_html);
     });
 
     $('.loading').remove();
     IML.bindHandlers();
-
-    //addExtraLine(imlData);
 }
 
-function setSd (imlData) {
-    var params = getDefaultParams(region);
-    addExtraLine(params);
+function saveDataToOrder () {
+    ajaxRequest('addExtraLine', IML.imlData);
 }
 
-function addExtraLine (imlData) {
-    var params = {
-        region_id_from  : imlData.regionIdFrom,
-        region_id_to    : imlData.regionIdTo,
-        service_id      : imlData.serviceId,
-        request_code    : imlData.current_sd
-    };
-    ajaxRequest('addExtraLine', params, updatePrice);
+function priceUpdateRequest () {
+    saveDataToOrder();
+    ajaxRequest('getDeliveryCostAjax', [], priceUpdateRender);
 }
 
-function updatePrice (data) {
-    ajaxRequest('getDeliveryCostAjax', [], afterUpdatePrice);
-}
-
-function afterUpdatePrice (data) {
-    console.log(imlDataArray);
+function priceUpdateRender (data) {
+    console.log(extractData(data));
     
-    //var $priceBlock = $('.price', '#delivery_'+deliveryId);
+    //var $priceBlock = $('.price', '#delivery_'+delivery_id);
     //if (Number.isInteger(data.getDeliveryCostAjax)) {
     //    $priceBlock.empty().html('<span class="help"></span>'+data.getDeliveryCostAjax);
     //} else {
@@ -165,6 +186,13 @@ function afterUpdatePrice (data) {
     //}
 }
 
+/**
+ * Стандартный контроллер AJAX
+ * @param  {*string*}   action   Имя вызываемого PHP метода. Класс - \Imldelivery\Model\DeliveryType->action()
+ * @param  {*array*|*object*}   params   Параметры, передающиеся методу
+ * @param  {*Function*} callback
+ * @return 
+ */
 function ajaxRequest (action, params, callback) {
     var imlData = IML.imlData;
     $.ajax({
@@ -183,28 +211,41 @@ function ajaxRequest (action, params, callback) {
     
 }
 
+/**
+ * Навешивает обработчики на элементы
+ * @return
+ */
 function bindHandlers () {
-    var deliveryId = IML.imlData.deliveryId;
+    var delivery_id = IML.imlData.delivery_id;
     
-    $('#showMap_'+deliveryId).unbind('click').on('click', function(e) {
+    $('#showMap_'+delivery_id).unbind('click').on('click', function(e) {
         e.preventDefault();
         $(this).addClass('passive');
         $(IML.imlData.loading).appendTo('body').clone().appendTo('.modal-body');
         IML.ajaxRequest('loadMap', [], showMapModal);
     });
     
-    $('#selectRegionCombo_'+deliveryId).unbind('change').on('change', function() {
-        var regionIdTo = $(this).children(':selected').val();
+    $('#selectRegionCombo_'+delivery_id).unbind('change').on('change', function() {
+        var region_id_to = $(this).children(':selected').val();
         $(IML.imlData.loading).appendTo('.modal-body');
-        initIML_Map(regionIdTo);
+        initIML_Map(region_id_to);
         //console.log($(this).children(':selected'));
     });
 
     $('#sdlist_{$delivery.id} .selectSd').unbind('click').on('click', function() {
         var $this = $(this);
         $this.addClass('active').siblings('.selectSd').removeClass('active');
-        IML.imlData.currentSd = $this.attr('data-code');
+        IML.imlData.request_code = $this.attr('data-code');
+        priceUpdateRequest();
     });
 
+    $('#mapModal').unbind('hide.bs.modal').on('hide.bs.modal', function(e) {
+        $this = $(this);
+        $this.find('.modal-body').empty();
+    });
+
+    $('button .submitModal').unbind('click').on('click', function(e) {
+        saveDataToOrm();
+    });
 }
 </script>
