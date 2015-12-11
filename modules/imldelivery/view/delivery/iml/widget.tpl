@@ -16,6 +16,12 @@
                 
             </div>
             <div class="modal-footer">
+                {foreach json_decode($service_ids) as $code => $name}
+                    <div class="priceItem">
+                        <div class="name">{$name}</div>
+                        <div class="priceText" data-code="{$code}"></div>
+                    </div>
+                {/foreach}
                 <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
                 <button type="button" class="btn btn-primary submitModal">Сохранить</button>
             </div>
@@ -30,13 +36,15 @@ jQuery(document).ready(bindHandlers);
  * @type {*Object*}
  */
 var defaultData = {
+        "url"               :"{$router->getUrl('shop-front-checkout', ['Act' => 'userAct'])}",
         "delivery_id"        :"{$delivery.id}", 
+        "delivery_cost_json"  :{$delivery_cost_json},
         "service_id"         :{$service_ids},
-        "select_id"          :"#selectRegionCombo_{$delivery.id}", 
-        "list_id"            :"#sdlist_{$delivery.id}", 
         "region_id_from"      :"{$region_id_from}", 
         "region_id_to"        :"{$region_id_to}", 
-        "delivery_cost_json"  :{$delivery_cost_json},
+        "currency"           :"{$currency}", 
+        "select_id"          :"#selectRegionCombo_{$delivery.id}", 
+        "list_id"            :"#sdlist_{$delivery.id}", 
         "loading"           :"<div class='loading'></div>"
     },
     /**
@@ -48,10 +56,8 @@ var defaultData = {
         showMapModal : showMapModal,
         initIML_Map : initIML_Map,
         loadRegions : loadRegions,
-        extractData : extractData,
         getSdByRegionRender : getSdByRegionRender,
         saveDataToOrder : saveDataToOrder,
-        priceUpdateRequest : priceUpdateRequest,
         priceUpdateRender : priceUpdateRender,
         ajaxRequest : ajaxRequest,
         bindHandlers : bindHandlers
@@ -65,8 +71,7 @@ var defaultData = {
 function showMapModal (data) {
     $('body > .loading').remove();
     $('#mapModal').modal('show');
-    $map = $(data.html).find('.mapContainer');
-    $('.modal-body').append($map);
+    $('.modal-body').append($(data.data));
     loadRegions();
     initIML_Map();
     //$(data.html).find('.mapContainer').appendTo('.imlContainer_{$delivery.id}');
@@ -80,11 +85,10 @@ function showMapModal (data) {
  */
 function initIML_Map (region_id_to) {
     
-    IML.imlData.region_id_to = region_id_to || IML.imlData.region_id_from;
+    IML.imlData.region_id_to = region_id_to ? region_id_to : IML.imlData.region_id_to;        
     var imlData = IML.imlData;
 
     $('#map_'+imlData.delivery_id).empty();
-    var myMap;
 
     //console.log(imlData);
     var params = {
@@ -99,23 +103,13 @@ function initIML_Map (region_id_to) {
  */
 function loadRegions () {
     ajaxRequest('getSdRegions', [], function (data) {
-        $selectRegionList = $(IML.imlData.select_id);
-        $.each(extractData(data), function(id, val) {
+        //console.log(data);
+        var $selectRegionList = $(IML.imlData.select_id);
+        $.each(data.data, function(id, val) {
             $selectRegionList.append('<option value="'+id+'">'+val+'</option>');
         });
         $selectRegionList.val(IML.imlData.region_id_to || IML.imlData.region_id_from);
     })
-}
-
-/**
- * Вынимает сожержимое контейнера .additionalInfo
- * @param  {*object*} response
- * @return {*object*} Ответ без оберток, данные получать через Smarty
- */
-function extractData (response) {
-    var $response = $('<html />').html(response.html);
-    var dataObject = JSON.parse($response.find('#delivery_'+IML.imlData.delivery_id+' .additionalInfo').html());
-    return dataObject.response;
 }
 
 /**
@@ -125,8 +119,10 @@ function extractData (response) {
  * @return
  */
 function getSdByRegionRender (data) {
-    var data = extractData(data);
+    data = data.data;
     var imlData = IML.imlData;
+    console.log(imlData);
+    //var myMap;
     $(imlData.list_id).empty();
 
     myMap = new ymaps.Map('map_'+imlData.delivery_id, {
@@ -134,9 +130,12 @@ function getSdByRegionRender (data) {
         zoom: 10
     });
     IML.imlData.request_code = data[0].RequestCode;
+    IML.imlData.sd_object = data[0];
+    IML.imlData.sd_list = {};
 
     $.each(data, function (i,el) {
         // создание объекта для карты
+        IML.imlData.sd_list[el.RequestCode] = el;
         var myPlacemark = new ymaps.Placemark([Number(el.Latitude), Number(el.Longitude)], {
             iconContent: 'IML',
             balloonContent: '<span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
@@ -151,8 +150,9 @@ function getSdByRegionRender (data) {
         // добавление объекта на карту
         myMap.geoObjects.add(myPlacemark);
         //console.log(el);
+        var active = (i==0) ? ' active' : '';
         // создание списка пунктов самовывоза рядом с картой
-        var li_html = '<li class="selectSd" data-code="'+el.RequestCode+'" id="sd_'+imlData.delivery_id+'_'+el.RequestCode+'"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
+        var li_html = '<li class="selectSd'+active+'" data-code="'+el.RequestCode+'" id="sd_'+imlData.delivery_id+'_'+el.RequestCode+'"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
                     el.Address + '<br />' +
                     'Оплата картой: ' + el.PaymentCard + '<br />' +
                     'Время работы: ' + el.WorkMode + '<br /></li>';
@@ -160,30 +160,39 @@ function getSdByRegionRender (data) {
     });
 
     $('.loading').remove();
+    saveDataToOrder()
     IML.bindHandlers();
 }
 
 function saveDataToOrder () {
-    ajaxRequest('addExtraLine', IML.imlData);
-}
-
-function priceUpdateRequest () {
-    saveDataToOrder();
-    ajaxRequest('getDeliveryCostAjax', [], priceUpdateRender);
+    var params = {
+        service_id      : IML.imlData.service_id,
+        region_id_from  : IML.imlData.region_id_from,
+        region_id_to    : IML.imlData.region_id_to,
+        request_code    : IML.imlData.request_code
+    }
+    ajaxRequest('updateExtraData', params, function(data) {
+        if (data.success) {
+            ajaxRequest('getDeliveryCostAjax', [], priceUpdateRender);
+        };
+    });
 }
 
 function priceUpdateRender (data) {
-    console.log(extractData(data));
-    
-    //var $priceBlock = $('.price', '#delivery_'+delivery_id);
-    //if (Number.isInteger(data.getDeliveryCostAjax)) {
-    //    $priceBlock.empty().html('<span class="help"></span>'+data.getDeliveryCostAjax);
-    //} else {
-    //    var error = data.getDeliveryCostAjax;
-    //    $.each(error, function(index, val) {
-    //        $priceBlock.empty().html('<strong>'+val.Code+'</strong><span class="text-error">'+val.Mess+'</span>');
-    //    });
-    //}
+    $.each(data.data, function(i,v) {
+        var $priceBlock = $('.priceText[data-code="'+i+'"]', $('#delivery_'+IML.imlData.delivery_id));
+        console.log(i,v);
+        if (v.Price) {
+            $priceBlock.text(v.Price);
+        } else if (v.Code && v.Mess) {
+            $priceBlock.attr({
+                dataErrorCode: v.Code,
+                dataErrorMess: v.Mess
+            }).text('Прайс лист отсутствует');
+        } else {
+            $priceBlock.text('Неизвестная ошибка!');
+        }
+    });
 }
 
 /**
@@ -196,19 +205,19 @@ function priceUpdateRender (data) {
 function ajaxRequest (action, params, callback) {
     var imlData = IML.imlData;
     $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        data: {
-            action: action,
-            params: params
-        }
-    })
-    .done(callback)
-    .fail(function() {
-    })
-    .always(function() {
+        url  : imlData.url,
+        type : 'POST',    
+        dataType : 'json',    
+        data : {
+            module  : 'Imldelivery',
+            typeObj : 0, //Доставка
+            typeId  : imlData.delivery_id,
+            'class' : 'Iml',
+            userAct : action,
+            params  : params
+        },
+        success : callback
     });
-    
 }
 
 /**
@@ -225,18 +234,20 @@ function bindHandlers () {
         IML.ajaxRequest('loadMap', [], showMapModal);
     });
     
-    $('#selectRegionCombo_'+delivery_id).unbind('change').on('change', function() {
+    $(IML.imlData.select_id).unbind('change').on('change', function() {
         var region_id_to = $(this).children(':selected').val();
         $(IML.imlData.loading).appendTo('.modal-body');
         initIML_Map(region_id_to);
-        //console.log($(this).children(':selected'));
     });
 
-    $('#sdlist_{$delivery.id} .selectSd').unbind('click').on('click', function() {
-        var $this = $(this);
+    $(IML.imlData.list_id+' .selectSd').unbind('click').on('click', function() {
+        var $this = $(this),
+            code = $this.attr('data-code');
         $this.addClass('active').siblings('.selectSd').removeClass('active');
-        IML.imlData.request_code = $this.attr('data-code');
-        priceUpdateRequest();
+        IML.imlData.request_code = code;
+        IML.imlData.sd_object = IML.imlData.sd_list[code];
+        console.log(IML.imlData);
+        saveDataToOrder();
     });
 
     $('#mapModal').unbind('hide.bs.modal').on('hide.bs.modal', function(e) {

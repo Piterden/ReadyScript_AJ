@@ -40,4 +40,13 @@
     <div class="buttons">
         <input type="submit" value="Далее">
     </div>
+    <!-- <div class="col-sm-24">
+        {$order_extra|@print_r}
+        {foreach $order->getProperties()->getValues() as $key => $value}
+            <div class="row">
+                <div class="col-sm-6">{$key}</div>
+                <div class="col-sm-18">{$value}</div>
+            </div>
+        {/foreach}
+    </div> -->
 </form>

@@ -64,8 +64,13 @@ a {
 a:hover, a:focus {
     text-decoration: none;
 }
+input, select {
+    padding: 4px 10px 7px;
+    border: 2px solid #ebebeb;
+    background: transparent;
+}
 input.has-error {
-    border: 1px solid #e91b25;
+    border-color: #e91b25;
 }
 .formFieldError, .error {
     color: #e91b25;
@@ -873,184 +878,29 @@ ul.topMenu {
     position: relative;
     margin: 0;
 }
-.sliders-wrap .inner-border {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    border: 40px solid rgba(0, 0, 0, 0.3);
-    z-index: 1;
-}
 .sliders-wrap-inner {
     padding: 0;
 }
-.slider-nav-wrap {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 2;
-    margin-top: -16px;
-    margin-left: -16px;
-    width: 32px;
-    height: 32px;
-    background-color: #e91b25;
+.carousel-indicators {
+    bottom: 0;
+    right: 0;
+    left: initial;
+    text-align: right;
+    padding-right: 14px;
 }
-.cornered-border {
-    border-bottom-right-radius: 8px;
-    border-top-left-radius: 8px;
+.carousel-indicators li {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 4px;
+    background-color: #fff;
 }
-.slider-nav-wrap:before {
-    content: '';
-    border: 2px solid #fff;
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    border-top-left-radius: 7px;
-    border-bottom-right-radius: 7px;
-}
-.slider-nav-wrap a {
-    font-size: 34px;
-    color: #fff;
-    position: absolute;
-    top: -2px;
-    left: 5.5px;
-}
-.link-wrap {
-    background-color: rgba(51, 51, 51, 0.4);
-    position: absolute;
-    top: 305px;
-    z-index: 3;
-    height: 80px;
-    width: 270px;
-    border: 6px solid rgba(255, 255, 255, 0.5);
-    -webkit-transition: all 0.4s ease-out;
-    -o-transition: all 0.4s ease-out;
-    transition: all 0.4s ease-out;
-}
-.link-wrap:hover {
-    background-color: rgba(51, 51, 51, 0.8);
-    border: 6px solid rgba(255, 255, 255, 0.8);
-}
-.link-wrap.man {
-    margin-left: -135px;
-    left: 25%;
-}
-.link-wrap.woman {
-    right: 25%;
-    margin-right: -135px;
-}
-.link-wrap .link {
-    position: relative;
-    display: block;
-    margin-top: 19px;
-    left: 50%;
-    margin-left: -50%;
-    height: 64px;
-    width: 258px;
-    text-align: center;
-    text-decoration: none;
-}
-.link-wrap .title {
-    display: block;
-    margin: 0;
-    padding: 0;
-    color: #fff;
-}
-.lookAtAll {
-    background-color: #e91b25;
-    position: relative;
-    display: block;
-    margin: 8px auto 0;
-    padding-top: 1px;
-    width: 150px;
-    height: 32px;
-    font-size: 16px;
-    color: #fff;
-}
-.lookAtAll:before {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    width: 148px;
-    height: 30px;
-    border: 2px solid #fff;
-    border-bottom-right-radius: 8px;
-    border-top-left-radius: 8px;
-}
-
-.slider1-wrap {
-    width: 50%;
-    float: left;
-}
-.slider2-wrap {
-    width: 50%;
-    float: left;
-}
-.vertical .carousel-inner {
-    height: 100%;
-}
-.carousel.vertical .item {
-    -webkit-transition: 0.6s ease-out top;
-    -moz-transition: 0.6s ease-out top;
-    -ms-transition: 0.6s ease-out top;
-    -o-transition: 0.6s ease-out top;
-    transition: 0.6s ease-out top;
-}
-.carousel.vertical .active {
-    top: 0;
-}
-.carousel.vertical .next {
-    top: 680px;
-}
-#slider2.carousel.vertical .next {
-    top: -680px;
-}
-.carousel.vertical .prev {
-    top: -680px;
-}
-#slider2.carousel.vertical .prev {
-    top: 680px;
-}
-.carousel.vertical .next.left,
-.carousel.vertical .prev.right {
-    top: 0;
-}
-#slider2.carousel.vertical .next.left,
-#slider2.carousel.vertical .prev.right {
-    top: 0;
-}
-.carousel.vertical .active.left {
-    top: -680px;
-    left: 100%;
-}
-#slider2.carousel.vertical .active.left {
-    top: 680px;
-    left: 100%;
-}
-@-moz-document url-prefix() {
-    .carousel.vertical .active.left {
-        top: -680px;
-        left: 0;
-    }
-    #slider2.carousel.vertical .active.left {
-        top: 680px;
-        left: 0;
-    }
-}
-.carousel.vertical .active.right {
-    top: 680px;
-    left: -100%;
-}
-#slider2.carousel.vertical .active.right {
-    top: -680px;
-    left: -100%;
-}
-.carousel.vertical .item {
-    left: 0;
+.carousel-indicators li.active {
+    margin-left: 3px;
+    width: 14px;
+    height: 14px;
+    background-color: #EC2028;
+    border-color: #EC2028;
 }
 
 /* Top products */
@@ -1266,13 +1116,14 @@ ul.topMenu {
 }
 .lastNews .newBlk {
     position: relative;
-    height: 240px;
+    height: 239px;
     margin-bottom: 30px;    
 }
 .lastNews .newWrap {
     background-color: #EDEDED;
     width: 100%;
     height: 100%;
+    padding-bottom: 15px;
     border: 6px solid #B2B2B2;
     border-top-left-radius: 16px;
     border-bottom-right-radius: 16px;
@@ -1321,12 +1172,14 @@ ul.topMenu {
 }
 .lastNews .titleBlock .intro {
     margin: 10px 0 0 25px;
+    font-size: 12px;
+    line-height: 1.5;
 }
 .lastNews .imageBlock {
     position: absolute;
     width: 52%;
     height: 228px;
-    right: 21px;
+    right: 20px;
     text-align: right;
     overflow: hidden;
 }
@@ -1337,7 +1190,7 @@ ul.topMenu {
     position: absolute;
     top: 0;
     right: 0;
-    border-bottom-right-radius: 9px;
+    border-bottom-right-radius: 10px;
 }
 .lastNews .more {
 
@@ -1421,7 +1274,7 @@ ul.topMenu {
 .article img {
     margin-top: -1px;
 }
-.article .title {
+.title {
     width: 100%;
     top: 0;
     z-index: 12;
@@ -1434,12 +1287,12 @@ ul.topMenu {
 .article .title .dateBlock {
     
 }
-.article .title h1 {
+.title h1 {
     font-size: 36px;
     margin-top: 40px;
     line-height: 1.2;
 }
-.article .title.onImage h1 {
+.title.onImage h1 {
     color: #fff;
     margin-top: 60px;
 }
@@ -1643,6 +1496,9 @@ ul.topMenu {
 
 .filters .filter {
     margin-bottom:30px;
+}
+.filters .filter.bool {
+    text-align: center;
 }
 
 .filters .buttons {
@@ -2781,12 +2637,119 @@ label[for="changePass"] {
 
 /* Checkout */
 
-ul.checkoutSteps {
-    float: right;
+.checkout .title h1 {
+    margin-top: 22px;
 }
-ul.checkoutSteps li {
+.checkoutSteps {
+    margin: 10px 0;
+}
+.checkoutSteps li {
     display: inline-block;
-    margin-left: 30px;
+}
+.checkoutSteps .item {
+    display: block;
+    height: 100px;
+    line-height: 13.5;
+    opacity: .4;
+    margin: 0 25px;
+}
+.checkoutSteps .current .item, .checkoutSteps .already .item{
+    opacity: 1;
+}
+.checkoutSteps .item .text {
+    position: relative;
+}
+.checkoutSteps .item i {
+    position: absolute;
+    bottom: 6px;
+    left: -30px;
+}
+.step_address .item {
+    background: url('../img/step_address.png') no-repeat scroll center center transparent;
+}
+.step_delivery .item {
+    background: url('../img/step_delivery.png') no-repeat scroll center center transparent;
+}
+.step_payment .item {
+    background: url('../img/step_payment.png') no-repeat scroll center center transparent;
+}
+.step_confirm .item {
+    background: url('../img/step_confirm.png') no-repeat scroll center center transparent;
+}
+.checkoutSteps .item .text {
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+}
+.checkout .titleWrap {
+    margin-top: 0;
+}
+.changeUser {
+    margin: 0;
+}
+.changeUser .link {
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+.themeTable {
+    width: 100%;
+}
+.themeTable .tableRow > div {
+    display: inline-block;
+    vertical-align: top;
+}
+.themeTable .key {
+    width: 20%;
+    text-align: right;
+    font-weight: bold;
+    padding: 8px 2px;
+}
+.themeTable .value {
+    width: 79%;
+    padding: 2px 12px 10px 6px;
+}
+.themeTable .value input[type="text"],
+.themeTable .value input[type="password"],
+.themeTable .value select {
+    width: 100%;
+}
+.themeTable .value input[type="checkbox"] {
+    margin-top: 9px;
+}
+.themeTable .value.phone {
+    width: 26%;
+}
+.themeTable .key.e_mail {
+    width: 9%;
+}
+.themeTable .value.e_mail {
+    width: 42.8%;
+}
+.lastAddress .key {
+    padding: 1px 5px;
+}
+.lastAddress .value {
+    width: 73%;
+}
+.lastAddress .value label {
+    margin: 0;
+}
+.lastAddress .delete {
+    width: 5%;
+    padding: 2px 5px;
+}
+.themeTable .value.district {
+    width: 49%;
+}
+.themeTable .key.index {
+    width: 11%;
+}
+.themeTable .value.index {
+    width: 17.8%;
+}
+.themeTable .value.inputPass, .themeTable .value.repeatPass {
+    width: 28.8%;
 }
 
 /* IML Map */
@@ -2806,14 +2769,14 @@ ul.checkoutSteps li {
 }
 .selectRegion {
     position: absolute;
-    top: -38px;
-    left: 20px;
+    top: -46px;
+    left: 10px;
 }
 .close {
     font-size: 30px;
 }
 .modal-body {
-    padding: 0 20px;
+    padding: 0;
 }
 .modal-header .close {
     margin-top: -4px;
@@ -2821,8 +2784,27 @@ ul.checkoutSteps li {
 .modal-title {
     margin: 4px 0 -4px 0;
 }
+.modal-footer .btn {
+    margin-top: 40px;
+}
 .modal-footer .btn+.btn {
     margin-left: 15px;
+}
+.priceItem {
+    text-align: left;
+    margin-bottom: 4px;
+    float: left;
+}
+.priceItem > div {
+    display: inline-block;
+}
+.priceItem .name {
+    font-size: 16px;
+    width: 400px;
+}
+.priceItem .priceText {
+    text-align: right;
+    width: 195px;
 }
 
 /* Footer */

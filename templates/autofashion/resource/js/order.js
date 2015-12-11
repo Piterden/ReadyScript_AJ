@@ -19,13 +19,25 @@ $(function() {
                 $('#region-input').show();
                 $('#region-select').hide();
             }
-            
-            
         });
     });
 
+    $('#sd_region').on('change', function() {
+        var name = $(this).children(':selected').text();
+        $('#sd_region_name').val(name);
+    });
+
     $('input[name="use_addr"]').click(function() {
-        $('.newAddress').toggle( this.value == '0' );
+        if (this.value == '0') {
+            $('.newAddress').removeClass('hide');
+            $('.sdAddress').addClass('hide');
+        } else if (this.value == '-1') {
+            $('.sdAddress').removeClass('hide');
+            $('.newAddress').addClass('hide');
+        } else {
+            $('.newAddress').addClass('hide');
+            $('.sdAddress').addClass('hide');
+        }
     });
     
     $('.userType input').click(function() {
@@ -35,14 +47,27 @@ $(function() {
 
     $('input[name="reg_autologin"]').change(function() {
         $('#manual-login').toggle(!this.checked);
-    });       
-    
+    });
+
+    $('.toggleView').on('click', function(e) {
+        e.preventDefault();
+        var id = $(this).attr('id');
+        if (id == 'hasAccount') {
+            $('[name="user_type"]').removeAttr('checked').filter('#type-account').click();
+            $('#doAuth').attr('disabled', false);
+        } else if (id == 'contactData') {
+            $('[name="user_type"]').removeAttr('checked').filter('#type-user').click();
+            $('#doAuth').attr('disabled', true);
+        }
+        $(this).closest('.row').addClass('hide');
+        $('.'+id).removeClass('hide');
+    });      
     
     /**
     * Отработка удаления адреса доставки на странице оформления заказа
     */
     $(".lastAddress .deleteAddress").on('click', function(){
-        var parent = $(this).closest('span');
+        var parent = $(this).closest('.tableRow');
         parent.css('opacity', '0.5');
         $.get($(this).attr('href') ? $(this).attr('href') : $(this).data('href'), function( response ) {
             parent.css('opacity', '1');

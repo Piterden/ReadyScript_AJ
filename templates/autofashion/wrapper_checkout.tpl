@@ -62,19 +62,26 @@
                     {moduleinsert name="\Catalog\Controller\Block\Category" indexTemplate="blocks/category/category.tpl"}
                 </div>
             </div>
-            <div class="col-md-12">
-                {* Шаги оформления заказа *}
-                {moduleinsert name="\Shop\Controller\Block\CheckoutStep"}
-            </div>
         </div>
     </div>
     <div class="viewport mainContent">
         <div class="container">
-            <div class="row">
-                <div class="col-md-16 col-md-offset-4">
-                    {* Главное содержимое страницы *}
-                    {$app->blocks->getMainContent()}
+            <div class="title text-center">
+                <h1>Оформление заказа</h1>
+            </div>
+            <div class="row checkoutStepsWrap">
+                <div class="col-md-24 text-center">
+                    {* Шаги оформления заказа *}
+                    {moduleinsert name="\Shop\Controller\Block\CheckoutStep"}
                 </div>
+            </div>
+            {* Главное содержимое страницы *}
+            {$app->blocks->getMainContent()}
+            <div class="row">
+                <div class="titleWrap col-md-24 text-center">
+                    <h3>Ваш заказ</h3>
+                </div>
+                {moduleinsert name="\Shop\Controller\Block\Cartlist" indexTemplate="blocks/cart/checkout_cart.tpl"}
             </div>
         </div>
         <div class="preFooter">

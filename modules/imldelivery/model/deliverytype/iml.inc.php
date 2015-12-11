@@ -189,7 +189,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * 
      * @return array 
      */
-    function getSelfDeliveryList()
+    static function getSelfDeliveryList()
     {
         $iml = new Iml;
         $list = $iml->getApiRequest(self::URL_HELP_SD, self::API_LOGIN, self::API_PASS);
@@ -201,7 +201,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * 
      * @return array [code] => [name]
      */
-    public function getSdRegions()
+    static function getSdRegions(\Shop\Model\Orm\Order $order, $delivery_id = null, $params = array())
     {
         $iml = new Iml;
         $arr = array();
@@ -219,7 +219,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param  string $params код региона из справочника
      * @return array 
      */
-    public function getSdByRegion($params)
+    static function getSdByRegion(\Shop\Model\Orm\Order $order, $delivery_id = null, $params = array())
     {
         $iml = new Iml;
         $arr = array();
@@ -238,8 +238,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $services = $this->getOption('service_id');
         $servicesList = self::staticGetServices();
         $arr = array();
-        foreach ($services as $service) {
-            $arr[$service] = $servicesList[$service];
+        if (is_array($services)) {
+            foreach ($services as $service) {
+                $arr[$service] = $servicesList[$service];
+            }
         }
         return $arr;
     }
@@ -249,11 +251,14 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * 
      * @param array $params 
      */
-    public function addExtraLine(array $params)
+    static function updateExtraData(\Shop\Model\Orm\Order $order, $delivery_id, $params)
     {
-        $order = \Shop\Model\Orm\Order::currentOrder();
-        $order->addExtraInfoLine('Данные IML','',$params,'iml_data');
-        return $order->getExtraInfo();
+        $extra = $order['order_extra'];
+        foreach ($params as $key => $value) {
+            $extra['delivery'][$key] = $value;
+        }
+        
+        return $order['order_extra'] = array_merge($order['order_extra'], $extra);
     }
 
     /**
@@ -425,13 +430,14 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      */
     function getImlCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
     {
-        $extra = $order->getExtraInfo();
-        $imlData = $extra['iml_data']['data'];
+        $order_extra = $order['order_extra'];
+        //return $order['order_extra']['address'];
+        $imlData = $order_extra['delivery'];
+        $cost = array();
         if (!$imlData) {
             return false;
         }
 
-        $cost = array();
         //var_dump($imlData);
         foreach ($imlData['service_id'] as $code => $service) {
             $content = array(
@@ -442,7 +448,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'Weigth' => $order->getWeight() ? $order->getWeight() : '1',// вес(кг)
                 'SpecialCode' => $imlData['request_code']        // код пункта самовывоза(см. справочник пунктов самовывоза)
             );
-            $cost[$code] = $this->postApiRequest(self::URL_API_GETPRICE, self::API_LOGIN, self::API_PASS, $content);
+            $cost[$code] = self::postApiRequest(self::URL_API_GETPRICE, self::API_LOGIN, self::API_PASS, $content);
         }
         return $cost;
     }
@@ -453,11 +459,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param  array $params 
      * @return string|number
      */
-    public function getDeliveryCostAjax($params)
+    static function getDeliveryCostAjax(\Shop\Model\Orm\Order $order, $delivery_id, $params)
     {
-        $order = \Shop\Model\Orm\Order::currentOrder();
         $address = $order->getAddress();
-        return $this->getImlCost($order, $address);
+        return self::getImlCost($order, $address);
         //return $order->getExtraInfo();
     }
 
@@ -474,10 +479,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             $address = $order->getAddress();
         }
         $cost = $this->getImlCost($order, $address);
-        if (!$cost) {
+        if (!is_array($cost)) {
             return -1;
         }
-
+        //return 0;
         reset($cost);
         $first_key = key($cost);
 
@@ -555,7 +560,6 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         foreach ($incomingData as $data) {
             $arr[$data['Code']] = $data['Description'];
         }
-
         return $arr;
     }
 
@@ -566,52 +570,51 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     */
     function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
     {
-        //return var_dump($this);
-        $request = \RS\Http\Request::commonInstance();
         if (!$order) {
             $order = \Shop\Model\Orm\Order::currentOrder();
         }
-        $extra = $order->getExtraInfo();
-        $imlData = $extra['iml_data']['data'];
+        $extra = $order['order_extra'];
 
         $view = new \RS\View\Engine();
         $view->assign(array(
-            'region_id_to'       => $imlData['region_id_to'],       //Регион куда
-            'region_id_from'     => $this->getOption('region_id_from'),     //Регион откуда
-            'service_ids'        => json_encode($this->getActiveServices()),             //Услуги этогй доставки
-            'delivery_cost_json' => json_encode($this->getImlCost($order)),         //Текущий объект цены доставки
-            'delivery_cost'      => $this->getImlCost($order),         //Текущий объект цены доставки
-            'order'              => $order,                                 //Текущий недоофрмленный заказ
-            'delivery'           => $delivery,                              //Текущий объект доставки
-            'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
+            'region_id_to'       => $extra['address']['region_id_to'] ? $extra['address']['region_id_to'] : $this->getOption('region_id_from'),       //Регион куда
+            'region_id_from'     => $this->getOption('region_id_from'),         //Регион откуда
+            'service_ids'        => json_encode($this->getActiveServices()),    //Услуги этогй доставки
+            'delivery_cost_json' => json_encode($this->getImlCost($order)),     //Текущий объект цены доставки
+            'delivery_cost'      => $this->getImlCost($order),                  //Текущий объект цены доставки
+            'order'              => $order,                                     //Текущий недоофрмленный заказ
+            'currency'           => json_encode($order->getMyCurrency()),       //Текущий объект валюты
+            'delivery'           => $delivery,                                  //Текущий объект доставки
+            'user'               => \RS\Application\Auth::getCurrentUser(),     //Текущий объект пользователя
         ) + \RS\Module\Item::getResourceFolders($this)); 
-
-        if ($request->isAjax() && $this->getOption('show_map') == 1) {
-            $action = $request->request('action', TYPE_STRING, '');
-            $params = $request->request('params', TYPE_ARRAY, '');
-
-            switch ($action) {
-
-                case 'loadMap':
-                    return $view->fetch('%imldelivery%/delivery/iml/map.tpl');;
-                    break;
-
-                default:
-                    $output = $this->$action($params);
-                    $view->assign(array(
-                        'output' => json_encode($output),
-                        'action' => $action
-                    ));
-                    return $view->fetch('%imldelivery%/delivery/iml/ajax_data.tpl');
-                    break;
-
-            }
-        }
 
         if ($this->getOption('show_map') == 1) {
             return $view->fetch('%imldelivery%/delivery/iml/widget.tpl');
         }
         
+    }
+
+    static function loadMap(\Shop\Model\Orm\Order $order, $delivery_id, $params)
+    {
+        //return print_r($order->getDelivery()->getTypeObject());
+        $order_extra = $order['order_extra'];
+        $order['delivery'] = $delivery_id;
+        $delivery = $order->getDelivery();
+        $delivery_type = new Iml;
+
+        $view = new \RS\View\Engine();
+        $view->assign(array(
+            'region_id_to'       => $order_extra['address']['region_id_to'],       //Регион куда
+            'service_ids'        => json_encode($delivery_type->getActiveServices()),             //Услуги этой доставки
+            'delivery_cost_json' => json_encode($delivery_type->getImlCost($order)),         //Текущий объект цены доставки
+            'delivery_cost'      => $delivery_type->getImlCost($order),         //Текущий объект цены доставки
+            'order'              => $order,                                 //Текущий недоофрмленный заказ
+            'delivery'           => $delivery,                              //Текущий объект доставки
+            'delivery_type'      => $delivery_type,                              //Текущий объект типа доставки
+            'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
+        ) + \RS\Module\Item::getResourceFolders($delivery_type));
+
+        return $view->fetch('%imldelivery%/delivery/iml/map.tpl');
     }
 
     /**

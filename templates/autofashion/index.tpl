@@ -3,7 +3,7 @@
 <div class="container main"> 
 
 	{* Баннеры *}
-	{moduleinsert name="\Banners\Controller\Block\Slider"}
+	{moduleinsert name="\Banners\Controller\Block\Slider" zone="home_slider"}
 
 	<div class="row specBlock">
 		{moduleinsert name="\Catalog\Controller\Block\TopProducts" indexTemplate='blocks/topproducts/top_products.tpl' pageSize='4' dirs='9' order='dateof'}

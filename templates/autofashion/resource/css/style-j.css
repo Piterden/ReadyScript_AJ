@@ -1,0 +1,26 @@
+footer .social a {
+	margin-right: 4px;
+	opacity: .7;
+	-webkit-transition: opacity .4s ease-out;
+		 -o-transition: opacity .4s ease-out;
+			transition: opacity .4s ease-out;
+}
+footer .social a:hover {
+	opacity: 1;
+}
+.footerFriendLinks .link {
+	margin-top: 20px;
+	opacity: .6;
+	-webkit-transition: all .4s ease-out;
+		 -o-transition: all .4s ease-out;
+			transition: all .4s ease-out;
+	-webkit-filter: grayscale(1);
+		 -o-filter: grayscale(1);
+			filter: grayscale(1);
+}
+.footerFriendLinks .link:hover {
+	opacity: 1;
+	-webkit-filter: grayscale(0);
+		 -o-filter: grayscale(0);
+			filter: grayscale(0);
+}

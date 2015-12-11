@@ -140,10 +140,18 @@
                             <div class="email"><a href="mailto:marketing@auto-jack.com">marketing@auto-jack.com</a></div>
                         </div>
                         <div class="social">
-                            <a href="#"><img src="{$THEME_IMG}/footer-icon-vkontakte.png" alt="AutoJack VK"></a>
-                            <a href="#"><img src="{$THEME_IMG}/footer-icon-facebook.png" alt="AutoJack FB"></a>
-                            <a href="#"><img src="{$THEME_IMG}/footer-icon-instagram.png" alt="AutoJack IG"></a>
-                            <a href="#"><img src="{$THEME_IMG}/footer-icon-youtube.png" alt="AutoJack YT"></a>
+                            <a href="http://vk.com/autojack" target="_blank">
+                                <img src="{$THEME_IMG}/footer-icon-vkontakte.png" height="33" width="33" alt="Группа AutoJack и LimoLady в Vkontakte">
+                                <img class="hover" src="{$THEME_IMG}/footer-icon-vkontakte-hover.png" height="33" width="33" alt="Группа AutoJack и LimoLady в Vkontakte">
+                            </a>
+                            <a href="http://www.facebook.com/autojack.official" target="_blank">
+                                <img src="{$THEME_IMG}/footer-icon-facebook.png" height="33" width="33" alt="Группа AutoJack и LimoLady в FaceBook">
+                                <img class="hover" src="{$THEME_IMG}/footer-icon-facebook-hover.png" height="33" width="33" alt="Группа AutoJack и LimoLady в FaceBook">
+                            </a>
+                            <a href="http://www.youtube.com/user/autojackandlimolady" target="_blank">
+                                <img src="{$THEME_IMG}/footer-icon-youtube.png" height="33" width="33" alt="Канал AutoJack и LimoLady на YouTube">
+                                <img class="hover" src="{$THEME_IMG}/footer-icon-youtube-hover.png" height="33" width="33" alt="Канал AutoJack и LimoLady на YouTube">
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -195,6 +195,23 @@
                     }
                 });
 
+                $('.yesno').selectOrDie({
+                    onChange: function() {
+                        var $this = $(this);
+                        if ($this.val() != '') {
+                            $this.parent().addClass('selected');
+                        } else {
+                            $this.parent().removeClass('selected');
+                        }; 
+                    }
+                });
+                $('.sod_select').each(function() {
+                    var $this = $(this);
+                    if ($this.find(':selected').val() != '') {
+                        $this.addClass('selected');
+                    };
+                });
+
                 $('.cleanFilter').bind('click', function() {
                     $('.multiselectItem').removeClass('active');
                 });
