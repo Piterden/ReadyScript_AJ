@@ -432,7 +432,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     {
         $order_extra = $order['order_extra'];
         //return $order['order_extra']['address'];
-        $imlData = $order_extra['delivery'];
+        $imlData = isset($order_extra['delivery']) ? $order_extra['delivery'] : null;
         $cost = array();
         if (!$imlData) {
             return false;
@@ -479,21 +479,13 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             $address = $order->getAddress();
         }
         $cost = $this->getImlCost($order, $address);
-        if (!is_array($cost)) {
-            return -1;
+        if (!is_array($cost)) return -1;
+        $cost_arr = array();
+        foreach ($cost as $code => $obj) {
+            $cost_arr[] = isset($obj['Price']) ? $obj['Price'] : null;
         }
-        //return 0;
-        reset($cost);
-        $first_key = key($cost);
 
-        if (isset($cost[$first_key]['Price'])) {
-            return $cost[$first_key]['Price'];
-        } else {
-            foreach ($cost[$first_key] as $error) {
-                //$this->addError(t('Ошибка '.$error.'. '.$error));
-            }
-            return $cost[$first_key];
-        }
+        return max($cost_arr) || 0;
     }
 
     function getDeliveryCostText(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)

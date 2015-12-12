@@ -77,12 +77,7 @@
             </div>
             {* Главное содержимое страницы *}
             {$app->blocks->getMainContent()}
-            <div class="row">
-                <div class="titleWrap col-md-24 text-center">
-                    <h3>Ваш заказ</h3>
-                </div>
-                {moduleinsert name="\Shop\Controller\Block\Cartlist" indexTemplate="blocks/cart/checkout_cart.tpl"}
-            </div>
+            {moduleinsert name="\Shop\Controller\Block\Cartlist" indexTemplate="blocks/cart/checkout_cart.tpl"}
         </div>
         <div class="preFooter">
             <div class="container">

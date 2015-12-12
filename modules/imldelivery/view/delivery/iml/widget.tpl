@@ -1,8 +1,7 @@
 {addjs file="http://api-maps.yandex.ru/2.1/?lang=ru_RU" basepath="root"}
-{*addjs file="http://css-spinners.com/css/spinner/hexdots.css" basepath="root"*}
 
 <div class="imlContainer_{$delivery.id}">
-    <button id="showMap_{$delivery.id}" class="btn btn-primary btn-md">Показать карту</button>
+    <button id="showMap_{$delivery.id}" class="btn btn-primary show-map">Выбрать пункт самовывоза</button>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel">

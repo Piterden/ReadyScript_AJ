@@ -299,17 +299,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-sm-offset-5 sdAddress{if $order.use_addr != -1} hide{/if}">
+            <div class="col-sm-12 col-sm-offset-5 additional{if $order.use_addr != -1} hide{/if}">
                 <div class="themeTable">
-                    <div class="tableRow">
-                        <div class="key">
-                            <label class="fieldName">Контактное лицо</label>
-                        </div>
-                        <div class="value">
-                            {$order->getPropertyView('contact_person')}
-                            <p class="help">Лицо, которое встретит доставку. Например: Иван Иванович Пуговкин</p>
-                        </div>
-                    </div>
                     {if $order.__code->isEnabled()}
                     <div class="tableRow captcha">
                         <div class="key">
@@ -347,7 +338,7 @@
         </div>
         <div class="row">
             <div class="buttons col-sm-24 text-center">
-                <input type="submit" class="button" value="Далее">
+                <button type="submit" class="button cornered">Далее</button>
             </div>
         </div>
     </div>

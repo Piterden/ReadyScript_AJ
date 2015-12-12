@@ -163,39 +163,30 @@
     </div>
 {else}
     <div class="cartPage" id="cartItems">
-        <h1>
-            <span class="caption">Корзина</span>
-            {if !empty($cart_data.items)}
-            <a href="{$router->getUrl('shop-front-cartpage', ["Act" => "cleanCart"])}" class="clearCart">Очистить корзину</a>
-            {/if}
-        </h1>
+        <div class="title text-center">
+            <h1>Корзина</h1>
+        </div>
         {if !empty($cart_data.items)}
+        <a href="{$router->getUrl('shop-front-cartpage', ["Act" => "cleanCart"])}" class="clearCart">Очистить корзину</a>
         <form method="POST" action="{$router->getUrl('shop-front-cartpage', ["Act" => "update"])}" id="cartForm" class="formStyle">
             <input type="submit" class="hidden">
             <div class="scrollCartWrap">
-            <table class="cartTablePage cartTable">
-                <thead>
-                    <tr>
-                        <td colspan="2">Товар</td>
-                        <td>Количество</td>
-                        <td>Цена</td>
-                        <td></td>
-                    </tr>
-                </thead>            
-                <tbody>
                 {foreach $cart_data.items as $index => $item}
                     {$product=$product_items[$index].product}
                     {$cartitem=$product_items[$index].cartitem}
                     {if !empty($cartitem.multioffers)}
                            {$multioffers=unserialize($cartitem.multioffers)} 
-                    {/if}                    
-                    <tr data-id="{$index}" data-product-id="{$cartitem.entity_id}" class="cartitem{if $smarty.foreach.items.first} first{/if}">
-                        <td class="image">
+                    {/if} 
+                    <div data-id="{$index}" data-product-id="{$cartitem.entity_id}" class="row cartitem{if $smarty.foreach.items.first} first{/if}">
+                        <div class="image col-sm-2 col-sm-offset-2">
                             <a href="{$product->getUrl()}"><img src="{$product->getMainImage(78,109)}" alt="{$product.title}"/></a>
-                        </td>
-                        <td class="title">
-                            <a href="{$product->getUrl()}" class="text">{$product.title}</a>
-                            
+                        </div>
+                        <div class="info col-sm-8">
+                            <a href="{$product->getUrl()}" class="text h3">{$product.title}</a>
+                            {if $product.barcode}<div class="barcode">Артикул: {$product->getBarCode($cartitem.offer)}</div>{/if}
+                            <div class="desc">{$product.short_description}</div>
+                        </div>
+                        <div class="offers col-sm-4">
                             {if $product->isMultiOffersUse()}
                                 <div class="multiOffers">
                                     {foreach $product.multioffers.levels as $level}
@@ -206,6 +197,7 @@
                                                     <option {if $multioffers[$level.prop_id].value == $value.val_str}selected="selected"{/if} value="{$value.val_str}">{$value.val_str}</option>   
                                                 {/foreach}
                                             </select>
+                                            <br>
                                         {/if}
                                     {/foreach}
                                     {if $product->isOffersUse()}
@@ -225,16 +217,13 @@
                                         {/foreach}
                                     </select>
                                 </div>
-                            {/if}                                
-                            
-                            {if $product.barcode}<p class="barcode">Артикул: {$product.barcode}</p>{/if}
-                            <p class="desc">{$product.short_description}</p>
-                        </td>
-                        <td class="amount">
+                            {/if}  
+                        </div>
+                        <div class="amount col-sm-3">
                             <input type="text" maxlength="4" class="inp fieldAmount" value="{$cartitem.amount}" name="products[{$index}][amount]">
                             <div class="incdec">
-                                <a href="#" class="inc"></a>
-                                <a href="#" class="dec"></a>
+                                <a href="#" class="inc"><i class="fa fa-chevron-up"></i></a>
+                                <a href="#" class="dec"><i class="fa fa-chevron-down"></i></a>
                             </div>
                             <span class="unit">
                                 {if $catalog_config.use_offer_unit}
@@ -244,19 +233,19 @@
                                 {/if}
                             </span>
                             <div class="error">{$item.amount_error}</div>
-                        </td>
-                        <td class="price">
+                        </div>
+                        <div class="price col-sm-3">
                             {$item.cost}
                             <div class="discount">
                                 {if $item.discount>0}
                                 скидка {$item.discount}
                                 {/if}
                             </div>
-                        </td>
-                        <td class="remove">
-                            <a title="Удалить товар из корзины" class="removeItem" href="{$router->getUrl('shop-front-cartpage', ["Act" => "removeItem", "id" => $index])}"></a>
-                        </td>
-                    </tr>
+                        </div>
+                        <div class="remove col-sm-1">
+                            <a title="Удалить товар из корзины" class="removeItem" href="{$router->getUrl('shop-front-cartpage', ["Act" => "removeItem", "id" => $index])}"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
                     {$concomitant=$product->getConcomitant()}
                     {foreach $item.sub_products as $id => $sub_product_data}
                         {$sub_product=$concomitant[$id]}
@@ -295,8 +284,6 @@
                         </tr>
                     {/foreach}
                 {/foreach}                            
-                </tbody>
-            </table>
             </div>
             <table class="cartTablePage cartTable">
                 <tbody>

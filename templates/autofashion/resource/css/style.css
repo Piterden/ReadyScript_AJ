@@ -1815,7 +1815,6 @@ ul.topMenu {
     margin-bottom: 20px;
 }
 .fieldAmount {
-    border: 2px solid #8b8b8b;
     border-radius: 2px;
     padding: 2px 6px 3px 10px;
     width: 70px;
@@ -2638,10 +2637,10 @@ label[for="changePass"] {
 /* Checkout */
 
 .checkout .title h1 {
-    margin-top: 22px;
+    margin: 0;
 }
 .checkoutSteps {
-    margin: 10px 0;
+    margin: -10px 0 10px;
 }
 .checkoutSteps li {
     display: inline-block;
@@ -2750,6 +2749,233 @@ label[for="changePass"] {
 }
 .themeTable .value.inputPass, .themeTable .value.repeatPass {
     width: 28.8%;
+}
+.checkout .cartItem {
+    margin: 20px 0 -10px;
+}
+.checkout .cartItem > div {
+    padding: 0;
+}
+.checkout .cartItem .imageBlock {
+    text-align: center;
+}
+.checkout .cartItem .infoBlock {
+    padding: 0 20px 16px;
+    border-bottom: 2px solid #ebebeb;
+}
+.checkout .cartItem .title {
+    margin: 0;
+}
+.checkout .cartItem .title a {
+    color: #000;
+}
+.checkout .cartItem .sku {
+    margin: 0;
+    color: #888;
+}
+.checkout .cartItem .offer {
+    margin: 5px 0 0;
+}
+.checkout .cartItem .offer .title {
+
+}
+.checkout .cartItem .offer .value {
+    margin-right: 20px;
+    font-weight: bold;
+    color: #31708f;
+}
+.checkout .cartItem .amountBlock {
+    padding-top: 30px;
+    height: 91px;
+    border-bottom: 2px solid #ebebeb;
+}
+.checkout .priceBlock {
+    height: 91px;
+    margin: 0;
+    border-bottom: 2px solid #ebebeb;
+    text-align: center;
+    font-size: 24px;
+    line-height: 3.3;
+}
+.checkout .atAll {
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding-top: 26px;
+    font-weight: bold;
+}
+.checkout .changeCartBlock {
+    margin-bottom: 16px;
+    padding-left: 35px;
+}
+}
+.checkout .atAllBlock {
+    text-align: center;
+    font-size: 14px;
+    line-height: 2.1;
+    padding: 0;
+    margin-left: -10px;
+}
+.checkout .priceAllBlock {
+    padding: 0;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1;
+    margin-right: 0px;
+    font-weight: normal;
+    color: #EC2028;
+    text-transform: none;
+}
+.checkout .buttons button[type="submit"] {
+    width: 134px;
+    background: #999;
+}
+.checkout .buttons button[type="submit"]:before {
+    width: 132px;
+}
+.checkout .sod_select {
+    width: 100%;
+    border: none;
+}
+.checkout .sod_select .sod_label:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: -2px;
+    border: 2px solid #EBEBEB;
+}
+.checkout .sod_select.open .sod_label:before {
+    border-bottom-color: transparent;
+}
+.checkout .sod_select .sod_list_wrapper {
+    width: 100%;
+    border-color: #EBEBEB;
+}
+.checkoutBox .radio {
+    text-align: right;
+    padding: 0 27px 0 0;
+}
+.checkoutBox .info {
+    padding: 0 0 8px;
+    margin: 0 0 10px -20px;
+    position: relative;
+    border-bottom: 2px solid #EBEBEB;
+}
+.checkoutBox .logoService {
+    display: inline-block;
+    margin-right: 47px;
+}
+.vertItems {
+    margin-top: 4px;
+}
+.vertItems .price {
+    margin-top: 7px;
+    margin-left: -26px;
+    font-size: 16px;
+    font-weight: bold;
+}
+.vertItems .title {
+    margin: 7px 0 2px;
+    float: left;
+    width: initial;
+}
+.additionalInfo {
+    position: absolute;
+    top: 0px;
+    right: 100px;
+}
+.show-map {
+    background: transparent;
+    border: none;
+    color: #337ab7;
+    text-transform: lowercase;
+    letter-spacing: 2.3px;
+    text-decoration: underline;
+}
+.show-map:hover {
+    background: transparent;
+    border: none;
+    color: #337ab7;
+    text-decoration: underline;
+}
+
+/* Cart Page */
+
+.cartWrapper {
+    position: relative;
+}
+.cartWrapper .title h1 {
+    margin: 0;
+}
+.cartWrapper .info {
+    padding: 40px 30px;
+}
+.cartWrapper .image {
+    padding: 15px 0 0;
+    text-align: center;
+}
+.cartWrapper .multiOffers {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+.cartWrapper .multiofferTitle {
+    margin: 0;
+    display: inline-block;
+}
+.cartWrapper .multiOffers select {
+    margin-bottom: 8px;
+}
+.cartWrapper .price {
+    font-size: 24px;
+}
+.cartWrapper .remove {
+    font-size: 30px;
+    line-height: 4.6;
+}
+.cartWrapper .barcode {
+    margin: 0;
+    color: #888;
+    font-weight: bold;
+}
+.cartWrapper .clearCart {
+    position: absolute;
+    top: 10px;
+    right: 40px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #EC2028;
+    text-decoration: underline;
+}
+.cartWrapper .amount {
+    position: relative;
+    padding: 55px 0 0;
+}
+.cartWrapper .incdec a {
+    position: absolute;
+    top: 60px;
+}
+.cartWrapper .incdec a.inc {
+    right: 15px;
+}
+.cartWrapper .incdec a.dec {
+    left: 15px;
+}
+.cartWrapper .offers {
+    padding: 10px 0 0;
+}
+.cartitem .price {
+    line-height: 5.9;
+}
+.row.cartitem {
+    border-bottom: 2px solid #EBEBEB;
+    padding: 10px 0;
+}
+.amountBlock .amount a {
+    display: none;
 }
 
 /* IML Map */

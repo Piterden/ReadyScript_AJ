@@ -1,1 +1,60 @@
-{$cart_list|@print_r}
+{assign var=catalog_config value=ConfigLoader::byModule('catalog')}
+<div class="row">
+    <div class="titleWrap col-md-24 text-center">
+        <h3>Ваш заказ</h3>
+    </div>
+	<div class="col-sm-20 col-sm-offset-2 cartList">
+		{foreach $cart_items as $item}
+			{$product=$cart_products[$item['entity_id']]}
+			{$main_image=$product->getMainImage()}
+			{$offer_list=$item->getMultiOfferTitles()}
+			{$offer=$item['offer']}
+			<div class="row cartItem">
+				<div class="col-sm-2 imageBlock">
+					<a href="{$product->getUrl()}" title="{$product.title}"><img src="{$main_image->getUrl(72, 72)}" alt="{$main_image.title|default:"{$product.title}"}"/></a>
+				</div>
+				<div class="col-sm-16 infoBlock">
+					<div class="title h3"><a href="{$product->getUrl()}">{$product.title}</a></div>
+					<div class="sku">Артикул: {$product->getBarCode($offer)}</div>
+					<div class="offer">
+						{foreach $offer_list as $offer_field}
+							<span class="title">{$offer_field.title}: </span>
+							<span class="value">{$offer_field.value}</span>
+						{/foreach}
+					</div>
+				</div>
+				<div class="col-sm-3 amountBlock">
+					<div class="amount">
+                        <input type="hidden" class="fieldAmount" value="{$item.amount}" name="products[{$index}][amount]"/> 
+                        <a class="inc"><i class="fa fa-angle-up"></i></a>
+                        <span class="num" title="Количество">{$item.amount}</span> 
+                        
+                        <span class="unit">
+                        {if $catalog_config.use_offer_unit}
+                            {$product.offers.items[$item.offer]->getUnit()->stitle}
+                        {else}
+                            {$product->getUnit()->stitle|default:"шт."}
+                        {/if}
+                        </span>
+                        
+                        <a class="dec"><i class="fa fa-angle-down"></i></a>
+                    </div>
+				</div>
+				<div class="col-sm-3 priceBlock">
+					{$product->getCost(null, $offer)} {$currency.stitle}
+				</div>
+			</div>
+		{/foreach}
+		<div class="row atAll">
+			<div class="col-sm-16 col-sm-offset-2 changeCartBlock">
+				<a href="{$router->getUrl('shop-front-cartpage')}" class="">Изменить заказ</a>
+			</div>
+			<div class="col-sm-3 atAllBlock">
+				Итого:
+			</div>
+			<div class="col-sm-3 priceAllBlock">
+				{$cart->getCustomOrderPrice()} {$currency.stitle}
+			</div>
+		</div>
+	</div>
+</div>

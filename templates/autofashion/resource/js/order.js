@@ -1,4 +1,8 @@
 $(function() {
+    $('.checkout select').selectOrDie({
+        size : '10'
+    });
+
     $('select[name="addr_country_id"]').change(function() {
         var regions = $('select[name="addr_region_id"]').attr('disabled','disabled');
         
