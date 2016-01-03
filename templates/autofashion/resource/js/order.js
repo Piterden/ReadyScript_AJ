@@ -1,7 +1,4 @@
 $(function() {
-    $('.checkout select').selectOrDie({
-        size : '10'
-    });
 
     $('select[name="addr_country_id"]').change(function() {
         var regions = $('select[name="addr_region_id"]').attr('disabled','disabled');
@@ -81,6 +78,13 @@ $(function() {
             }
         }, "json");
         return false;
-    });     
+    });
+
+    $('.deliveryItem').on('click', 'input', function(event) {
+        //var $addressBlock = $(this).parents('.deliveryItem').find('.addressBlock');
+        $('.deliveryItem .addressBlock').addClass('hide');
+        $(this).parents('.deliveryItem').find('.addressBlock').removeClass('hide');
+        //console.log($addressBlock.siblings());
+    });
     
 });   

@@ -1,3 +1,4 @@
+{addjs file="order.js"}
 <div class="bodyWrap checkout">
     <header class="container">
         <div class="row">

@@ -1,4 +1,3 @@
-{addjs file="order.js"}
 <form method="POST" class="checkoutBox formStyle {$order.user_type|default:"authorized"}" id="order-form">
     {if !$is_auth}
     <div class="userType">
