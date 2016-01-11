@@ -22,10 +22,11 @@
 {$app->getAnyHeadData()}
 </head>
 <body {if $app->getBodyClass()!= ''}class="{$app->getBodyClass()}"{/if}>
+    mdskmvkfmvklsdmfblkm
     {$body}
     {* Нижние скрипты *}
     {foreach from=$app->getJs('footer') item=js}
 	    {$js.params.before}<script type="{$js.params.type|default:"text/javascript"}" src="{$js.file}"></script>{$js.params.after}
-    {/foreach}    
+    {/foreach}
 </body>
 </html>

@@ -1,7 +1,8 @@
 {addjs file="http://api-maps.yandex.ru/2.1/?lang=ru_RU" basepath="root"}
 {addjs file="{$mod_js}/delivery/cdek_widjet.js" basepath="root"}
-{if empty($errors) && !empty($pochtomates)}
-    <div id="cdekWidjet{$delivery.id}" class="cdekWidjet" data-delivery-id="{$delivery.id}">
+
+<div id="cdekWidjet{$delivery.id}" class="cdekWidjet" data-delivery-id="{$delivery.id}">
+    {if empty($errors) && !empty($pochtomates)}
         <div class="title">
             {t}Выберите место получения товара{/t}:
         </div>
@@ -18,7 +19,7 @@
         
         <select id="cdekSelect{$delivery.id}" class="cdekSelect">
             {foreach $pochtomates as $pochtomat}
-                <option value='{literal}{{/literal}"code":"{$pochtomat['Code']}","cityCode":"{$pochtomat['CityCode']}","tariffId":"{$cdek->getTariffId()}"{if isset($pochtomat['cashOnDelivery'])},"cashOnDelivery":"{$pochtomat['cashOnDelivery']}"{/if}}' data-info='{ "note":"{$pochtomat['Note']}", "city":"{$pochtomat['City']}", "code":"{$pochtomat['Code']}" , "cityCode" : "{$pochtomat['cityCode']}", "coordY":"{$pochtomat['coordY']}", "coordX":"{$pochtomat['coordX']}", "WorkTime":"{$pochtomat['WorkTime']}", "phone":"{$pochtomat['Phone']}", "adress":"{$pochtomat['Address']}"{if isset($pochtomat['cashOnDelivery'])},"cashOnDelivery":"{$pochtomat['cashOnDelivery']}{/if} }'>{$pochtomat['City']}, {$pochtomat['Address']}</option>
+                <option value='{literal}{{/literal}"code":"{$pochtomat['Code']}","cityCode":"{$pochtomat['CityCode']}","addressInfo":"{$pochtomat['City']}, {$pochtomat['Address']}","tariffId":"{$cdek->getTariffId()}"{if isset($pochtomat['cashOnDelivery'])},"cashOnDelivery":"{$pochtomat['cashOnDelivery']}"{/if}}' data-info='{ "note":"{$pochtomat['Note']}", "city":"{$pochtomat['City']}", "code":"{$pochtomat['Code']}" , "cityCode" : "{$pochtomat['cityCode']}", "coordY":"{$pochtomat['coordY']}", "coordX":"{$pochtomat['coordX']}", "WorkTime":"{$pochtomat['WorkTime']}", "phone":"{$pochtomat['Phone']}", "adress":"{$pochtomat['Address']}"{if isset($pochtomat['cashOnDelivery'])},"cashOnDelivery":"{$pochtomat['cashOnDelivery']}{/if} }'>{$pochtomat['City']}, {$pochtomat['Address']}</option>
             {/foreach}
         </select>
         <a class="cdekOpenMap formSave" title="Скрыть карту">Открыть карту</a>
@@ -28,6 +29,8 @@
         </div>
         <input id="cdekInputMap{$delivery.id}" class="cdekDeliveryExtra" type="hidden" name="delivery_extra[value]" value="" disabled="disabled"/>
         <div id="cdekMap{$delivery.id}" class="cdekMap" style="display:none;"></div>
-    </div>
-{/if}
-
+    {else}
+        {$address=$order->getAddress()}
+        <input id="cdekInputMap{$delivery.id}" class="cdekDeliveryExtra" type="hidden" name="delivery_extra[value]" value='{literal}{{/literal}"tariffId":"{$extra_info.tariffId}", "zipcode":"{$address.zipcode}"}' disabled="disabled"/>
+    {/if}
+</div>

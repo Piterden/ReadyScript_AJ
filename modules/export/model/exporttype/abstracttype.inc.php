@@ -14,7 +14,6 @@ abstract class AbstractType extends \RS\Orm\AbstractObject
 {
     function _init()
     {
-        $this->setClassParameter('storage_class', '\RS\Orm\Storage\Stub');
         return $this->getPropertyIterator();
     }  
     
@@ -53,6 +52,16 @@ abstract class AbstractType extends \RS\Orm\AbstractObject
     */
     public function sendHeaders()
     {
+    }
+    
+    /**
+    * Возвращает объект хранилища
+    * 
+    * @return \RS\Orm\Storage\AbstractStorage
+    */
+    protected function getStorageInstance()
+    {
+        return new \RS\Orm\Storage\Stub($this);
     }
 }
 ?>

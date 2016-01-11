@@ -36,29 +36,18 @@ class Menu extends \RS\Controller\StandartBlock
     function actionIndex()
     {
         //Кэшируем меню для неавторизованных пользователей
-        $cache_id = $this->getBlockId().$this->url->parameters('menu_item_id');
-        if ($this->user['id']>0 || !$this->view->cacheOn($cache_id)->isCached($this->getParam('indexTemplate')) ) {
-            if ($debug_group = $this->getDebugGroup()) {
-                $create_href = $this->router->getAdminUrl('add', array(), 'menu-ctrl');
-                $debug_group->addDebugAction(new \RS\Debug\Action\Create($create_href));
-                $debug_group->addTool('create', new \RS\Debug\Tool\Create($create_href));
-            }
-            
-            $root = $this->getParam('root');
-            
-            $api = new \Menu\Model\Api();
-            $root_orm = $api->getById($root);
-            
-            $public_menu = new \Menu\Model\Api();
-            $public_menu -> setFilter('public', 1);
-            $public_menu -> setFilter('menutype', 'user');
-            
-            $items = $public_menu->getTreeList( (int)$root_orm['id'] );
-            $this->view->assign(array(
-                'root' => $root_orm,
-                'items' => $items
-            ));
+        if ($debug_group = $this->getDebugGroup()) {
+            $create_href = $this->router->getAdminUrl('add', array(), 'menu-ctrl');
+            $debug_group->addDebugAction(new \RS\Debug\Action\Create($create_href));
+            $debug_group->addTool('create', new \RS\Debug\Tool\Create($create_href));
         }
+        
+        $root = $this->getParam('root');
+
+        $api = new \Menu\Model\Api();
+        $menu_vars = $api->getMenuItems($root);
+        
+        $this->view->assign($menu_vars);
         
         return $this->result->setTemplate( $this->getParam('indexTemplate') );
     }

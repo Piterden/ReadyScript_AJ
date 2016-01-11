@@ -624,7 +624,7 @@ class Api extends \RS\Module\AbstractModel\BaseModel
     {
         $exts = $this->getLoadedExtensions();
         return array(
-                'decision' => in_array('mysql', $exts),
+                'decision' => in_array('mysqli', $exts),
                 'need' => self::NEED_MYSQL_VERSION
             );
     }

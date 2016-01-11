@@ -135,7 +135,7 @@ class Product extends \RS\Csv\AbstractSchema
                     'producturl' => self::FIELDSCOPE_EXPORT, //Только экспорт
                 )
             )            
-        );
+        );                                             
     }
     
     /**

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Интеграция с сервисом DaData. Подсказки при регистрации.</name>
+        <description multilanguage="true">Позволяет корректировать поля при заполнении пользователями данных для регистрации. 
+        Показ подсказок в формах и корректировка адресов, фамилий, организаций, а также названия городов.</description>   
+        <version>1.0.0.2</version>
+        <author>Zakusilo Alexander</author>
+        
+        <address_show_hint>1</address_show_hint>
+        <company_show_hint>1</company_show_hint>
+        <company_inn_input>1</company_inn_input>
+        <surname_show_hint>1</surname_show_hint>
+        <fio_show_hint>1</fio_show_hint>
+        <name_show_hint>1</name_show_hint>
+        <midname_show_hint>1</midname_show_hint>
+        <city_show_hint>1</city_show_hint>
+        <email_show_hint>1</email_show_hint>
+        <email_show_all>1</email_show_all>
+        <ip_check_city>1</ip_check_city>
+        <count>5</count>
+    </defaultValues>
+</config>

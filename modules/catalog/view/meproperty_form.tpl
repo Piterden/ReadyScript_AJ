@@ -44,7 +44,7 @@
             </tr> 
     </table>
     <div class="oh">
-        <a href="Javascript;" class="close-property">Убрать строку</a>
+        <a href="Javascript:;" class="close-property">Убрать строку</a>
     </div>
 </div>
 

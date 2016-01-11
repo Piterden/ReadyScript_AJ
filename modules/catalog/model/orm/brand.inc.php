@@ -23,12 +23,7 @@ class Brand extends \RS\Orm\OrmObject
     * @return void
     */
     function _init()
-    {
-        $this->addDebugActions(array(
-            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'catalog-brandctrl')),
-            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'catalog-brandctrl'))
-        ));        
-        
+    {        
         parent::_init()->append(array(
             'site_id' => new Type\CurrentSite(),  
             'title' => new Type\String(array(
@@ -81,6 +76,19 @@ class Brand extends \RS\Orm\OrmObject
                )), 
         ));
         $this->addIndex(array('site_id', 'alias'), self::INDEX_UNIQUE);
+    }
+    
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'catalog-brandctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'catalog-brandctrl'))
+        );
     }
     
     /**

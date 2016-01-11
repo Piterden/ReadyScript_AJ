@@ -3,7 +3,7 @@
     <defaultValues>
         <name multilanguage="true">Поддержка. Личные сообщения</name>
         <description multilanguage="true">Переписка администратора и пользователя в личном кабинете</description>
-        <version>2.0.0.18</version>
+        <version>2.0.0.19</version>
         <author>ReadyScript lab.</author>
         <is_system>1</is_system>        
         <send_admin_message_notice>Y</send_admin_message_notice>

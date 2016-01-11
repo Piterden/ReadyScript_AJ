@@ -41,7 +41,7 @@ class Category extends \RS\Controller\StandartBlock
     {
         $this->api = new \Article\Model\CatApi();
         $this->api->setFilter('public', 1);
-    }
+    }              
     
     function actionIndex()
     {

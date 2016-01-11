@@ -13,16 +13,12 @@ class Banner extends \RS\Orm\OrmObject
     protected static
         $table = 'banner';
     
+    public static
+        $src_folder = '/storage/banners/original',
+        $dst_folder = '/storage/banners/resized';    
     
     function _init()
-    {
-        $this->setClassParameter('src_folder', '/storage/banners/original');
-        $this->setClassParameter('dst_folder', '/storage/banners/resized');
-        $this->addDebugActions(array(
-            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'banners-ctrl')),
-            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'banners-ctrl'))
-        ));
-        
+    {        
         parent::_init()->append(array(
             'site_id' => new Type\CurrentSite(),
             'title' => new Type\String(array(
@@ -30,7 +26,7 @@ class Banner extends \RS\Orm\OrmObject
             )),
             'file' => new Type\File(array(
                 'description' => t('Баннер'),
-                'storage' => array(\Setup::$ROOT, \Setup::$FOLDER . $this->getClassParameter('src_folder')),
+                'storage' => array(\Setup::$ROOT, \Setup::$FOLDER . static::$src_folder),
                 'template' => '%banners%/form/banner/file.tpl'
             )),
             'use_original_file' => new Type\Integer(array(
@@ -67,8 +63,19 @@ class Banner extends \RS\Orm\OrmObject
             )),
         ));
     }
-    
 
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */    
+    function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'banners-ctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'banners-ctrl'))
+        );        
+    }
     
     /**
     * Функция срабатывает после записи объекта
@@ -166,7 +173,7 @@ class Banner extends \RS\Orm\OrmObject
     function getImageUrl($width, $height, $scale = 'xy', $absolute = false)
     {
         //Пользуемся общей системой отображения картинок этой CMS.
-        $img = new \RS\Img\Core(\Setup::$ROOT, \Setup::$FOLDER.$this->getClassParameter('src_folder'), \Setup::$FOLDER.$this->getClassParameter('dst_folder'));
+        $img = new \RS\Img\Core(\Setup::$ROOT, \Setup::$FOLDER.static::$src_folder, \Setup::$FOLDER.static::$dst_folder);
         return $img->getImageUrl($this['__file']->getRealPath(), $width, $height, $scale, $absolute);
     }
     

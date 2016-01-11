@@ -5,7 +5,7 @@
         <input type="radio" id="type-account" name="user_type" value="user" {if $order.user_type=='user'}checked{/if}><label for="type-account">Я регистрировался раннее</label>
     </div>
     {/if}
-    
+
     {$errors=$order->getNonFormErrors()}
     {if $errors}
     <div class="pageError">
@@ -190,7 +190,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row address">
             <div class="titleWrap col-sm-24 text-center">
                 <h3>Адрес</h3>
@@ -236,6 +236,7 @@
                         <div class="key">
                             <label class="fieldName">Страна</label>
                         </div>
+                        {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'getSdRegions'] params=[$order]}
                         {assign var=region_tools_url value=$router->getUrl('shop-front-regiontools', ["Act" => 'listByParent'])}
                         <div class="value">
                             {$order->getPropertyView('addr_country_id', ['data-region-url' => $region_tools_url])}
@@ -243,6 +244,17 @@
                     </div>
                     <div class="tableRow">
                         <div class="key district">
+                            <label class="fieldName">Регион</label>
+                        </div>
+                        <div class="value district">
+                            <select id="sd_region" name="order_extra[region_id_to]">
+                                {foreach $regions_sd_list as $id => $name}
+                                <option value="{$id}"{if ($order_extra.address['region_id_to'] && $id == $order_extra.address['region_id_to']) || (!$order_extra.address['region_id_to'] && $id == 'САНКТ-ПЕТЕРБУРГ')} selected{/if}>{$name}</option>
+                                {/foreach}
+                            </select>
+                            <input id="sd_region_name" type="hidden" name="order_extra[region_to]" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
+                        </div>
+                        <!-- <div class="key district">
                             <label class="fieldName">Область/край</label>
                         </div>
                         <div class="value district">
@@ -250,11 +262,11 @@
                             <span {if count($regcount) == 0}style="display:none"{/if} id="region-select">
                                 {$order.__addr_region_id->formView()}
                             </span>
-                            
+
                             <span {if count($regcount) > 0}style="display:none"{/if} id="region-input">
                                 {$order.__addr_region->formView()}
                             </span>
-                        </div>
+                        </div> -->
                         <div class="key index">
                             <label class="fieldName">Индекс</label>
                         </div>
@@ -286,7 +298,6 @@
                         <div class="key">
                             <label class="fieldName">Город</label>
                         </div>
-                        {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'getSdRegions'] params=[$order]}
                         <div class="value">
                             <select id="sd_region" name="order_extra[region_id_to]">
                                 {foreach $regions_sd_list as $id => $name}
@@ -311,7 +322,7 @@
                         </div>
                     </div>
                     {/if}
-                    
+
                     {if $conf_userfields->notEmpty()}
                     <div class="additional">
                         <h2>Дополнительные сведения</h2>

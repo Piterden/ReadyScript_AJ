@@ -1179,12 +1179,13 @@ class Order extends \RS\Orm\OrmObject
     /**
     * Возвращайет URL для оплаты заказа в случае выбора online способа оплаты
     * 
+    * @param bool $absolute - Если true, то будет возвращен абсолютный URL
     * @return string
     */
-    function getOnlinePayUrl()
+    function getOnlinePayUrl($absolute = false)
     {
         $router = \RS\Router\Manager::obj();
-        return $router->getUrl('shop-front-onlinepay', array("Act" => "doPay", "order_id" => $this['order_num']));
+        return $router->getUrl('shop-front-onlinepay', array("Act" => "doPay", "order_id" => $this['order_num']), $absolute);
     }
     
     /**
@@ -1238,6 +1239,16 @@ class Order extends \RS\Orm\OrmObject
             }
         }
         return $result;
+    }
+    
+    /**
+    * Возвращает стоимость доставки, у существующего заказа
+    * 
+    * @return float
+    */
+    function getDeliveryCost()
+    {
+        return $this['user_delivery_cost'] ?: 0;
     }
 
 }

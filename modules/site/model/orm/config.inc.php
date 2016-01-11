@@ -126,6 +126,11 @@ class Config extends \RS\Orm\AbstractObject
         ));
     }
     
+    function getPrimaryKeyProperty()
+    {
+        return 'site_id';
+    }
+    
     function _initDefaults()
     {
         $this['theme'] = 'default';        

@@ -19,7 +19,8 @@ class Patches extends \RS\Module\AbstractPatches
     {
         return array(
             '20068',
-            '20082'
+            '20082',
+            '200163'
         );
     }
     
@@ -84,5 +85,16 @@ class Patches extends \RS\Module\AbstractPatches
               \RS\Db\Adapter::sqlExec($sql); 
            } 
         } 
+    }
+    
+    /**
+    * Патч, переносит значение поля public в checkout_public у объекта warehouse
+    */
+    function afterUpdate200163()
+    {
+        \RS\Orm\Request::make()
+            ->update(new \Catalog\Model\Orm\WareHouse)
+            ->set('checkout_public = public')
+            ->exec();
     }
 }

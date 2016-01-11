@@ -20,19 +20,19 @@
                         <a href="{$router->getUrl('support-front-support')}">Сообщения</a>
                     </li>
                     <li class="exitWrap">
-                        <a href="{$router->getUrl('users-front-auth', ['Act' => 'logout'])}" class="exit">Выход</a>    
+                        <a href="{$router->getUrl('users-front-auth', ['Act' => 'logout'])}" class="exit">Выход</a>
                     </li>
                     {if ModuleManager::staticModuleExists('partnership')}
                         {static_call var="is_partner" callback=['Partnership\Model\Api', 'isUserPartner'] params=$current_user.id}
                         {if $is_partner}
-                        <li><a href="{$router->getUrl('partnership-front-profile')}">профиль партнера</a></li>                    
-                        {/if}                    
+                        <li><a href="{$router->getUrl('partnership-front-profile')}">профиль партнера</a></li>
+                        {/if}
                     {/if}
                 </ul>
             </div>
         </div>
     </div>
-    
+
     {if ModuleManager::staticModuleExists('support')}
         {moduleinsert name="\Support\Controller\Block\NewMessages"}
     {/if}

@@ -5,10 +5,11 @@
     </div>
 	<div class="col-sm-20 col-sm-offset-2 cartList">
 		{foreach $cart_items as $item}
-			{$product=$cart_products[$item['entity_id']]}
-			{$main_image=$product->getMainImage()}
-			{$offer_list=$item->getMultiOfferTitles()}
-			{$offer=$item['offer']}
+			{*$cart_products[$item.entity_id]->getMainImage()|@print_r*}
+			{assign var=product value=$cart_products[$item.entity_id]}
+			{assign var=main_image value=$product->getMainImage()}
+			{assign var=offer_list value=$item->getMultiOfferTitles()}
+			{assign var=offer value=$item['offer']}
 			<div class="row cartItem">
 				<div class="col-sm-2 imageBlock">
 					<a href="{$product->getUrl()}" title="{$product.title}"><img src="{$main_image->getUrl(72, 72)}" alt="{$main_image.title|default:"{$product.title}"}"/></a>
@@ -25,10 +26,10 @@
 				</div>
 				<div class="col-sm-3 amountBlock">
 					<div class="amount">
-                        <input type="hidden" class="fieldAmount" value="{$item.amount}" name="products[{$index}][amount]"/> 
+                        <input type="hidden" class="fieldAmount" value="{$item.amount}" name="products[{$index}][amount]"/>
                         <a class="inc"><i class="fa fa-angle-up"></i></a>
-                        <span class="num" title="Количество">{$item.amount}</span> 
-                        
+                        <span class="num" title="Количество">{$item.amount}</span>
+
                         <span class="unit">
                         {if $catalog_config.use_offer_unit}
                             {$product.offers.items[$item.offer]->getUnit()->stitle}
@@ -36,7 +37,7 @@
                             {$product->getUnit()->stitle|default:"шт."}
                         {/if}
                         </span>
-                        
+
                         <a class="dec"><i class="fa fa-angle-down"></i></a>
                     </div>
 				</div>
@@ -55,6 +56,9 @@
 			<div class="col-sm-3 priceAllBlock">
 				{$cart->getCustomOrderPrice()} {$currency.stitle}
 			</div>
+		</div>
+		<div class="row">
+			<pre>{*$cart|@print_r*}</pre>
 		</div>
 	</div>
 </div>

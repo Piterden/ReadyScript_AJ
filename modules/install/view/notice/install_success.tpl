@@ -1,12 +1,12 @@
 {t alias="Уведомление об успешной установке"}
-<pre>ReadyScript успешно установлен на сайте {$url->getDomainStr()}!
+<p>ReadyScript успешно установлен на сайте {$url->getDomainStr()}!</p>
 
-Ваши данные для доступа в административную часть сайта:
+<p>Ваши данные для доступа в административную часть сайта:</p>
 
-E-mail (Логин): {$data->data.supervisor_email}
-Пароль: {$data->data.supervisor_password}
+<p>E-mail (Логин): {$data->data.supervisor_email}<br>
+Пароль: {$data->data.supervisor_password}</p>
 
-Перейдите по ссылке, чтобы попасть в административную панель <a href="http://{$data->data.domain}/{$data->data.admin_section}/">http://{$data->data.domain}/{$data->data.admin_section}/</a>
-Перейдите по ссылке, чтобы попасть в клиентскую часть сайта <a href="http://{$data->data.domain}">http://{$data->data.domain}</a>
+<p>Перейдите по ссылке, чтобы попасть в административную панель <a href="http://{$data->data.domain}/{$data->data.admin_section}/">http://{$data->data.domain}/{$data->data.admin_section}/</a><br>
+Перейдите по ссылке, чтобы попасть в клиентскую часть сайта <a href="http://{$data->data.domain}">http://{$data->data.domain}</a></p>
 
-Спасибо, что выбрали ReadyScript.</pre>{/t}
+<p>Спасибо, что выбрали ReadyScript.</p>{/t}

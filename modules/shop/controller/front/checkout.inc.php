@@ -352,7 +352,7 @@ class Checkout extends \RS\Controller\Front
                     $this->order->addExtraKeyPair('delivery_extra',$delivery_extra);
                 }
                 $warehouse_api = new \Catalog\Model\WareHouseApi();
-                $warehouses    = $warehouse_api->setFilter('public', 1)->getList(); //Склады
+                $warehouses    = $warehouse_api->setFilter('checkout_public', 1)->getList(); //Склады
                 
                 if ($delivery['class'] == 'myself' && (count($warehouses)>1)){ //Если самовывоз и складов больше одного
                    $this->redirect($this->router->getUrl('shop-front-checkout', array('Act' => 'warehouses'))); 
@@ -387,7 +387,7 @@ class Checkout extends \RS\Controller\Front
         $this->app->title->addSection(t('Выбор склада для забора товара'));
         
         $warehouse_api = new \Catalog\Model\WareHouseApi();
-        $warehouses    = $warehouse_api->setFilter('public', 1)->getList();
+        $warehouses    = $warehouse_api->setFilter('checkout_public', 1)->getList();
         
         //Добавим хлебные крошки
         $this->app->breadcrumbs
@@ -533,6 +533,8 @@ class Checkout extends \RS\Controller\Front
             $this->order->setCheckFields($work_fields);
             if (!$this->order->hasError() && $this->order->checkData($sysdata, null, null, $work_fields)) {
                 $this->order['is_payed'] = 0;
+                $this->order['delivery_new_query'] = 1;
+                $this->order['payment_new_query'] = 1;
                
                 //Создаем заказ в БД
                 if ($this->order->insert()) {

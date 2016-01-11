@@ -46,6 +46,7 @@
                     </div>
                 {/if}
                 <div class="descr">{$item.description}</div>
+                <div class="additionalInfo"><div class="costBlock">300 р.</div></div>
             </div>
             <div class="priceWrap col-sm-3">
                 <div id="scost_{$item.id}" class="price">

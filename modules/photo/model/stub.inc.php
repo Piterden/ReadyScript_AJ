@@ -31,12 +31,6 @@ class Stub extends \Photo\Model\Orm\Image
         $this->theme_image_file = $filename;
     }
     
-    function _init()
-    {
-        $this->setClassParameter('storage_class', '\RS\Orm\Storage\Stub');
-        return parent::_init();
-    }
-    
     /**
     * Возвращает путь к заглушке, создает ее, если не существует.
     * 
@@ -54,5 +48,14 @@ class Stub extends \Photo\Model\Orm\Image
         return $url;
     }
     
-    
+        
+    /**
+    * Возвращает объект хранилища
+    * 
+    * @return \RS\Orm\Storage\AbstractStorage
+    */
+    protected function getStorageInstance()
+    {
+        return new \RS\Orm\Storage\Stub($this);
+    }
 }

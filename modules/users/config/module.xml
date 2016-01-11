@@ -3,7 +3,7 @@
     <defaultValues>    
         <name multilanguage="true">Пользователи и группы</name>
         <description multilanguage="true">Управление пользователями. Добавление, удаление, назначение прав</description>        
-        <version>2.0.0.53</version>
+        <version>2.0.0.54</version>
         <author>ReadyScript lab.</author>
         <is_system>1</is_system>
         

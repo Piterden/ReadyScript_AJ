@@ -63,7 +63,7 @@ class Category extends \RS\Controller\StandartBlock
             }
         }
         
-        $cache_id = $root_id. $category. $this->api->queryObj()->toSql(); 
+        $cache_id = $root_id. $category. $this->api->queryObj()->toSql(). serialize($this->getParam());
 
         //Кэшируем список категорий.
         if (!$this->view->cacheOn($cache_id)->isCached($this->getParam('indexTemplate')) ) {

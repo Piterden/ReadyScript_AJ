@@ -5,27 +5,28 @@
 {assign var=user value=$data->order->getUser()}
 {assign var=order_data value=$cart->getOrderData(true, false)}
 {assign var=products value=$cart->getProductItems()}
-<pre>
-Вы сделали заказ в интернет-магазине {$url->getDomainStr()}. 
-Ваш заказ будет обработан в течение 1 рабочего дня.
-При необходимости, с Вами свяжется наш менеджер.
-Номер Вашего заказа: {$data->order.order_num}
-Заказ оформлен: {$data->order.dateof|date_format:"%d.%m.%Y"}
 
-<strong>Параметры заказа</strong>
+Вы сделали заказ в интернет-магазине {$url->getDomainStr()}.<br>
+Ваш заказ будет обработан в течение 1 рабочего дня.<br>
+При необходимости, с Вами свяжется наш менеджер.<br>
+Номер Вашего заказа: {$data->order.order_num}<br>
+Заказ оформлен: {$data->order.dateof|date_format:"%d.%m.%Y"}<br>
+
+<p><strong>Параметры заказа</strong></p>
 {if $data->order.delivery}
-    Адрес доставки: {$address->getLineView()}
+    Адрес доставки: {$address->getLineView()}<br>
 {/if}
 {if $data->order.payment}
-    Способ оплаты: {$pay.title}
+    Способ оплаты: {$pay.title}<br>
     {if $pay->hasDocs()}{assign var=type_object value=$pay->getTypeObject()}
-    Документы на оплату: {foreach from=$type_object->getDocsName() key=key item=doc}<a href="{$type_object->getDocUrl($key, true)}" target="_blank">{$doc.title}</a> {/foreach}
+    Документы на оплату: {foreach from=$type_object->getDocsName() key=key item=doc}<a href="{$type_object->getDocUrl($key, true)}" target="_blank">{$doc.title}</a> {/foreach}<br>
     {/if}
 {/if}
 {if $data->order.delivery}
-    Способ доставки: {$delivery.title}
+    Способ доставки: {$delivery.title}<br>
 {/if}
 
+<p><strong>Состав заказа</strong></p>
 
 <table cellpadding="5" border="1" bordercolor="#969696" style="border-collapse:collapse; border:1px solid #969696">
     <thead>
@@ -40,7 +41,7 @@
     <tbody>
         {foreach from=$order_data.items key=n item=item}
         {assign var=product value=$products[$n].product}
-        <tr data-n="{$n}" class="item">
+        <tr>
             <td>
                 {$item.cartitem.title}
                 <br>
@@ -56,7 +57,7 @@
         </tr>
         {/foreach}
     </tbody>
-    <tbody class="additems">
+    <tbody>
         {foreach from=$order_data.other key=n item=item}
         <tr>
             <td colspan="4">{$item.cartitem.title}</td>
@@ -65,17 +66,16 @@
         {/foreach}
     </tbody>
     <tfoot>
-        <tr class="last">
+        <tr>
             <td colspan="4"></td>
-            <td class="total">
+            <td>
                 Итого: {$order_data.total_cost}
             </td>
         </tr>
     </tfoot>
 </table>
 
-Вы можете изменить свои данные и ознакомиться со статусом заказа в разделе <a href="{$router->getUrl('shop-front-myorders',[], true)}">«Личный кабинет»</a>.
+<p>Вы можете изменить свои данные и ознакомиться со статусом заказа в разделе <a href="{$router->getUrl('shop-front-myorders',[], true)}">«Личный кабинет»</a>.</p>
 
-С Наилучшими пожеланиями,
-        Администрация интернет-магазина {$url->getDomainStr()}
-</pre>
+<p>С Наилучшими пожеланиями,<br>
+        Администрация интернет-магазина {$url->getDomainStr()}</p>

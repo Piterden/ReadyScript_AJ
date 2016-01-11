@@ -109,7 +109,19 @@ class Comment extends \RS\Orm\OrmObject
             ))
         ));
 	}
-    
+
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    public function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'comments-ctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'comments-ctrl'))
+        );
+    }    
     
     /**
     * Получает ссылку на объект который прокомментирован.

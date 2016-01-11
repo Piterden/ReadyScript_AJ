@@ -42,7 +42,7 @@ class MenuPage extends \RS\Controller\Front
         }
         if ($menu_item['typelink'] == Menu::TYPELINK_EMPTY) {
             if ($menu_item['link_template']) {
-                return $this->view->fetch($menu_item['link_template']);
+                return $this->result->setTemplate($menu_item['link_template']);
             } else {
                 return;
             }

@@ -17,6 +17,7 @@ class Base extends \RS\Csv\Preset\AbstractPreset
         $fields = array(),
         $select_request,
         $id_field = 'id',
+        $saved_request = null, //Объект запроса из сессии с параметрами текущего просмотра списка
         $select_order,
         $exclude_fields = array(),
         $titles = array(),
@@ -61,6 +62,16 @@ class Base extends \RS\Csv\Preset\AbstractPreset
     {
         $this->null_fields = $fields;
     }
+    
+    /**
+    * Устнавливает запрос, который был взят из сессии с установленными параметрами просмотра списка
+    * 
+    * @param \RS\Orm\Request|null $request - объект из сессии
+    */
+    function setSavedRequest($request)
+    {
+        $this->saved_request = $request ? clone $request : null;
+    }  
     
     /**
     * Загружает данные перед экспортом
@@ -355,13 +366,18 @@ class Base extends \RS\Csv\Preset\AbstractPreset
     function getSelectRequest()
     {
         if (!$this->select_request) {
-            $this->select_request = \RS\Orm\Request::make()->from($this->getOrmObject());
-            if ($this->is_multisite) {
-                $this->select_request->where(array('site_id' => \RS\Site\Manager::getSiteId()));
-            }
-            
-            if ($this->select_order) {
-                $this->select_request->orderby($this->select_order);
+            if (!$this->saved_request){ //Если нет запроса сохранённого в сессии
+                $this->select_request = \RS\Orm\Request::make()->from($this->getOrmObject());
+                if ($this->is_multisite) {
+                    $this->select_request->where(array('site_id' => \RS\Site\Manager::getSiteId()));
+                }
+                
+                if ($this->select_order) {
+                    $this->select_request->orderby($this->select_order);
+                } 
+            }else{ //Если есть запрос сохранённый в сессии
+                $this->saved_request->limit(null);
+                $this->select_request = $this->saved_request;
             }
         }
         return $this->select_request;
@@ -391,4 +407,3 @@ class Base extends \RS\Csv\Preset\AbstractPreset
     }    
     
 }
-?>

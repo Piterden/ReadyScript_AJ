@@ -24,13 +24,6 @@ class Article extends \RS\Orm\OrmObject
 
     protected function _init()
     {
-        if (\RS\Debug\Mode::isEnabled()) {        
-            $this->addDebugActions(array(
-                new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'article-ctrl')),
-                new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'article-ctrl'))
-            ));
-        }        
-        
         parent::_init()->append(array(
             t('Основные'),
                     'site_id' => new Type\CurrentSite(),
@@ -131,6 +124,19 @@ class Article extends \RS\Orm\OrmObject
         $this['__id']->setHidden(true);
                 
         $this->addIndex(array('site_id', 'parent'));
+    }
+    
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'article-ctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'article-ctrl'))
+        );
     }
     
     /**

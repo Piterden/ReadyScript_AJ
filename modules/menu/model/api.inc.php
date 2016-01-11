@@ -351,6 +351,34 @@ class Api extends \RS\Module\AbstractModel\TreeCookieList
         }
         return false;
     }
+    
+    /**
+    * Возвращает пункты меню для заданного root
+    * 
+    * @param integer | string $root ID или ALIAS корневого элемента
+    * @param bool $cache - если true, то 
+    * @return array ['root' => корневой элемент, 'items' => [пункт меню, пункт меню, ...]]
+    */
+    function getMenuItems($root, $cache = true)
+    {
+        if ($cache) {
+            $site_id = \RS\Site\Manager::getSiteId();
+            return \RS\Cache\Manager::obj()
+                        ->request(array($this, __FUNCTION__), $root, false, $site_id);
+        } else {
+            $root_orm = $this->getById($root);
+            
+            $public_menu = new self();
+            $public_menu -> setFilter('public', 1);
+            $public_menu -> setFilter('menutype', 'user');
+            $items = $public_menu->getTreeList( (int)$root_orm['id'] );        
+            
+            return array(
+                'root' => $root_orm,
+                'items' => $items
+            );
+        }
+    }
                 
 }
 

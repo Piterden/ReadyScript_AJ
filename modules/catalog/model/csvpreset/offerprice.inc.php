@@ -6,64 +6,150 @@
 * @license http://readyscript.ru/licenseAgreement/
 */
 namespace Catalog\Model\CsvPreset;
+use \Catalog\Model\Orm;
 
-class OfferPrice extends \RS\Csv\Preset\AbstractPreset
+/**
+* Набор колонок описывающих связь комплектации с ценами
+*/
+class OfferPrice extends \Catalog\Model\CsvPreset\Cost
 {
-    protected
-        $link_preset_id,
-        $link_foreign_field,
+    protected static
+        $type_cost = array(),
+        $type_cost_by_title = array(),
+        $default_currency = null, //Валюта по умолчанию
+        $currencies = array(),
+        $currencies_by_title = array();
         
-        $offer_api,
-        $price_delimiter = ";",
-        $currencies,
-        $currencies_by_name,
-        $type_costs,
-        $type_costs_by_name;
+    protected
+        $delimiter = ';',
+        $id_field,
+        $link_preset_id,
+        $link_id_field,
+        $manylink_orm,
+        $orm_object;
         
     function __construct($options)
-    {        
-        $this->offer_api = new \Catalog\Model\OfferApi();
+    {
+        $this->array_field = 'excost';
+        $this->manylink_foreign_id_field = 'cost_id';
+        $this->manylink_id_field = 'product_id';
+        $this->manylink_orm = new Orm\Xcost();
+        $this->orm_object = new Orm\Typecost();
+        $this->id_field = 'id';
+        $this->link_id_field = 'id';
         parent::__construct($options);
+        
+        $this->link_preset_id = 0;
+        $this->loadCurrencies();
     }
     
-    function loadCosts()
+    
+    /**
+    * Устанавливает поле с массивом сведений о ценах
+    * 
+    * @param string $field - поле с ценой
+    */
+    function setArrayField($field)
     {
-        if ($this->type_costs === null) {
-            $site_id = \RS\Site\Manager::getSiteId();
-            $this->type_costs = \RS\Orm\Request::make()
-                ->from(new \Catalog\Model\Orm\Typecost())
-                ->where(array(
-                    'site_id' => $site_id
-                ))->objects(null, 'id');
-            
-            $this->currencies = \RS\Orm\Request::make()
-                ->from(new \Catalog\Model\Orm\Currency())
-                ->where(array(
-                    'site_id' => $site_id
-                ))->objects(null, 'id');
+        $this->array_field = $field;
+    }
+    
+    
+    /**
+    * Подгрузка сведений о валютах и ценах присутствующих в системе
+    * 
+    */
+    function loadCurrencies()
+    {
+        $api = new \Catalog\Model\CurrencyApi();
+        $api->setOrder('`default` DESC');
+        $list = $api->getList();
+        foreach($list as $cost) {
+            self::$currencies[$cost['id']] = $cost['title'];
         }
-    }
-    
+        self::$currencies_by_title = array_flip(self::$currencies);
+        //Валюта по умолчанию
+        self::$default_currency = current(self::$currencies);
+        
+        $type_api = new \Catalog\Model\CostApi();
+        $type_api->setFilter('type', 'manual');
+        $list = $type_api->getList();
+        foreach($list as $typecost) {
+            self::$type_cost[$typecost['id']] = $typecost['title'];
+        }
+        self::$type_cost_by_title = array_flip(self::$type_cost);
+    }  
+
+
     /**
-    * Определяет foreign key другого объекта
+    * Загружает связанные данные
     * 
-    * @param string $field
     * @return void
     */
-    function setLinkForeignField($field)
+    function loadData()
     {
-        $this->link_foreign_field = $field;
-    }
+        $ids = array();
+        foreach($this->schema->rows as $row) {
+            $ids[] = $row[$this->link_id_field];
+        }
+        
+        $this->row = array();
+        if ($ids) {
+            $this->row = \RS\Orm\Request::make()
+                ->from($this->orm_object, 'OFFER')
+                ->whereIn($this->link_id_field, $ids)
+                ->objects(null, $this->link_id_field, true);
+        }
+    }        
+    
     
     /**
-    * Устанавливает номер пресета, к которому линкуется текущий пресет
+    * Возвращает ассоциативный массив с одной строкой данных, где ключ - это id колонки, а значение - это содержимое ячейки
     * 
-    * @param integer $n - номер пресета
-    * @return void
+    * @param integer $n - индекс в наборе строк $this->rows
+    * @return array
     */
-    function setLinkPresetId($n)
+    function getColumnsData($n)
     {
-        $this->link_preset_id = $n;
+        /** 
+        * @var \Catalog\Model\Orm\Offer
+        */
+        $offer = $this->schema->rows[$n];   
+        $id    = $this->schema->rows[$n][$this->link_id_field];
+        
+        $values_array = array();
+        if (isset($this->row[$id])) {
+            foreach($this->row[$id] as $n => $item) {          
+                
+                $price_arr = $offer['pricedata_arr'];
+                //Разберём цены в зависимости от типа заданных параметров цены
+                if (isset($price_arr['oneprice']) && $price_arr['oneprice']['use']) { //Если единая цена всех типов цен
+                    foreach (self::$type_cost_by_title as $title=>$cost_id){
+                        $znak     = ($price_arr['oneprice']['znak'] == "=") ? "" : "(".$price_arr['oneprice']['znak'].")"; 
+                        
+                        $currency = "%";
+                        if ($price_arr['oneprice']['unit']!="%"){ //Если числовое значение
+                          $currency = isset(self::$currencies[$price_arr['oneprice']['unit']]) ? self::$currencies[$price_arr['oneprice']['unit']] : ''; 
+                        }
+                        $values_array[$this->id.'-costlistname_'.$cost_id]     = $znak.$price_arr['oneprice']['original_value']; 
+                        $values_array[$this->id.'-costlistcurrency_'.$cost_id] = $currency;
+                    }
+                }elseif (!isset($price_arr['oneprice']) && isset($price_arr['price'])){ //Если цены на комплектацию разные
+                    foreach ($price_arr['price'] as $cost_id=>$price_data){
+                        $znak     = ($price_data['znak'] == "=") ? "" : "(".$price_data['znak'].")"; 
+                        
+                        $currency = "%";
+                        if ($price_data['unit']!="%"){ //Если числовое значение
+                          $currency = isset(self::$currencies[$price_data['unit']]) ? self::$currencies[$price_data['unit']] : ''; 
+                        }
+                        $values_array[$this->id.'-costlistname_'.$cost_id]     = $znak.$price_data['original_value']; 
+                        $values_array[$this->id.'-costlistcurrency_'.$cost_id] = $currency;
+                    }    
+                }  
+            }
+        }
+        return $values_array;        
+        
     }
     
     /**
@@ -71,105 +157,112 @@ class OfferPrice extends \RS\Csv\Preset\AbstractPreset
     * 
     * @return array
     */
-    function getColumns()
-    {
-        return array(
-            $this->id.'-offerprice' => array(
-                'key' => 'offerprice',
-                'title' => t('Цены')
-            )
-        );
-    }
-    
-    
-    /**
-    * Возвращает набор колонок с данными для одной строки
-    * 
-    * @param mixed $n
-    */
-    function getColumnsData($n)
-    {
-        $field_data = $this->schema->rows[$n][$this->link_foreign_field];
-        $this->loadCosts();
-        
-        $this->row = array();
-        foreach($this->getColumns() as $id => $column) {
-            $data = $field_data;
-            $value = '';
-            if ($data) {
-                if (!empty($data['oneprice']['use'])) {
-                    @$currency = $data['oneprice']['unit'] == '%' ? '%' : $this->currencies[$data['oneprice']['unit']]['title'];
-                    $value = $data['oneprice']['znak'].$data['oneprice']['value'].'('.$currency.')';
-                } else {
-                    $values = array();
-                    foreach($data['price'] as $price_id => $params) {
-                        if (isset($this->type_costs[$price_id])) {
-                            @$currency = $params['unit'] == '%' ? '%' : $this->currencies[$params['unit']]['title'];
-                            $values[] = $this->type_costs[$price_id]['title'].':'.$params['znak'].$params['value'].'('.$currency.')';
-                        }
-                    }
-                    $value = implode($this->price_delimiter."\n", $values);
-                }
-            }
-            $this->row[$id] = $value;
+    function getColumns() {        
+        $columns = array();      
+        if (!empty(self::$type_cost)){
+           foreach (self::$type_cost as $cost_id => $cost_title){
+               $columns[$this->id.'-costlistname_'.$cost_id] = array(
+                    'key'   => 'costname_'.$cost_id,
+                    'title' => t('Цена_'.$cost_title)
+               ); 
+               $columns[$this->id.'-costlistcurrency_'.$cost_id] = array(
+                    'key'   => 'costlistcurrency_'.$cost_id,
+                    'title' => t('Цена_'.$cost_title.'_Валюта')
+               ); 
+           } 
         }
-        return $this->row;
+        
+        return $columns;
     }
     
+    /**
+    * Добавляет дополнительный 
+    * 
+    * @param array $pricedata_arr - массив цены для комплектации
+    */
+    function addOnePriceIfNeeded($pricedata_arr)
+    {
+       $one_price       = true;
+       $last_seriallize = ''; //Сериализованная строка для проверки 
+       foreach ($pricedata_arr['price'] as $cost_id=>$info){
+          if (empty($last_seriallize)){
+              $last_seriallize = serialize($info);
+          }else{
+              if ($last_seriallize!=serialize($info)){
+                 $one_price = false;
+                 break; 
+              }
+          } 
+       }
+       if ($one_price){ //Если "Для всех типов цен" признак найден
+          $first = reset($pricedata_arr['price']);
+          $pricedata_arr['oneprice']['use']            = 1; 
+          $pricedata_arr['oneprice']['znak']           = $first['znak']; 
+          $pricedata_arr['oneprice']['original_value'] = $first['original_value']; 
+          $pricedata_arr['oneprice']['unit']           = $first['unit']; 
+       }
+       return $pricedata_arr;
+    }
     
     /**
-    * Импортирует данные одной строки текущего пресета в базу
+    * Добавляет данные цены для массива цены комплектации
+    * 
+    * @param array $pricedata_arr - массив в данными о ценах комплектации 
+    * @param integer $cost_id - id цены
+    * @param string $value - значение цены
+    */
+    function addCostInPriceArray($pricedata_arr, $cost_id, $value)
+    {
+        if (empty($value) && $value!='0'){
+            return $pricedata_arr;
+        }
+        $znak = "=";
+        if (!is_numeric($value)){ //Если это строка
+            if (preg_match('/\(([\+|=])\)?([\d|.]+)?/', $value, $matches)){
+               $znak  = $matches[1];
+               $value = $matches[2];
+            }    
+        }
+        $pricedata_arr['price'][$cost_id]['znak']           = $znak;
+        $pricedata_arr['price'][$cost_id]['original_value'] = $value;
+        
+        return $pricedata_arr;
+    }
+    
+    /**
+    * Импортирует одну строку данных
+    * 
+    * @return void
     */
     function importColumnsData()
     {
-        if ($this->type_costs_by_name === null) {
-            $this->loadCosts();
-            $this->type_costs_by_name = array();
-            foreach($this->type_costs as $cost) {
-                $this->type_costs_by_name[$cost['title']] = $cost['id'];
-            }
-            
-            $this->currencies_by_name = array();
-            foreach($this->currencies as $currency) {
-                $this->currencies_by_name[$currency['title']] = $currency['id'];
-            }
-        }
-        
-        $oneprice_pattern = '/^([+-=])([\d\.]+)\((.*?)\)?$/';
-        $pattern = '/^(.*?)\:([+-=])([\d\.]+)\((.*?)\)?$/';
-        
-        $arr = array();
-        if (preg_match($oneprice_pattern, $this->row['offerprice'], $match)) {
-            $unit_title = isset($match[3]) ? $match[3] : '';
-            $unit = isset($this->currencies_by_name[$unit_title]) ? $this->currencies_by_name[$unit_title] : 0;
-            
-            $arr['oneprice'] = array(
-                'use' => 1,
-                'znak' => $match[1],
-                'original_value' => $match[2],
-                'unit' => $unit
-            );
-        } else {
-            $prices = explode($this->price_delimiter, $this->row['offerprice']);
-            foreach($prices as $price) {
-                $price = trim($price);
-                if (preg_match($pattern, $price, $match)) {
-                    if (isset($this->type_costs_by_name[$match[1]])) {
-                        $unit_title = isset($match[4]) ? $match[4] : '';
-                        $unit = isset($this->currencies_by_name[$unit_title]) ? $this->currencies_by_name[$unit_title] : 0;
-                                                
-                        $arr['price'][$this->type_costs_by_name[$match[1]]] = array(
-                            'znak' => $match[2],
-                            'original_value' => $match[3],
-                            'unit' => $unit
-                        );
-                    }
+        if (isset($this->row)) {  
+            $pricedata_arr = array();            
+            foreach($this->row as $key_info=>$item) {
+                $item     = trim($item);                  //Значение ячейки
+                $key_info = explode("_",trim($key_info)); //Получим информацию из поля
+                $cost_id  = $key_info[1];
+                
+                switch($key_info[0]){  //Пройдёмся по типу поля 
+                    case "costname": //Название цены
+                            $value = str_replace(",", ".", $item);
+                            $pricedata_arr = $this->addCostInPriceArray($pricedata_arr, $cost_id, $value); //Разложим для импорта не многомерной комлектации 
+                            break;
+                    case "costlistcurrency": //Валюта цены
+                            $currency_id = $item;
+                            if ($currency_id!="%"){
+                               $currency_id = isset(self::$currencies_by_title[$currency_id]) ? self::$currencies_by_title[$currency_id] : 0; 
+                            }
+                            $pricedata_arr['price'][$cost_id]['unit']   = $currency_id; 
+                            break;
                 }
             }
+            
+            if (!empty($pricedata_arr)){ //Если данные есть, то проверим, нужно ли объединять и добавлять признак "Для всех типов цен"
+                $pricedata_arr = $this->addOnePriceIfNeeded($pricedata_arr);
+            }
+           
+            $this->schema->getPreset($this->link_preset_id)->row[$this->array_field] = $pricedata_arr;
         }
-                    
-        $preset = $this->schema->getPreset($this->link_preset_id);
-        $preset->row[$this->link_foreign_field] = $arr;
-    } 
-    
+    }
 }

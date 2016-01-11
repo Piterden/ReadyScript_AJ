@@ -3,7 +3,7 @@
     <defaultValues>
         <name multilanguage="true">XML Sitemap</name>
         <description multilanguage="true">Формирует XML с картой сайта для поисковых систем</description>
-        <version>2.0.0.4</version>
+        <version>2.0.0.6</version>
         <author>ReadyScript lab.</author>
         <is_system>1</is_system>        
         

@@ -1,11 +1,10 @@
-<pre>
-Уважаемый, администратор! На сайте {$url->getDomainStr()} оформлен предварительный заказ на товар.
+<p>Уважаемый, администратор! На сайте {$url->getDomainStr()} оформлен предварительный заказ на товар.</p>
 
-Номер предварительного заказа: <a href="{$router->getAdminUrl('edit', ["id" => $data->reserve.id], 'shop-reservationctrl', true)}"><strong>{$data->reserve.id}</strong></a> от <strong>{$data->reserve.dateof|date_format:"%d.%m.%Y %H:%M:%S"}</strong>
+<p>Номер предварительного заказа: <a href="{$router->getAdminUrl('edit', ["id" => $data->reserve.id], 'shop-reservationctrl', true)}"><strong>{$data->reserve.id}</strong></a> от <strong>{$data->reserve.dateof|date_format:"%d.%m.%Y %H:%M:%S"}</strong></p>
 
 {assign var=product value=$data->reserve->getProduct()}
 <h3>Контакты заказчика</h3>
-Телефон: {$data->reserve.phone}
+Телефон: {$data->reserve.phone}<br>
 E-mail: {$data->reserve.email}
 
 <h3>Заказан товар</h3>
@@ -42,5 +41,4 @@ E-mail: {$data->reserve.email}
 </table>
 
 
-Автоматическая рассылка {$url->getDomainStr()}.
-</pre>
+<p>Автоматическая рассылка {$url->getDomainStr()}.</p>

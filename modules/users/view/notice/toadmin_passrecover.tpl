@@ -1,18 +1,16 @@
-<pre>
-Уважаемый, администратор!
+<p>Уважаемый, администратор!</p>
 
-На сайте {$url->getDomainStr()} пользователь восстановил пароль!
+<p>На сайте {$url->getDomainStr()} пользователь восстановил пароль!</p>
 
-ID: {$data->user.id}
-Ф.И.О.: {$data->user.name} {$data->user.surname} {$data->user.midname}
-E-mail: {$data->user.e_mail}
-Телефон: {$data->user.phone}
-{if $data->user.is_company}Название организации: {$data->user.company}
-ИНН: {$data->user.company_inn}
+<p>ID: {$data->user.id}<br>
+Ф.И.О.: {$data->user.name} {$data->user.surname} {$data->user.midname}<br>
+E-mail: {$data->user.e_mail}<br>
+Телефон: {$data->user.phone}<br>
+{if $data->user.is_company}Название организации: {$data->user.company}<br>
+ИНН: {$data->user.company_inn}<br>
 {/if}
--------------------------------------
-Логин: {$data->user.login}
-Пароль: {$data->password}
+-------------------------------------<br>
+Логин: {$data->user.login}<br>
+Пароль: {$data->password}<br>
 
-Автоматическая рассылка {$url->getDomainStr()}.
-</pre>
+<p>Автоматическая рассылка {$url->getDomainStr()}.</p>

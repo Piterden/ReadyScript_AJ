@@ -83,7 +83,7 @@ class Mysql
         
         
         $words = preg_split('/[\s,]+/u', $this->query, -1, PREG_SPLIT_NO_EMPTY);
-        $stemmer = new \RS\Stem\Ru();
+        $stemmer = new \Search\Model\Stem\Ru();
         
         $query = $this->query;
         foreach($words as $word) {

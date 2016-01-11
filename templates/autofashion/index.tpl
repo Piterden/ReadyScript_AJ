@@ -1,6 +1,6 @@
 {extends file="%THEME%/wrapper.tpl"}
 {block name="content"}
-<div class="container main"> 
+<div class="container main">
 
 	{* Баннеры *}
 	{moduleinsert name="\Banners\Controller\Block\Slider" zone="home_slider"}
@@ -42,7 +42,7 @@
 	<div class="aboutBody container">
 		<div class="row">
 			<div class="col-md-12 col-md-offset-6">
-				<p>Немецко-­российский бренд AutoJack известен на рынке с 2000 года и добился широкой известности благодаря инновационному подходу к созданию верхней одежды. В нашей продукции используются лучшие материалы и технологии со всего мира, объединенные в фирменную систему Climate-Control®. Climate-Control® гарантирует потребителю идеальный комфорт в любых условиях. </p> 
+				<p>Немецко-­российский бренд AutoJack известен на рынке с 2000 года и добился широкой известности благодаря инновационному подходу к созданию верхней одежды. В нашей продукции используются лучшие материалы и технологии со всего мира, объединенные в фирменную систему Climate-Control®. Climate-Control® гарантирует потребителю идеальный комфорт в любых условиях. </p>
 
 				<p>Одежда от AutoJack предназначена для современного городского жителя, который проводит за рулем и в помещении не меньше времени, чем на улице.  Поэтому система Climate-Control® защищает не только от неблагоприятных погодных условий, но и от перегрева. В одежде от AutoJack вам будет не холодно и не жарко.</p>
 			</div>
@@ -64,7 +64,7 @@ jQuery(document).ready(function($) {
 		  	//console.log(offset);
             $parallaxBlock.css('background-position', '0 ' + offset + 'px');
         } else {
-           
+
         }
         //console.log($(this).scrollTop()); //check
     });
@@ -76,7 +76,7 @@ jQuery(document).ready(function($) {
 	<!-- <div class="box mt40">
 		{* Лидеры продаж *}
 		{moduleinsert name="\Catalog\Controller\Block\TopProducts" dirs="samye-prodavaemye-veshchi" pageSize="5"}
-		
+
 		<div class="oh mt40">
 			<div class="left">
 				{* Новости *}
@@ -85,14 +85,14 @@ jQuery(document).ready(function($) {
 			<div class="right">
 				{* Оплата и возврат *}
 				{moduleinsert name="\Article\Controller\Block\Article" indexTemplate="blocks/article/main_payment_block.tpl" article_id="molodezhnaya--glavnaya--ob-oplate"}
-				
+
 				{* Доставка *}
 				{moduleinsert name="\Article\Controller\Block\Article" indexTemplate="blocks/article/main_delivery_block.tpl" article_id="molodezhnaya--glavnaya--o-dostavke"}
 			</div>
 		</div>
 		{* Товары во вкладках *}
 		{moduleinsert name="\Catalog\Controller\Block\ProductTabs" categories=["populyarnye-veshchi", "novye-postupleniya"] pageSize=6}
-		
+
 		{* Бренды *}
 		{moduleinsert name="\Catalog\Controller\Block\BrandList"}
 	</div> -->

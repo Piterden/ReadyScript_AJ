@@ -76,13 +76,15 @@ class PhotoApi extends \RS\Module\AbstractModel\EntityList
     function fixSortNumbers($linkid, $type)
     {
         $linkid = (int)$linkid;
-        $type = mysql_real_escape_string($type);
         \RS\Db\Adapter::SQLExec("SET @rownumber=0");
         \RS\Db\Adapter::SQLExec("
             UPDATE {$this->obj_instance->_getTable()} set `sortn` = (@rownumber := @rownumber + 1) - 1
-            WHERE `linkid` = '{$linkid}' AND `type` = '{$type}'
+            WHERE `linkid` = '#linkid' AND `type` = '#type'
             order by `sortn` asc
-        ");
+        ", array(
+            'linkid' => $linkid,
+            'type' => $type
+        ));
     }
 
     

@@ -99,7 +99,7 @@ class Api extends \RS\Module\AbstractModel\BaseModel
         if (!isset($this->data['myVersions'])) return null;
         return isset($this->data['myVersions'][$module]) ? $this->data['myVersions'][$module] : false;
     }
-    
+                                               
     /**
     * Подготавливает список версий программы, для которых можно получить обновления
     * 
@@ -110,7 +110,8 @@ class Api extends \RS\Module\AbstractModel\BaseModel
         \RS\File\Tools::makePath($this->update_tmp_folder);
         $this->setData(null);
         $params = array(
-            'do' => 'getProductsForUpdate'
+            'do' => 'getProductsForUpdate',
+            'modules' => implode(',', get_loaded_extensions())
         );
         $response = $this->requester($params);
 

@@ -68,6 +68,11 @@ class UserGroup extends \RS\Orm\OrmObject
         ));
     }
     
+    function getPrimaryKeyProperty()
+    {
+        return 'alias';
+    }
+    
     function delete()
     {
         if (in_array($this['alias'], $this->non_delete_groups)) return false; //Группу администраторы - удалить нельзя. Это базовыя группа.

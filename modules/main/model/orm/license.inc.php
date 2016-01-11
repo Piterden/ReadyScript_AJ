@@ -117,6 +117,11 @@ class License extends \RS\Orm\AbstractObject
         ));
     }
     
+    function getPrimaryKeyProperty()
+    {
+        return 'license';
+    }
+    
     function beforeWrite($flag)
     {
         $error = null;

@@ -50,6 +50,9 @@ class File extends \RS\Orm\ConfigObject
             )),
             'add_urls' => new Type\Text(array(
                 'description' => 'Добавить следующие адреса (каждый с новой строки)'
+            )),
+            'exclude_urls' => new Type\Text(array(
+                'description' => 'Исключить следующие адреса по маске (каждый с новой строки, применяются регулярные выражения)'
             ))
         ));
         

@@ -31,14 +31,6 @@ class Menu extends \RS\Orm\OrmObject
     {
         parent :: _init();
         
-        if (\RS\Debug\Mode::isEnabled()) {
-            $this->addDebugActions(array(
-                new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'menu-ctrl')),
-                new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'menu-ctrl')),
-                new \RS\Debug\Action\Create(\RS\Router\Manager::obj()->getAdminPattern('add', array(':pid' => '{id}'), 'menu-ctrl'), t('создать подменю'))
-            ));
-        }
-        
         $properties = $this->getPropertyIterator()->append(array(
             t('Основные'),
                     'site_id' => new Type\CurrentSite(),
@@ -148,6 +140,20 @@ class Menu extends \RS\Orm\OrmObject
             ->addIndex(array('parent', 'sortn'))
             ->addIndex('site_id');
     }
+    
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    public function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'menu-ctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'menu-ctrl')),
+            new \RS\Debug\Action\Create(\RS\Router\Manager::obj()->getAdminPattern('add', array(':pid' => '{id}'), 'menu-ctrl'), t('создать подменю'))
+        );
+    }    
     
     public static function checkEmptyDependTypelink($coreobj, $value, $real_errtext)
     {

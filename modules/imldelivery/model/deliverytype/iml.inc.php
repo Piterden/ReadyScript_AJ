@@ -9,7 +9,7 @@ use \RS\Orm\Type;
 
 class Iml extends \Shop\Model\DeliveryType\AbstractType
 {
-    const 
+    const
         // Учетные данные
         API_LOGIN = '07308',
         API_PASS = 'TAaB4myF',
@@ -19,7 +19,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         URL_API_ORDERSLIST          =   'http://api.iml.ru/json/GetOrders',
         URL_API_CREATEORDER         =   'http://api.iml.ru/json/CreateOrder',
         URL_API_GETPRICE            =   'http://api.iml.ru/json/GetPrice',
-        
+
         // Справочные таблицы для API
         URL_HELP_DELIVERYSTATUS     =   'http://api.iml.ru/list/deliverystatus?type=json',
         URL_HELP_ORDERSTATUS        =   'http://api.iml.ru/list/orderstatus?type=json',
@@ -39,45 +39,45 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         URL_POSTCODE                =   'http://list.iml.ru/PostCode?type=json',
         URL_CALENDAR                =   'http://list.iml.ru/calendar?type=json',
         URL_SERVICE                 =   'http://list.iml.ru/service?type=json';
-    
+
     //protected
         //$service_id            = null, // Текущая услуга
         //$region_id_from        = null; // Услуги доставки IML
         //$carries          = null; // Агрегаторы доставки существующие в sheepla
 
     private
-        $cache_api_requests = array();  // Кэш запросов к серверу рассчета 
+        $cache_api_requests = array();  // Кэш запросов к серверу рассчета
 
     /**
     * Возвращает название расчетного модуля (типа доставки)
-    * 
+    *
     * @return string
     */
     function getTitle()
     {
         return t('IML');
     }
-    
+
     /**
     * Возвращает описание типа доставки
-    * 
+    *
     * @return string
     */
     function getDescription()
     {
         return t('IML агрегатор доставок');
     }
-    
+
     /**
     * Возвращает идентификатор данного типа доставки. (только англ. буквы)
-    * 
+    *
     * @return string
     */
     function getShortName()
     {
         return t('iml');
     }
-    
+
     /**
     * Функция которая возвращает надо ли, проверять возможность создание заказа на доставку
     *
@@ -85,11 +85,11 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     */
     function getNeedCheckCreate(){
         return true;
-    } 
-    
+    }
+
     /**
     * Возвращает ORM объект для генерации формы или null
-    * 
+    *
     * @return \RS\Orm\FormObject | null
     */
     function getFormObject()
@@ -131,14 +131,14 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'description' => t('Время ожидания ответа IML, сек'),
                 'hint' => t('Иногда запросы к IML идут очень долго,<br/> чтобы не дожидатся ответа используется это значение.<br/>Рекоммендуемое значение 2 сек.'),
                 'default' => 2,
-            )),  
+            )),
         ));
         return new \RS\Orm\FormObject($properties);
-    } 
+    }
 
     /**
      * Справочник услуг
-     * 
+     *
      * @return array [id]|string => [name]|string
      */
     static function staticGetServices()
@@ -147,10 +147,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $list = $iml->getApiRequest(self::URL_HELP_SERVICES, self::API_LOGIN, self::API_PASS);
         return $iml->getHelpIdList($list);
     }
-    
+
     /**
      * Справочник регионов
-     * 
+     *
      * @return array [id]|string => [name]|string
      */
     static function staticGetRegions()
@@ -162,7 +162,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Справочник состояний заказа
-     * 
+     *
      * @return array [id]|string => [name]|string
      */
     static function staticGetDeliveryStatuses()
@@ -174,7 +174,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Справочник статусов заказа
-     * 
+     *
      * @return array [id]|string => [name]|string
      */
     static function staticGetOrderStatus()
@@ -186,8 +186,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Справочник пунктов самовывоза
-     * 
-     * @return array 
+     *
+     * @return array
      */
     static function getSelfDeliveryList()
     {
@@ -198,7 +198,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Получает массив регионов, в которых есть пункты самовывоза
-     * 
+     *
      * @return array [code] => [name]
      */
     static function getSdRegions(\Shop\Model\Orm\Order $order, $delivery_id = null, $params = array())
@@ -215,9 +215,9 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Получает пункты самовывоза одного региона
-     *                     
+     *
      * @param  string $params код региона из справочника
-     * @return array 
+     * @return array
      */
     static function getSdByRegion(\Shop\Model\Orm\Order $order, $delivery_id = null, $params = array())
     {
@@ -248,8 +248,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Добавляет доп данные в объект заказа
-     * 
-     * @param array $params 
+     *
+     * @param array $params
      */
     static function updateExtraData(\Shop\Model\Orm\Order $order, $delivery_id, $params)
     {
@@ -257,13 +257,13 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         foreach ($params as $key => $value) {
             $extra['delivery'][$key] = $value;
         }
-        
+
         return $order['order_extra'] = array_merge($order['order_extra'], $extra);
     }
 
     /**
      * Запрос получает статус и состояние заказа(ов)
-     * 
+     *
      * @param  array|null $filters
      * @return array
      */
@@ -289,7 +289,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Запрос позволяет получить список заказов по параметрам
-     * 
+     *
      * @param  array|null $filters
      * @return array
      */
@@ -315,7 +315,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Запрос позволяет создать заказ в системе IML
-     * 
+     *
      * @param  array|null $filters
      * @return array
      */
@@ -327,7 +327,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $currency      = \Catalog\Model\CurrencyApi::getBaseCurrency(); //Базовая валюта
         $date          = date('c',strtotime($order['dateof'])); //Дата заказа
         $delivery      = $order->getDelivery(); //объект доставки
-        $delivery_cost = $delivery->getDeliveryCost($order);   
+        $delivery_cost = $delivery->getDeliveryCost($order);
         $payment       = $order->getPayment();
         $user          = $order->getUser();
         $extra         = $order->getExtraInfo();
@@ -424,7 +424,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Запрос базовой стоимости заказа у IML
-     * 
+     *
      * @param  array|null $filters
      * @return array
      */
@@ -444,7 +444,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'Job' => $code,                 // услуга
                 'RegionFrom' => $imlData['region_id_from'],      // регион отправки
                 'RegionTo' => $imlData['region_id_to'],             // регион получения
-                'Volume' => '1',                                            // кол-во мест  
+                'Volume' => '1',                                            // кол-во мест
                 'Weigth' => $order->getWeight() ? $order->getWeight() : '1',// вес(кг)
                 'SpecialCode' => $imlData['request_code']        // код пункта самовывоза(см. справочник пунктов самовывоза)
             );
@@ -455,8 +455,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Получает цену на доставку до пунктов самовывоза
-     * 
-     * @param  array $params 
+     *
+     * @param  array $params
      * @return string|number
      */
     static function getDeliveryCostAjax(\Shop\Model\Orm\Order $order, $delivery_id, $params)
@@ -468,14 +468,14 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
     * Возвращает стоимость доставки для заданного заказа. Только число.
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order
     * @param \Shop\Model\Orm\Address $address - Адрес доставки
     * @return double
     */
     function getDeliveryCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null, $use_currency = true)
     {
-        if(!$address) { 
+        if(!$address) {
             $address = $order->getAddress();
         }
         $cost = $this->getImlCost($order, $address);
@@ -500,7 +500,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Основной POST запрос к API. Вернет массив объектов
-     * 
+     *
      * @param  string         $url
      * @param  string         $login
      * @param  string         $pass
@@ -523,7 +523,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
      * Основной GET запрос к API. Вернет массив объектов
-     * 
+     *
      * @param  string         $url
      * @param  string         $login
      * @param  string         $pass
@@ -538,12 +538,12 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         curl_setopt($curl, CURLOPT_SSLVERSION, 3);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($curl);
-        return json_decode($response, true); // результат запроса  
+        return json_decode($response, true); // результат запроса
     }
 
     /**
      * Переделывает структуру массива для формы в админке
-     * 
+     *
      * @return array [id] => [name]
      */
     private function getHelpIdList($incomingData)
@@ -557,7 +557,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
     * Возвращает дополнительный HTML для публичной части
-    * 
+    *
     * @return string
     */
     function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
@@ -578,12 +578,14 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'currency'           => json_encode($order->getMyCurrency()),       //Текущий объект валюты
             'delivery'           => $delivery,                                  //Текущий объект доставки
             'user'               => \RS\Application\Auth::getCurrentUser(),     //Текущий объект пользователя
-        ) + \RS\Module\Item::getResourceFolders($this)); 
+        ) + \RS\Module\Item::getResourceFolders($this));
 
         if ($this->getOption('show_map') == 1) {
             return $view->fetch('%imldelivery%/delivery/iml/widget.tpl');
+        } else {
+        	return $view->fetch('%imldelivery%/delivery/iml/simple_cost.tpl');
         }
-        
+
     }
 
     static function loadMap(\Shop\Model\Orm\Order $order, $delivery_id, $params)
@@ -611,7 +613,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     /**
     * Функция срабатывает после создания заказа
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order     - объект заказа
     * @param \Shop\Model\Orm\Address $address - Объект адреса
     * @return void
@@ -621,7 +623,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $extra = $order->getExtraInfo();
         if (!isset($extra['iml_order_response'])){ // Если заказ не создан
             //Создадим заказ
-            //$created_order = $this->createImlOrder($order,$address); 
+            //$created_order = $this->createImlOrder($order,$address);
             //Если ответа дождались, то запишем номер заказа
 //            if ($created_order){
 //                if ($created_order['Result'] == 'OK') {
@@ -649,9 +651,9 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 //                    'iml_api_error'
 //                );
 //            }
-            //$extra = $order->getExtraInfo();      
-        }  
-               
+            //$extra = $order->getExtraInfo();
+        }
+
         //Запишем данные в таблицу, чтобы не вызывать повторного сохранения
         \RS\Orm\Request::make()
             ->update()
@@ -661,29 +663,29 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             ))
             ->where(array(
                 'id' => $order['id']
-        ))->exec(); 
+        ))->exec();
     }
 
     /**
     * Возвращает дополнительный HTML для административной части с выбором опций доставки в заказе
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - заказ доставки
     * @return string
     */
     function getAdminAddittionalHtml(\Shop\Model\Orm\Order $order = null)
-    {  
+    {
         //Получим данные по товарам
         $products = $order->getCart()->getProductItems();
-        
+
         if (empty($products)){
             $this->addError(t('В заказ не добавлено ни одного товара'));
         }
-        
+
         //Получим цену с параметрами по умолчанию
         $cost     = $this->getDeliveryCostText($order);
         $delivery = $order->getDelivery();
         $service_id = $this->getOption('service_id');
-        
+
         $view = new \RS\View\Engine();
         $view->assign(array(
             'errors'      => $this->getErrors(),
@@ -692,14 +694,14 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'extra_info'  => $order->getExtraKeyPair(),
             'delivery'    => $delivery,
             'service_id'  => $service_id,
-        )+ \RS\Module\Item::getResourceFolders($this));           
-        
+        )+ \RS\Module\Item::getResourceFolders($this));
+
         return $view->fetch("%imldelivery%/form/delivery/iml/iml_admin.tpl");
     }
 
     /**
     * Возвращает HTML виджет с краткой информацией заказа для админки
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - объект заказа
     */
     private function getHtmlShortInfo(\Shop\Model\Orm\Order $order)
@@ -710,77 +712,77 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
          'title' => 'Краткие сведения заказа',
          'order' => $order,
          'delivery_type' => $this
-       ));                       
-       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl'); 
+       ));
+       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl');
     }
-    
+
     /**
     * Возвращает HTML виджет с информацией заказа для админки
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - объект заказа
     */
     private function getHtmlInfo(\Shop\Model\Orm\Order $order)
     {
        $view = new \RS\View\Engine();
        $view->assign(array(
-         'public_api_js_url'  => self::PUBLIC_API_URL_JS,  
-         'public_api_css_url' => self::PUBLIC_API_URL_CSS, 
-         'api_key' => $this->getOption('admin_api',0),    
-         'cultureId' => $this->getOption('language',self::DEFAULT_LANGUAGE_ID),   
+         'public_api_js_url'  => self::PUBLIC_API_URL_JS,
+         'public_api_css_url' => self::PUBLIC_API_URL_CSS,
+         'api_key' => $this->getOption('admin_api',0),
+         'cultureId' => $this->getOption('language',self::DEFAULT_LANGUAGE_ID),
          'type' => 'full',
          'title' => 'Сведения заказа',
          'order' => $order,
          'delivery_type' => $this
-       ));                       
-       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl'); 
+       ));
+       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl');
     }
-    
+
     /**
     * Возвращает HTML виджет с историей заказа для админки
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - объект заказа
     */
     private function getHtmlHistory(\Shop\Model\Orm\Order $order)
     {
        $view = new \RS\View\Engine();
        $view->assign(array(
-         'public_api_js_url'  => self::PUBLIC_API_URL_JS,  
-         'public_api_css_url' => self::PUBLIC_API_URL_CSS, 
-         'api_key' => $this->getOption('admin_api',0),    
-         'cultureId' => $this->getOption('language',self::DEFAULT_LANGUAGE_ID),   
+         'public_api_js_url'  => self::PUBLIC_API_URL_JS,
+         'public_api_css_url' => self::PUBLIC_API_URL_CSS,
+         'api_key' => $this->getOption('admin_api',0),
+         'cultureId' => $this->getOption('language',self::DEFAULT_LANGUAGE_ID),
          'type' => 'history',
          'title' => 'История заказа',
          'order' => $order,
          'delivery_type' => $this
-       ));                  
-         
-       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl'); 
+       ));
+
+       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl');
     }
-    
+
     /**
     * Возвращает HTML виджет со статусом заказа для админки
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - объект заказа
     */
     private function getHtmlStatus(\Shop\Model\Orm\Order $order)
     {
        $view = new \RS\View\Engine();
        $view->assign(array(
-         'public_api_js_url'  => self::PUBLIC_API_URL_JS,  
-         'public_api_css_url' => self::PUBLIC_API_URL_CSS, 
-         'api_key' => $this->getOption('admin_api',0),    
-         'cultureId' => $this->getOption('language',self::DEFAULT_LANGUAGE_ID),   
+         'public_api_js_url'  => self::PUBLIC_API_URL_JS,
+         'public_api_css_url' => self::PUBLIC_API_URL_CSS,
+         'api_key' => $this->getOption('admin_api',0),
+         'cultureId' => $this->getOption('language',self::DEFAULT_LANGUAGE_ID),
          'type' => 'standard',
          'title' => 'Статус заказа',
          'order' => $order,
          'delivery_type' => $this
-       ));                       
-       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl'); 
+       ));
+       return $view->fetch('%imldelivery%/form/delivery/iml/iml_get_status.tpl');
     }
-    
+
     /**
     * Действие с запросами к заказу для получения дополнительной информации от доставки
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - объект заказа
     */
     function actionOrderQuery(\Shop\Model\Orm\Order $order)
@@ -789,35 +791,35 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $method = $url->request('method',TYPE_STRING,false);
         switch ($method){
             case "getInfo": //Получение статуса заказа
-                return $this->getHtmlInfo($order); 
+                return $this->getHtmlInfo($order);
                 break;
             case "getShortInfo": //Получение статуса заказа
-                return $this->getHtmlShortInfo($order); 
+                return $this->getHtmlShortInfo($order);
                 break;
             case "getHistory": //Получение статуса заказа
-                return $this->getHtmlHistory($order); 
+                return $this->getHtmlHistory($order);
                 break;
             case "getStatus": //Получение статуса заказа
             default:
-                return $this->getHtmlStatus($order);    
+                return $this->getHtmlStatus($order);
                 break;
         }
     }
-    
+
     /**
     * Возвращает дополнительный HTML для админ части в заказе
-    * 
+    *
     * @param \Shop\Model\Orm\Order $order - заказ доставки
     * @return string
     */
     function getAdminHTML(\Shop\Model\Orm\Order $order)
     {
         $view = new \RS\View\Engine();
-        
+
         $view->assign(array(
             'order' => $order,
         ));
-        
+
         return $view->fetch("%imldelivery%/form/delivery/iml/iml_additional_html.tpl");
     }
 }

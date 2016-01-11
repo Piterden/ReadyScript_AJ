@@ -25,6 +25,7 @@ class Product extends \RS\Csv\AbstractSchema
                 'excludeFields' => array(
                     'site_id', 'processed', 'brand_id', 'unit', 'recommended', 'concomitant', 'maindir'
                 ),
+                'savedRequest' => \Catalog\Model\Api::getSavedRequest('Catalog\Controller\Admin\Ctrl_list'), //Объект запроса из сессии с параметрами текущего просмотра списка
                 'multisite'    => true,
                 'nullFields'   => array('id'),
                 'searchFields' => $config['csv_id_fields'],
@@ -55,6 +56,19 @@ class Product extends \RS\Csv\AbstractSchema
                     'linkPresetId' => 0,
                     'linkIdField'  => 'id'
                 )),
+                new Preset\TreeParent(array(
+                    'ormObject' => new Orm\Dir(),
+                    'titles' => array(
+                        'name' => t('Основная категория')
+                    ),
+                    'idField' => 'id',
+                    'parentField' => 'parent',
+                    'treeField' => 'name',
+                    'rootValue' => 0,
+                    'multisite' => true,                
+                    'linkForeignField' => 'maindir',
+                    'linkPresetId' => 0
+                )), 
                 new CustomPreset\Catalog(array(
                     'ormObject'   => new Orm\Dir(),
                     'idField'     => 'id',
@@ -80,7 +94,7 @@ class Product extends \RS\Csv\AbstractSchema
                     'linkIdField'  => 'id',
                     'multisite'    => true
                 )),
-                new CustomPreset\Cost(array(
+                new \Catalog\Model\CsvPreset\Cost(array(
                     'linkPresetId' => 0,
                     'linkIdField' => 'id',
                     'arrayField' => 'xcost',
@@ -115,35 +129,6 @@ class Product extends \RS\Csv\AbstractSchema
         );
     }
     
-    /**
-    * Возвращает запрос для базовой выборки элементов из БД для экспорта и импорта
-    * 
-    * @return \RS\Orm\Request
-    */
-    function getBaseQuery()
-    {
-       $parent_dir = $this->getParamByKey('dir'); //Папка в которой ищем товары
-       
-       if (!$this->query) {
-            //Получим все подкатегории для поиска
-            $dir_api = new \Catalog\Model\Dirapi();
-            $ids = $dir_api->FindSubFolder(array(
-                $parent_dir
-            ));
-           
-            //Дописываем базовый пресет для выборки с учётом категории
-            /**
-            * @var \RS\Orm\Request
-            */
-            $query       = $this->base_preset->getSelectRequest();
-            $query->asAlias('A')
-                  ->join(new \Catalog\Model\Orm\Xdir(), 'X.product_id=A.id','X')
-                  ->groupby('A.id')
-                  ->whereIn('dir_id',$ids); 
-            $this->query = $query;  
-       }
-       return $this->query;
-    }
     
     public static function beforeLineImport($_this)
     {
@@ -175,7 +160,7 @@ class Product extends \RS\Csv\AbstractSchema
         }
     }    
 
-/**
+    /**
     * Возвращает возможные колонки для идентификации продукта
     * 
     * @return array
@@ -191,4 +176,4 @@ class Product extends \RS\Csv\AbstractSchema
     }    
 }
 
-?>
+

@@ -3,7 +3,7 @@
     <defaultValues>
         <name multilanguage="true">Управление сайтами</name>
         <description multilanguage="true">Добавление, изменение сайтов в системе</description>
-        <version>2.0.0.22</version>
+        <version>2.0.0.23</version>
         <author>ReadyScript lab.</author>
         <is_system>1</is_system>        
     </defaultValues>

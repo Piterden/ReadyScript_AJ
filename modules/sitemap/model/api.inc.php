@@ -93,14 +93,24 @@ class Api
         $xml->startElement('urlset');
         $xml->writeAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
         
+        $exclude_urls = !empty($config['exclude_urls']) ? explode("\r", $config['exclude_urls']) : array(); //url которые надо исключить
+        
         $base_url = rtrim(\RS\Site\Manager::getSite()->getRootUrl(true), '/');
         foreach($pagelist as $page_data) {
-            $xml->startElement('url');
             $page = array_intersect_key($page_data, array_flip(array('loc', 'lastmod', 'changefreq', 'priority'))) + $default_page;
+            
+            if (substr($page['loc'], 0, 4) != 'http') {
+                $page['loc'] = $base_url.$page['loc'];
+            }
+            
+            foreach ($exclude_urls as $exclude_url) {
+                if (preg_match("/".trim(str_replace('/', '\/', $exclude_url))."/ui", $page['loc'])){   
+                    continue 2;
+                }  
+            } 
+                        
+            $xml->startElement('url');
             foreach($page as $node => $value) {
-                if ($node == 'loc' && substr($value,0,4) != 'http') {
-                    $value = $base_url.$value;
-                }
                 $xml->writeElement($node, $value);
             }
             $xml->endElement();
@@ -110,4 +120,3 @@ class Api
         unset($xml);
     }
 }
-?>

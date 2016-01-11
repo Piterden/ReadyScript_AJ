@@ -101,7 +101,12 @@ class WareHouse extends \RS\Orm\OrmObject
                     'public' => new Type\Integer(array(
                         'maxLength' => '1',
                         'index' => true,
-                        'description' => t('Показывать склад'),
+                        'description' => t('Показывать склад в карточке товара'),
+                        'CheckboxView' => array(1, 0),
+                    )),
+                    'checkout_public' => new Type\Integer(array(
+                        'maxLength' => 1,
+                        'description' => t('Показывать склад как пункт самовывоза'),
                         'CheckboxView' => array(1, 0),
                     )),
                     'use_in_sitemap' => new Type\Integer(array(

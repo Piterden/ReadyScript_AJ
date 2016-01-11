@@ -21,12 +21,7 @@ class Dir extends \RS\Orm\OrmObject
         $product_xdir;
     
     function _init()
-    {
-        $this->addDebugActions(array(
-            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit_dir', array(':id' => '{id}'), 'catalog-ctrl')),
-            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del_dir', array(':chk[]' => '{id}'), 'catalog-ctrl'))
-        ));   
-                
+    {                
         parent::_init()->append(array(
             t('Основные'),
                     'site_id' => new Type\CurrentSite(),
@@ -160,6 +155,19 @@ class Dir extends \RS\Orm\OrmObject
         $this->addIndex(array('site_id', 'parent'));
         $this->addIndex(array('site_id', 'xml_id'), self::INDEX_UNIQUE);
         $this->addIndex(array('site_id', 'alias'), self::INDEX_UNIQUE);
+    }
+    
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit_dir', array(':id' => '{id}'), 'catalog-ctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del_dir', array(':chk[]' => '{id}'), 'catalog-ctrl'))        
+        );
     }
     
     function _initDefaults()

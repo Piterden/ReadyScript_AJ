@@ -184,7 +184,7 @@ class Csv extends \RS\Controller\Admin\Front
                 if ($csv_schema->validateImportWorkField($columns)) {
                     $csv_schema->setWorkFields($columns);
                     //Начинаем импортировать строки
-                    $result = $csv_schema->import($csv_file,$config['csv_check_timeout'],$start_pos);
+                    $result = $csv_schema->import($csv_file, $config['csv_check_timeout'], $start_pos);
                     
                     if ($result === true) {
                         //Импорт завершён
@@ -273,5 +273,3 @@ class Csv extends \RS\Controller\Admin\Front
         return $this->result->setSuccess(true);
     }
 }
-  
-?>

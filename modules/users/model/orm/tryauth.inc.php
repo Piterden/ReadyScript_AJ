@@ -41,5 +41,9 @@ class TryAuth extends \RS\Orm\AbstractObject
     {
         $this->setLocalParameter('checkRights', false);
     }
-
+    
+    function getPrimaryKeyProperty()
+    {
+        return 'ip';
+    }
 }

@@ -68,10 +68,10 @@
         </div>
     </div>
     <div class="viewport mainContent">
-        
+
         {* Данный блок будет переопределен у наследников данного шаблона *}
         {block name="content"}{/block}
-        
+
         <div class="preFooter">
             <div class="container">
                 <div class="row">
@@ -163,5 +163,5 @@
             </div>
         </footer>
     </div>
-    
+
 </div> <!-- .bodyWrap -->

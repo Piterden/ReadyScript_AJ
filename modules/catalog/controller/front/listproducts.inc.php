@@ -270,6 +270,7 @@ class ListProducts extends \RS\Controller\Front
                 ));
             } else {
                 $this->view->assign(array(
+                    'list' => array(),
                     'no_query_error' => true
                 ));
             }
