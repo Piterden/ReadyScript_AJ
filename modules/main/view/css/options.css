@@ -1,19 +1,18 @@
 .cache_links li {
-    line-height:16px;
-    height: 16px;
-    margin:5px 0;
+	line-height: 16px;
+	height: 16px;
+	margin: 5px 0;
 }
 
 .cache_links img {
-    vertical-align:middle;
+	vertical-align: middle;
 }
 
-.cache_links a:hover{
-    text-decoration:underline;
-    
+.cache_links a:hover {
+	text-decoration: underline;
 }
 
 .cache_info {
-    padding:5px;
-    color: #585858;
+	padding: 5px;
+	color: #585858;
 }

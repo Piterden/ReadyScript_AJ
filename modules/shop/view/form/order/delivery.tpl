@@ -39,6 +39,7 @@
                     <td>Склад</td>
                     <td class="d_warehouse">
                         <select name="warehouse">
+                            <option value="0">не выбран</option>
                             {foreach $warehouse_list as $warehouse}
                                 <option value="{$warehouse.id}" {if $elem.warehouse == $warehouse.id}selected="selected"{/if}>{$warehouse.title}</option>
                             {/foreach}

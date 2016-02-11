@@ -1,10 +1,11 @@
 <?php
+
 /**
-* ReadyScript (http://readyscript.ru)
-*
-* @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
-* @license http://readyscript.ru/licenseAgreement/
-*/
+ * ReadyScript (http://readyscript.ru)
+ * 
+ * @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
+ * @license http://readyscript.ru/licenseAgreement/
+ */
 namespace RS\Helper\PhpMailer;
 
 /**
@@ -12,13 +13,14 @@ namespace RS\Helper\PhpMailer;
  */
 class phpmailerException extends \Exception
 {
-    /**
-     * Prettify error message output
-     * @return string
-     */
-    public function errorMessage()
-    {
-        $errorMsg = '<strong>' . $this->getMessage() . "</strong><br />\n";
-        return $errorMsg;
-    }
+	/**
+	 * Prettify error message output
+	 * 
+	 * @return string
+	 */
+	public function errorMessage()
+	{
+		$errorMsg = '<strong>' . $this->getMessage () . "</strong><br />\n";
+		return $errorMsg;
+	}
 }

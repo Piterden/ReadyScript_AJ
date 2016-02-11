@@ -1,9 +1,10 @@
 <?php
+
 namespace Wishlist\Config;
 
 /**
-* Класс деинсталяции модуля
-*/
+ * Класс деинсталяции модуля
+ */
 class Uninstall extends \RS\Module\AbstractUninstall
 {}
 ?>

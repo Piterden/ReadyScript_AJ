@@ -6,8 +6,18 @@
 {assign var=products value=$cart->getProductItems()}
 {assign var=user value=$order->getUser()}
 {assign var=pay value=$order->getPayment()}
-
 {assign var=hl value=["n","hl"]}
+<style type="text/css">
+.order-table {
+    border-collapse:collapse;
+    border:1px solid #aaa;
+}
+
+.order-table td {
+    padding:3px;
+    border:1px solid #aaa;
+}
+</style>
 Уважаемый, администратор! На сайте {$url->getDomainStr()} оформлен заказ.<br>
 Номер заказа: <a href="{$router->getAdminUrl('edit', ["id" => $order.id], 'shop-orderctrl', true)}"><strong>{$order.order_num}</strong></a> от <strong>{$order.dateof|dateformat:"@date @time:@sec"}</strong>
 
@@ -144,6 +154,13 @@
                 <td class="otitle">Адрес</td>
                 <td class="d_address">{$address.address}</td>
             </tr>
+            {if $delivery->getTypeObject()->isMyselfDelivery()}
+            {$warehouse=$data->order->getWarehouse()} 
+            <tr class="{cycle values=$hl name="delivery"}">
+                <td class="otitle">Склад самовывоза</td>
+                <td class="d_address">"{$warehouse.title}" (Адрес: {$warehouse.adress})</td>
+            </tr>
+            {/if}
     </table>    
 {/if}
 
@@ -163,12 +180,10 @@
                     Документы на оплату
                 </td>
                 <td>
-                    <ul>
-                        {assign var=type_object value=$pay->getTypeObject()}
-                        {foreach from=$type_object->getDocsName() key=key item=doc}
-                        <li><a href="{$type_object->getDocUrl($key, true)}" target="_blank">{$doc.title}</a></li>
-                        {/foreach}
-                    </ul>
+                    {assign var=type_object value=$pay->getTypeObject()}
+                    {foreach from=$type_object->getDocsName() key=key item=doc}
+                    <a href="{$type_object->getDocUrl($key, true)}" target="_blank">{$doc.title}</a><br>
+                    {/foreach}
                 </td>
             </tr>
             {/if}
@@ -182,7 +197,7 @@
             </tr>                    
     </table>  
 {/if}
-
+<br><br>
 <table cellpadding="5" border="1" bordercolor="#969696" style="border-collapse:collapse; border:1px solid #969696">
     <thead>
     <tr>

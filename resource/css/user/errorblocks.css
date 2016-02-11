@@ -1,9 +1,9 @@
 .comError {
-    border:1px dashed red;
-    padding:10px;
-    overflow:auto;
+	border: 1px dashed red;
+	padding: 10px;
+	overflow: auto;
 }
 
 .comError .more {
-    display:none;
+	display: none;
 }

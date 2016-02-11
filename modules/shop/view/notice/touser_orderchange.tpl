@@ -22,7 +22,7 @@
    {$delivery=$order->getDelivery()} 
    - Способ доставки Вашего товара - "{$delivery.title}" (Стоимость: {$order->getDeliveryCostText($delivery)})<br>
 {/if}
-{if $order_before.warehouse != $order.warehouse} {* Склад *}
+{if $order_before.warehouse != $order.warehouse && $order.warehouse != 0} {* Склад *}
    {$warehouse=$order->getWarehouse()} 
    - Склад самовывоза - "{$warehouse.title}" (Адрес: {$warehouse.adress}) <br>
 {/if}

@@ -13,7 +13,7 @@
 Заказ оформлен: {$data->order.dateof|date_format:"%d.%m.%Y"}<br>
 
 <p><strong>Параметры заказа</strong></p>
-{if $data->order.delivery}
+{if $data->order.delivery && !$delivery->getTypeObject()->isMyselfDelivery()}
     Адрес доставки: {$address->getLineView()}<br>
 {/if}
 {if $data->order.payment}
@@ -24,6 +24,10 @@
 {/if}
 {if $data->order.delivery}
     Способ доставки: {$delivery.title}<br>
+    {if $data->order.warehouse && $delivery->getTypeObject()->isMyselfDelivery()}
+        {$warehouse=$data->order->getWarehouse()} 
+        Склад самовывоза - "{$warehouse.title}" (Адрес: {$warehouse.adress}) <br>
+    {/if}
 {/if}
 
 <p><strong>Состав заказа</strong></p>

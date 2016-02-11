@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <theme scriptType="shop" scriptMajorVersion="2" themeType="pc">
-    <general>
-        <author>ReadyScript lab.</author>
-        <name>Классическая</name>
-        <description>Адаптивная тема, предусматривает различное отображение контента для различных устройств</description>
-        <version>3.0.0.69</version>
-    </general>    
+	<general>
+		<author>ReadyScript lab.</author>
+		<name>Классическая</name>
+		<description>Адаптивная тема, предусматривает различное отображение
+			контента для различных устройств</description>
+		<version>3.0.0.69</version>
+	</general>
 </theme>

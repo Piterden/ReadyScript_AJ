@@ -23,109 +23,88 @@
 				<div class="fcost">
 					{*assign var=last_price value=$product->getCost('Зачеркнутая цена')}
 					{if $last_price>0}<div class="lastPrice">{$last_price}</div>{/if*}
-					<span class="myCost">{$product->getCost()} {$product->getCurrency()}</span>
+					<span class="myCost">{$product->getCost()}</span>{$product->getCurrency()}
 				</div>
 				{if $product.barcode}
 					<p class="barcode"><span class="cap">Артикул:</span> <strong class="offerBarcode">{$product.barcode}</strong></p>
 				{/if}
 
-<div class="information">
-    {if $product->isMultiOffersUse()}
-        {* Многомерные комплектации *}
-        <span class="pname">{$product.offer_caption|default:'Комплектация'}</span>
-        {* Подгрузим у многомерных комплектаций фото к их вариантам *}
-        {$product->fillMultiOffersPhotos()}
-        {* Переберём доступные многомерные комплектации *}
-        <div class="multiOffers">
-            {foreach $product.multioffers.levels as $level}
-                {if !empty($level.values)}
-                    <div class="multiofferTitle">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
-                    {if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)*}
-                        <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
-                            {foreach $level.values as $value}
-                                <option value="{$value.val_str}">{$value.val_str}</option>
-                            {/foreach}
-                        </select>
-                        <div class="multiofferBlock multiofferBlock{$level.prop_id}">
-							{foreach $level.values as $value key=i}
-								<div class="moItem{if $i == 1} active{/if}"><div class="moItemInner">{$value.val_str}</div></div>
-							{/foreach}
-						</div>
-						<div class="clearfix"></div>
-                    {else} {* Как фото *}
-                        <div class="multiOfferValues">
-                            <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
-                            <div class="multiofferBlock multiofferBlock{$level.prop_id}">
-								{foreach $level.values as $value key=i}
-									<div class="moItem{if $i == 1} active{/if}"><div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">{$value.val_str}</div></div>
-								{/foreach}
-							</div>
-                        </div>
-                    {/if}
-                {else if !empty($level.values) && $level.title == 'Цвет'}
-					<div class="multiofferTitle">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
-                    {if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)*}
-                        <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
-                            {foreach $level.values as $value}
-                                <option value="{$value.val_str}">{$value.val_str}</option>
-                            {/foreach}
-                        </select>
-                        <div class="multiofferBlock multiofferBlock{$level.prop_id}" data-prop-id="{$level.prop_id}">
-						{foreach $level.values as $value key=i}
-							<div class="moItem{if $i == 1} active{/if}"><div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">{$value.val_str}</div></div>
-						{/foreach}
-					</div>
-						<div class="clearfix"></div>
-                    {else} {* Как фото *}
-                        <div class="multiOfferValues">
-                            <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
-                            {foreach $level.values as $value}
-                                {if isset($level.values_photos[$value.val_str])}
-                                    <a class="multiOfferValueBlock {if $value@first}sel{/if}" data-value="{$value.val_str}" data-image="{$level.values_photos[$value.val_str]->getUrl(310,310,'axy')}" data-is-dialog="1" title="{$value.val_str}"><img src="{$level.values_photos[$value.val_str]->getUrl(30,30,'axy')}"/></a>
-                                {else}
-                                    <a class="multiOfferValueBlock likeString {if $value@first}sel{/if}" data-value="{$value.val_str}" data-is-dialog="1" title="{$value.val_str}">{$value.val_str}</a>
-                                {/if}
-                            {/foreach}
-                        </div>
-                    {/if}
-                {/if}
-            {/foreach}
-        </div>
-        {if $product->isOffersUse()}
-            {foreach from=$product.offers.items key=key item=offer name=offers}
-                <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
-            {/foreach}
+				<div class="information">
+				    {if $product->isMultiOffersUse()}
+				        {* Многомерные комплектации *}
+				        {* <span class="pname">{$product.offer_caption|default:'Комплектация'}</span> *}
+				        {* Подгрузим у многомерных комплектаций фото к их вариантам *}
+				        {$product->fillMultiOffersPhotos()}
+				        {* Переберём доступные многомерные комплектации *}
+				        <div class="multiOffers">
+				            {foreach $product.multioffers.levels as $level}
+				                {if !empty($level.values)}
+				                <div class="clearfix"></div>
+				                    <div class="multiofferTitle">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
+				                    {if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)*}
+				                        <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
+				                            {foreach $level.values as $value}
+				                                <option value="{$value.val_str}">{$value.val_str}</option>
+				                            {/foreach}
+				                        </select>
+				                        <div class="multiofferBlock multiofferBlock{$level.prop_id}">
+											{foreach $level.values as $value key=i}
+												<div class="moItem{if $i == 1} active{/if}"><div class="moItemInner">{$value.val_str}</div></div>
+											{/foreach}
+										</div>
+										<div class="clearfix"></div>
+				                    {else} {* Как фото (цвет) *}
+				                        <div class="multiOfferValues">
+				                            <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
+				                            <div class="multiofferBlock multiofferBlock{$level.prop_id}">
+												{foreach $level.values as $value key=i}
+													<div class="moItem{if $i == 1} active{/if}"><div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">{$value.val_str}</div></div>
+												{/foreach}
+											</div>
+				                        </div>
+				                    {/if}
+				                {/if}
+				            {/foreach}
+				        </div>
+				        {if $product->isOffersUse()}
+				            {foreach from=$product.offers.items key=key item=offer name=offers}
+				                <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
+				            {/foreach}
 
-            <input type="hidden" name="offer" value="0"/>
-        {/if}
-    {elseif $product->isOffersUse()}
-        {* Простые комплектации *}
-        <div class="packages">
-            <div class="package">
-                <span class="pname">{$product.offer_caption|default:'Комплектация'}</span>
-                <div class="values">
-                    {if count($product.offers.items)>5}
-                        <select name="offer">
-                            {foreach from=$product.offers.items key=key item=offer name=offers}
-                            <option value="{$key}" {if $smarty.foreach.offers.first}checked{/if} {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>{$offer.title}</option>
-                            {/foreach}
-                        </select>
-                    {else}
-                        {foreach from=$product.offers.items key=key item=offer name=offers}
-                            <div class="packageItem">
-                                <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
-                                <label for="offer_{$key}">{$offer.title}</label><br>
-                            </div>
-                        {/foreach}
-                    {/if}
-                </div>
-            </div>
-        </div>
-    {/if}
-</div>
+				            <input type="hidden" name="offer" value="0"/>
+				        {/if}
+				    {elseif $product->isOffersUse()}
+				        {* Простые комплектации *}
+				        <div class="packages">
+				            <div class="package">
+				                <span class="pname">{$product.offer_caption|default:'Комплектация'}</span>
+				                <div class="values">
+				                    {if count($product.offers.items)>5}
+				                        <select name="offer">
+				                            {foreach from=$product.offers.items key=key item=offer name=offers}
+				                            <option value="{$key}" {if $smarty.foreach.offers.first}checked{/if} {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>{$offer.title}</option>
+				                            {/foreach}
+				                        </select>
+				                    {else}
+				                        {foreach from=$product.offers.items key=key item=offer name=offers}
+				                            <div class="packageItem">
+				                                <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
+				                                <label for="offer_{$key}">{$offer.title}</label><br>
+				                            </div>
+				                        {/foreach}
+				                    {/if}
+				                </div>
+				            </div>
+				        </div>
+				    {/if}
+				</div>
 
 				<div class="amountWrap">
-					<div class="amount">Количество: <input value="1" type="number" name="amount" class="fieldAmount"></div>
+					<div class="inc"><i class="fa fa-plus"></i></div>
+					<div class="amount">
+						Количество: <input value="1" type="number" name="amount" class="fieldAmount">
+					</div>
+					<div class="dec"><i class="fa fa-minus"></i></div>
 				</div>
 		        <div class="buttons">
 					{* Вывод наличия на складах *}
@@ -146,7 +125,7 @@
 							</div>
 						{/foreach}
 					</div>
-					<a data-href="{$router->getUrl('shop-front-cartpage', ["add" => $product.id])}" class="button addToCart noShowCart">В корзину</a>
+					<a data-href="{$router->getUrl('shop-front-cartpage', ["add" => $product.id])}" class="cornered button addToCart noShowCart">В корзину</a>
 				</div>
 			</div>
 		</div>

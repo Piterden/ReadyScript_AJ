@@ -172,7 +172,13 @@
 					{* Переберём доступные многомерные комплектации *}
 					{foreach $product.multioffers.levels as $level}
 						{if !empty($level.values) && $level.title != 'Цвет'}
-							<div class="multiofferTitle">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
+							<div class="multiofferTitle">
+								{if $level.title}
+									{$level.title}
+								{else}
+									{$level.prop_title}
+								{/if}
+							</div>
 							{if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)*}
 								<select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
 									{foreach $level.values as $value}

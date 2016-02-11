@@ -1,1 +1,1 @@
-На сайте {$url->getDomainStr()} оплачен заказ "{$data->order.order_num}"
+На сайте {$url->getDomainStr()} оплачен заказ "{$data->order.order_num}" на сумму {$data->order.totalcost|format_price}.

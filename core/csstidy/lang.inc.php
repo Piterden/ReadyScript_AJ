@@ -1,48 +1,42 @@
 <?php
 /**
-* ReadyScript (http://readyscript.ru)
-*
-* @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
-* @license http://readyscript.ru/licenseAgreement/
-*/
+ * ReadyScript (http://readyscript.ru)
+ * 
+ * @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
+ * @license http://readyscript.ru/licenseAgreement/
+ */
 
 /**
  * Localization of CSS Optimiser Interface of CSSTidy
- *
  * Copyright 2005, 2006, 2007 Florian Schmitz
- *
  * This file is part of CSSTidy.
- *
- *  CSSTidy is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation; either version 2.1 of the License, or
- *   (at your option) any later version.
- *
- *   CSSTidy is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU Lesser General Public License for more details.
- *
- *   You should have received a copy of the GNU Lesser General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * CSSTidy is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ * CSSTidy is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * 
  * @license http://opensource.org/licenses/lgpl-license.php GNU Lesser General Public License
  * @package csstidy
  * @author Florian Schmitz (floele at gmail dot com) 2005-2007
  * @author Brett Zamir (brettz9 at yahoo dot com) 2007
  */
-
-
-if (isset($_GET['lang'])) {
+if (isset ( $_GET['lang'] )) {
 	$l = $_GET['lang'];
-} elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+} elseif (isset ( $_SERVER['HTTP_ACCEPT_LANGUAGE'] )) {
 	$l = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-	$l = strtolower(substr($l, 0, 2));
+	$l = strtolower ( substr ( $l, 0, 2 ) );
 } else {
 	$l = '';
 }
 
-$l = (in_array($l, array('de', 'fr', 'zh'))) ? $l : 'en';
+$l = (in_array ( $l, array('de','fr','zh' 
+) )) ? $l : 'en';
 
 // note 5 in all but French, and 40 in all are orphaned
 
@@ -113,7 +107,6 @@ $lang['en'][64] = 'Code';
 $lang['en'][65] = 'CSS to style CSS output';
 $lang['en'][66] = 'You need to go to about:config in your URL bar, select \'signed.applets.codebase_principal_support\' in the filter field, and set its value to true in order to use this feature; however, be aware that doing so increases security risks.';
 
-
 $lang['de'][0] = 'CSS Formatierer und Optimierer (basierend auf CSSTidy ';
 $lang['de'][1] = 'CSS Formatierer und Optimierer';
 $lang['de'][2] = '(basierend auf';
@@ -180,7 +173,6 @@ $lang['de'][64] = 'Code';
 $lang['de'][65] = 'CSS to style CSS output';
 $lang['de'][66] = 'You need to go to about:config in your URL bar, select \'signed.applets.codebase_principal_support\' in the filter field, and set its value to true in order to use this feature; however, be aware that doing so increases security risks.';
 
-
 $lang['fr'][0] = 'CSS Formateur et Optimiseur (basé sur CSSTidy ';
 $lang['fr'][1] = 'CSS Formateur et Optimiseur';
 $lang['fr'][2] = '(basé sur ';
@@ -246,7 +238,6 @@ $lang['fr'][63] = 'Sauver le code CSS comme document complet HTML';
 $lang['fr'][64] = 'Code';
 $lang['fr'][65] = 'CSS pour colorier la sortie CSS';
 $lang['fr'][66] = 'Vous devez aller dans about:config dans votre barre d’adresse, sélectionner \'signed.applets.codebase_principal_support\' dans le champ Filtre et attribuez-lui la valeur \'true\' pour utiliser cette fonctionnalité; toutefois, soyez conscient que cela augmente les risques de sécurité.';
-
 
 $lang['zh'][0] = 'CSS整形與最佳化工具(使用 CSSTidy ';
 $lang['zh'][1] = 'CSS整形與最佳化工具';
