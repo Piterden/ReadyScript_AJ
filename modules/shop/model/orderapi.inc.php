@@ -76,7 +76,7 @@ class OrderApi extends \RS\Module\AbstractModel\EntityList
         
         if ($cache) {
             $result = \RS\Cache\Manager::obj()
-                ->request(array($this, 'ordersByYears'), $order_filter, $show_type, $lastrange, false);
+                ->request(array($this, 'ordersByYears'), $order_filter, $show_type, $lastrange, false, $site_id);
         } else {
             $q = \RS\Orm\Request::make()
                 ->select('dateof, COUNT(*) cnt, SUM(totalcost) total_cost')
@@ -139,7 +139,7 @@ class OrderApi extends \RS\Module\AbstractModel\EntityList
         
         if ($cache) {
             $result = \RS\Cache\Manager::obj()
-                ->request(array($this, 'ordersByMonth'), $order_filter, $show_type, $lastrange, false);
+                ->request(array($this, 'ordersByMonth'), $order_filter, $show_type, $lastrange, false, $site_id);
         } else {
             $currency = \Catalog\Model\CurrencyApi::getBaseCurrency()->stitle;
             $start_time = strtotime('-1 month');

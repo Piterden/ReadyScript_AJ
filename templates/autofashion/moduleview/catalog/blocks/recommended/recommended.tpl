@@ -1,7 +1,7 @@
 {if !empty($recommended)}
 <section class="recommended">
     <div class="titleWrap col-sm-24 text-center">
-        <h3>{$recommended_title|default:"Рекомендованные товары"}</h3>            
+        <h3>{$recommended_title|default:"Рекомендованные товары"}</h3>
     </div>
     <div class="clearfix"></div>
     <div class="productWrap">
@@ -9,37 +9,29 @@
         {$main_image=$product->getMainImage()}
         <div class="col-sm-6 productItem" {$product->getDebugAttributes()}>
             <div class="productItemWrap">
-                <div class="wishWrap">
-                    <div class="wishBox">
-                        {if in_array($product.id, $added_ids)}
-                            {moduleinsert 
-                                name="\Wishlist\Controller\Block\WishActions" 
-                                product_id=$product.id 
-                                indexTemplate="blocks/actions/formdelwish.tpl"
-                            }
+                    <div class="wishWrap">
+                        {moduleinsert
+                            name="\Wishlist\Controller\Block\WishActions"
+                            product_id=$product.id
+                        }
+                    </div>
+                    <div class="toCartWrap">
+                        {if $product->isOffersUse() || $product->isMultiOffersUse()}
+                            <a data-href="{$router->getUrl('shop-front-multioffers', ["product_id" => $product.id])}" class="button showMultiOffers inDialog noShowCart">
+                                <img src="{$THEME_IMG}/cart.png" alt="Add to Cart" width="20px" height="20px">
+                                <div class="toCartText">
+                                    В корзину
+                                </div>
+                            </a>
                         {else}
-                            {moduleinsert 
-                                name="\Wishlist\Controller\Block\WishActions" 
-                                product_id=$product.id 
-                                indexTemplate="blocks/actions/formaddwish.tpl"
-                            }
-                        {/if}
-                        <img src="{$THEME_IMG}/wishlist.png" alt="Add to Wishlist">
-                    </div>
-                    <div class="wishDesc">
-                        {if in_array($product.id, $added_ids)}
-                            Добавить в список<br>желаемых покупок
-                        {else}
-                            Удалить из списка<br>желаемых покупок
+                            <a data-href="{$router->getUrl('shop-front-cartpage', ["add" => $product.id])}" class="button addToCart noShowCart" data-add-text="Добавлено">
+                                <img src="{$THEME_IMG}/cart.png" alt="Add to Cart" width="20px" height="20px">
+                                <div class="toCartText">
+                                    В корзину
+                                </div>
+                            </a>
                         {/if}
                     </div>
-                </div>
-                <div class="toCartWrap">
-                    <img src="{$THEME_IMG}/cart.png" alt="Wishlist">
-                    <div class="toCart">
-                        В корзину
-                    </div>
-                </div>
                 <a href="{$product->getUrl()}" class="mainLink">
                     <div class="pic text-center">
                         <img src="{$main_image->getUrl(185,300,'axy')}" alt="{$main_image.title|default:"{$product.title}"}"/>
@@ -52,8 +44,17 @@
                                     {$product->getCost(2)} {$product->getCurrency()}
                                 {/if}
                             </div>
+                            <div class="brand">AutoJack</div>
                             <h3 class="title">{$product.title}</h3>
-                            <div class="desc">{$product.short_description}</div>
+                            <!-- <div class="desc">{$product.short_description}</div> -->
+                            <div class="stars">
+                                <i class="fa fa-star-o act"></i>
+                                <i class="fa fa-star-o act"></i>
+                                <i class="fa fa-star-o act"></i>
+                                <i class="fa fa-star-o"></i>
+                                <i class="fa fa-star-o"></i>
+                                (4)
+                            </div>
                         </div>
                     </div>
                 </a>

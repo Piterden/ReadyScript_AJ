@@ -17,7 +17,7 @@ class Currency extends \RS\Orm\OrmObject
 {
     protected static
         $table = 'currency';
-        
+
     function _init()
     {
         parent::_init()->append(array(
@@ -61,11 +61,11 @@ class Currency extends \RS\Orm\OrmObject
                         Действует при нажатии "Получить курс ЦБ РФ".'),
                     'default' => 0
                 ))
-                
+
         ));
         $this->addIndex(array('title', 'site_id'), self::INDEX_UNIQUE);
     }
-    
+
     function beforeWrite($flag)
     {
         if ($this['default'] == 1) {
@@ -76,10 +76,10 @@ class Currency extends \RS\Orm\OrmObject
             ->exec();
         }
     }
-    
+
     /**
     * Действие после сохраниния объектра
-    * 
+    *
     * @param string $flag - строковый флаг текущей оперпции (insert,update)
     */
     function afterWrite($flag)
@@ -88,18 +88,18 @@ class Currency extends \RS\Orm\OrmObject
             \Catalog\Model\CostApi::recalculateCosts($this['site_id']);
         }
     }
-    
+
     function delete()
     {
         $count = \RS\Orm\Request::make()->from($this)
             ->where(array('site_id' => \RS\Site\Manager::getSiteId()))->count();
-        
+
         if ($count>1) {
             return parent::delete();
         } else {
             return $this->addError(t('Должна присутствовать хотя бы одна валюта'));
         }
-        
+
     }
 }
 

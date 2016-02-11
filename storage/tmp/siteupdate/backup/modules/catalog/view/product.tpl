@@ -60,8 +60,9 @@
                 <div class="block">
                     <i class="corner"></i>
                     <p class="text">Поделиться:</p>
-                    <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
-                    <div class="yashare-auto-init" data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,odnoklassniki,moimir"></div> 
+                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+                    <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+                    <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,twitter"></div>
                 </div>
             </div>
         </div>
@@ -123,13 +124,20 @@
                             </select>
                         {else}
                             {foreach from=$product.offers.items key=key item=offer name=offers}
-                                <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
-                                <label for="offer_{$key}">{$offer.title}</label><br>
+                                <div class="packageItem">
+                                    <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
+                                    <label for="offer_{$key}">{$offer.title}</label>
+                                </div>
                             {/foreach}
                         {/if}
                     </div>
                 </div>
             </div><br>
+        {/if}
+        
+        {* Блок с сопутствующими товарами *}
+        {if $shop_config}
+            {moduleinsert name="\Shop\Controller\Block\Concomitant"}
         {/if}
 
         {* Блок с ценой *}

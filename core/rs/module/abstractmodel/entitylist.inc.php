@@ -488,7 +488,7 @@ class EntityList extends BaseModel
     * @param string | null $value - поле, значение которого будет использовано в качестве значения для ключа $key_field, 
     * если null, то в значение будет помещен объект выборки
     * 
-    * @return \RS\Orm\ObjectList
+    * @return array
     */
     function loadAssocList($key_field, $value = null)
     {
@@ -510,7 +510,7 @@ class EntityList extends BaseModel
     * @param string | null $value - поле, значение которого будет использовано в качестве значения для ключа $key_field, 
     * если null, то в значение будет помещен объект выборки
     * 
-    * @return \RS\Orm\ObjectList
+    * @return array
     */
     function getAssocList($key_field, $value = null)
     {

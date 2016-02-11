@@ -1,6 +1,8 @@
 <div class="formStyle checkoutBox">
         <h3>Спасибо! Ваш заказ успешно оформлен</h3>                
-        <p class="thanks">Следить за изменениями статуса заказа можно в разделе <a href="{$router->getUrl('shop-front-myorders')}" target="_blank">история заказов</a>. 
+        {if $user.id}
+            <p class="thanks">Следить за изменениями статуса заказа можно в разделе <a href="{$router->getUrl('shop-front-myorders')}" target="_blank">история заказов</a>. 
+        {/if}
         Все уведомления об изменениях в данном заказе также будут отправлены на электронную почту покупателя.</p>
         <div class="coInfo">
             {$user=$order->getUser()}
@@ -31,18 +33,22 @@
                     {$delivery=$order->getDelivery()}
                     {$address=$order->getAddress()}
                     {$pay=$order->getPayment()}
-                    <tr class="postSep">
-                        <td class="key">Доставка</td>
-                        <td>{$delivery.title}</td>
-                    </tr>
+                    {if $order.delivery}
+                        <tr class="postSep">
+                            <td class="key">Доставка</td>
+                            <td>{$delivery.title}</td>
+                        </tr>
+                    {/if}
                     <tr>
                         <td class="key">Адрес</td>
                         <td>{$address->getLineView()}</td>
                     </tr>
-                    <tr>
-                        <td class="key">Оплата</td>
-                        <td>{$pay.title}</td>
-                    </tr>
+                    {if $order.payment}
+                        <tr>
+                            <td class="key">Оплата</td>
+                            <td>{$pay.title}</td>
+                        </tr>
+                    {/if}
                 </table>
             </div>
 

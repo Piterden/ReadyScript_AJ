@@ -15,11 +15,11 @@ namespace Catalog\Model;
  */
 class OneClickItemApi extends \RS\Module\AbstractModel\EntityList
 {
-    
-    
     function __construct()
     {
-        parent::__construct(new \Catalog\Model\Orm\OneClickItem());
+        parent::__construct(new \Catalog\Model\Orm\OneClickItem(), array(
+            'multisite' => true
+        ));
     }
       
 }

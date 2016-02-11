@@ -152,6 +152,19 @@ class File extends \RS\Orm\ConfigObject
                 'description' => t('Показывать фильтр по цене в виде слайдера?'),
                 'checkboxview' => array(1,0),
             )),
+            'search_fields' => new Type\ArrayList(array(
+                'description' => t('Поля, которые должны войти в поисковый индекс товара (помимо названия). После изменения, переиндексируйте товары (ссылка справа)'),
+                'Attr' => array(array('size' => 5, 'multiple' => 'multiple', 'class' => 'multiselect')),
+                'ListFromArray' => array(array(
+                    'properties' => t('Характеристики'),
+                    'barcode' => t('Артикул'),
+                    'short_description' => t('Короткое описание'),
+                    'meta_keywords' => t('Мета ключевые слова')
+                )),     
+                'CheckboxListView' => true,
+                'runtime' => false,
+            )),
+            
             t('Купить в один клик'),
                 '__clickfields__' => new Type\UserTemplate('%catalog%/form/config/userfield.tpl'),
                 'clickfields' => new Type\ArrayList(array(
@@ -230,6 +243,12 @@ class File extends \RS\Orm\ConfigObject
                     'title' => t('Удалить несвязанные комплектации'),
                     'description' => t('Удалит несвязанные комплектации, которые могли остаться в базе после отмены создания товара'),
                     'confirm' => t('Вы действительно хотите удалить несвязанные комплектации?')                    
+                ),
+                array(
+                    'url' => \RS\Router\Manager::obj()->getAdminUrl('ajaxReIndexProducts', array(), 'catalog-tools'),
+                    'title' => t('Переиндексировать товары'),
+                    'description' => t('Построит заново поисковый индекс по товарам'),
+                    'confirm' => t('Вы действительно хотите переиндексировать все товары?')                    
                 )
             )
         );

@@ -90,6 +90,12 @@ class OrderItem extends \RS\Orm\AbstractObject
         @$this['data'] = unserialize($this['extra']);
     }
     
+    function getExtraParam($key, $default = null)
+    {
+        @$data = unserialize($this['extra']);
+        return isset($data[$key]) ? $data[$key] : $default;
+    }
+    
     /**
     * Возвращает массив с названиями и выбранными значениями многомерных комплектаций
     * 

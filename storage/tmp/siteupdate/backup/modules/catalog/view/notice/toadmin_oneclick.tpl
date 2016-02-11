@@ -1,5 +1,4 @@
-<pre>
-Уважаемый, администратор! На сайте {$url->getDomainStr()} хотят купить в 1 клик товар:
+<p>Уважаемый, администратор! На сайте {$url->getDomainStr()} хотят купить в 1 клик товар:</p>
 
 {assign var=product value=$data->oneclick.product}
 {assign var=offers_info value=$data->oneclick.offer_fields}
@@ -62,7 +61,4 @@
 {/if}
 
 
-
-
-Автоматическая рассылка {$url->getDomainStr()}.   
-</pre>
+<p>Автоматическая рассылка {$url->getDomainStr()}.</p>

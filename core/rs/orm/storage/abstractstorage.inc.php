@@ -7,19 +7,29 @@
 */
 namespace RS\Orm\Storage;
 
+/**
+* Базовый класс хранилища ORM объектов.
+* ORM объект использует хранилище, при загрузке, сохранении, 
+* изменении, удалении ORM объекта.
+*/
 abstract class AbstractStorage
 {
     protected
-        $Core_Object,
+        $orm_object,
         $options;
     
-    function __construct(\RS\Orm\AbstractObject $Core_Object, $options = array())
+    function __construct(\RS\Orm\AbstractObject $orm_object, $options = array())
     {
-        $this->Core_Object = $Core_Object;
+        $this->orm_object = $orm_object;
         $this->options = $options;
         $this->_init();
     }
     
+    /**
+    * Инициализирует хранилище
+    * 
+    * @return void
+    */
     function _init() 
     {}
 
@@ -75,7 +85,6 @@ abstract class AbstractStorage
     function getOption($key, $default = null)
     {
         return isset($this->options[$key]) ? $this->options[$key] : $default;
-    }
-    
+    }    
 }
 

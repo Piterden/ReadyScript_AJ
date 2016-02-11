@@ -37,8 +37,9 @@
         {/if}
         {if $param.show_brand_filter && count($brands)>1}
             <div class="filter typeMultiselect">
-                <h4>{t}Производитель{/t}:</h4>
-                <ul>
+                <h4>{t}Производитель{/t}: <a class="removeBlockProps hidden" title="{t}Сбросить выбранные параметры{/t}"></a></h4>
+                <ul class="propsContentSelected hidden"></ul>
+                <ul class="propsContent">
                     {foreach $brands as $brand}
                     <li>
                         <input type="checkbox" {if is_array($basefilters.brand) && in_array($brand.id, $basefilters.brand)}checked{/if} name="bfilter[brand][]" value="{$brand.id}" class="cb" id="cb_{$brand.id}_{$smarty.foreach.i.iteration}">
@@ -66,8 +67,9 @@
                 </div>                
             {elseif $prop.type == 'list'}
                 <div class="filter typeMultiselect">
-                    <h4>{$prop.title}:</h4>
-                    <ul>
+                    <h4>{$prop.title}: <a class="removeBlockProps hidden" title="{t}Сбросить выбранные параметры{/t}"></a></h4>
+                    <ul class="propsContentSelected hidden"></ul>
+                    <ul class="propsContent">
                         {foreach from=$prop->getAllowedValues() key=key item=value name=i}
                         <li><input type="checkbox" {if is_array($filters[$prop.id]) && in_array($value, $filters[$prop.id])}checked{/if} name="f[{$prop.id}][]" value="{$value}" class="cb" id="cb_{$prop.id}_{$smarty.foreach.i.iteration}"><label for="cb_{$prop.id}_{$smarty.foreach.i.iteration}">{$value}</label></li>
                         {/foreach}

@@ -13,18 +13,18 @@
 		            <span class="ddList">
 		                <span class="value h4">{if $cur_sort=='dateof'}дате{elseif $cur_sort=='rating'}популярности{else}цене{/if} <i class="fa fa-sort-{$cur_n}"></i></span>
 		                <ul>
-		                    <li><a href="{urlmake sort="cost" nsort=$sort.cost}" class="item{if $cur_sort=='cost'} {$cur_n}{/if}" rel="nofollow">цене</a></li>                
-		                    <li><a href="{urlmake sort="rating" nsort=$sort.rating}" class="item{if $cur_sort=='rating'} {$cur_n}{/if}" rel="nofollow">популярности</a></li>                    
+		                    <li><a href="{urlmake sort="cost" nsort=$sort.cost}" class="item{if $cur_sort=='cost'} {$cur_n}{/if}" rel="nofollow">цене</a></li>
+		                    <li><a href="{urlmake sort="rating" nsort=$sort.rating}" class="item{if $cur_sort=='rating'} {$cur_n}{/if}" rel="nofollow">популярности</a></li>
 		                    <li><a href="{urlmake sort="dateof" nsort=$sort.dateof}" class="item{if $cur_sort=='dateof'} {$cur_n}{/if}" rel="nofollow">дате</a></li>
 		                    <li><a href="{urlmake sort="num" nsort=$sort.num}" class="item{if $cur_sort=='num'} {$cur_n}{/if}" rel="nofollow">наличию</a></li>
 		                    {if $can_rank_sort}
 		                    <li><a href="{urlmake sort="rank" nsort=$sort.rank}" class="item{if $cur_sort=='rank'} {$cur_n}{/if}" rel="nofollow"><i>релевантности</i></a></li>
-		                    {/if}                    
+		                    {/if}
 		                </ul>
 		            </span>
 		        </span>
 		        <span class="pageSize">
-		            Показывать по 
+		            Показывать по
 		            <span class="ddList">
 		                <span class="value h4">{$page_size}</span>
 		                <ul>
@@ -33,7 +33,7 @@
 		                    {/foreach}
 		                </ul>
 		            </span>
-		        </span>                    
+		        </span>
 		    </div>
 		    <!-- /Sortline -->
 			{foreach $products as $product}
@@ -51,16 +51,16 @@
 						</div>
 	                    <div class="wishWrap">
 	                        <div class="wishBox">
-								{moduleinsert 
-									name="\Wishlist\Controller\Block\WishActions" 
-									product_id=$product.id 
+								{moduleinsert
+									name="\Wishlist\Controller\Block\WishActions"
+									product_id=$product.id
 								}
 	                            <img src="{$THEME_IMG}/wishlist.png" alt="Add to Wishlist">
 	                        </div>
 	                        <div class="wishDesc">
 	                        	{if in_array($product.id, $added_ids)}
 									Удалить из списка<br>желаемых покупок
-									
+
 								{else}
 			                        Добавить в список<br>желаемых покупок
 								{/if}
@@ -105,7 +105,7 @@
 			{/foreach}
 		</div>
 		{include file="%THEME%/paginator.tpl"}
-	{else}    
+	{else}
 		<div class="container noProducts">
 			<div class="row">
 				<div class="col-md-24">

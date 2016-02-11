@@ -5,7 +5,6 @@
 * @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
 * @license http://readyscript.ru/licenseAgreement/
 */
-
 namespace Catalog\Controller\Admin;
 use \RS\Html\Table\Type as TableType,
     \RS\Html\Toolbar\Button as ToolbarButton,
@@ -320,7 +319,8 @@ class Ctrl extends \RS\Controller\Admin\Crud
                                     new Filter\Line( array('Items' => array(
                                                             new Filter\Type\String('id','№', array('attr' => array('class' => 'w50'))),                                    
                                                             new Filter\Type\String('title', t('Название'), array('SearchType' => '%like%')),
-                                                            new Filter\Type\String('barcode', t('Артикул'), array('SearchType' => '%like%', 'Attr' => array('class' => 'w60')))
+                                                            new Filter\Type\String('barcode', t('Артикул'), array('SearchType' => '%like%', 'Attr' => array('class' => 'w60'))),
+                                                            new Filter\Type\String('num', t('Общий остаток'), array('Attr' => array('class' => 'w60'), 'showType' => true))
                                                         )
                                     ))
                                 ),
@@ -410,6 +410,13 @@ class Ctrl extends \RS\Controller\Admin\Crud
                 )
             ),
             array(
+                'title' => t('Экспорт остатков и цен в CSV'),
+                'attr' => array(
+                    'data-url' => \RS\Router\Manager::obj()->getAdminUrl('exportCsv', array('schema' => 'catalog-simplepricestockupdate', 'referer' => $this->url->selfUri()), 'main-csv'),
+                    'class' => 'crud-add'
+                )
+            ),    
+            array(
                 'title' => t('Импорт категорий из CSV'),
                 'attr' => array(
                     'data-url' => \RS\Router\Manager::obj()->getAdminUrl('importCsv', array('schema' => 'catalog-dir', 'referer' => $this->url->selfUri()), 'main-csv'),
@@ -429,7 +436,14 @@ class Ctrl extends \RS\Controller\Admin\Crud
                     'data-url' => \RS\Router\Manager::obj()->getAdminUrl('importCsv', array('schema' => 'catalog-offer', 'referer' => $this->url->selfUri()), 'main-csv'),
                     'class' => 'crud-add'
                 )
-            ),            
+            ),       
+            array(
+                'title' => t('Импорт остатков и цен из CSV'),
+                'attr' => array(
+                    'data-url' => \RS\Router\Manager::obj()->getAdminUrl('importCsv', array('schema' => 'catalog-simplepricestockupdate', 'referer' => $this->url->selfUri()), 'main-csv'),
+                    'class' => 'crud-add'
+                )
+            ),      
             array(
                 'title' => t('Импорт изображений из ZIP-архива'),
                 'attr' => array(
@@ -443,7 +457,7 @@ class Ctrl extends \RS\Controller\Admin\Crud
                     'data-url' => \RS\Router\Manager::obj()->getAdminUrl(false, array('referer' => $this->url->selfUri()), 'catalog-importyml'),
                     'class' => 'crud-add'
                 )
-            ),             
+            ),         
         )), 'import');        
         
         $helper->addHiddenFields(array('dir' => $dir));

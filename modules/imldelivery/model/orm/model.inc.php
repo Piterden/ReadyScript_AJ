@@ -9,7 +9,7 @@ class Model extends \RS\Orm\OrmObject
 {
     protected static
         $table = 'imldelivery';
-    
+
     function _init()
     {
         parent::_init()->append(array(

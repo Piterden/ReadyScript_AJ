@@ -4,13 +4,18 @@
 (function( $ ){
     $.fn.productFilter = function( method ) {
         var defaults = {
-            targetList       : '#products', //Селектор блока, в котором отображаются товары
-            form             : '.filters', //Селектор формы которая будет отправляться
-            multiSelectBlock : '.typeMultiselect', //Селектор обёртки множественного фильтра
-            multiSelectRow   : 'li', //Селектор обёртки одного фильтра
-            submitButton     : '.submitFilter',
-            cleanFilter      : '.cleanFilter',    
+            targetList             : '#products',     //Селектор блока, в котором отображаются товары
+            form                   : '.filters',      //Селектор формы которая будет отправляться
+            submitButton           : '.submitFilter', //Селектор кнопки отправки формы 
+            cleanFilter            : '.cleanFilter',  //Селектор кнопки очистки фильтра
             
+            //Для фильтра множественного выбора
+            multiSelectRemoveProps : '.removeBlockProps',     //Селектор кнопки, которая убирает все выделенные характеристики в обном блоке
+            multiSelectBlock       : '.typeMultiselect',      //Селектор обёртки множественного фильтра
+            multiSelectInsertBlock : '.propsContentSelected', //Селектор обёртки всех строк с выбором характеристик отмеченным
+            multiSelectRowsBlock   : '.propsContent',         //Селектор обёртки всех строк с выбором характестик не отмеченным
+            multiSelectRow         : 'li',                    //Селектор обёртки одного фильтра
+            multiHideClass         : 'hidden',                //Селектор класса для скрытия элментов в блоке
         },
         args = arguments,
         timer;
@@ -32,9 +37,7 @@
                     $('input[type="text"], input[type="hidden"], select', $this).each(function() {
                         $(this).data('lastValue', $(this).val());    
                     });
-                                                                  
-                    setMultiSelectStartPositions(); //Выставляем позиции по умолчанию
-                    
+                                                             
                     bindChanges();      
                     changeMultiSelectCheckedRowsPosition();
 
@@ -66,6 +69,7 @@
                     methods.queryFilters(readyValues);      
                     return false;
                 },
+                
                 /**
                 * Запрос результата применения фильтров
                 * 
@@ -177,19 +181,7 @@
                 }
                 filter.trigger('change', true);
             };    
-            
-            /**
-            * Устанавливает стартовую позицию всем элементам в мультивыборе галочек
-            * 
-            */
-            var setMultiSelectStartPositions = function(){
-               // Если блоки есть 
-               $(data.options.multiSelectBlock, $this).each(function(){
-                   $(data.options.multiSelectRow, $this).each(function(){
-                       $(this).data('start-position', $(this).index());
-                   });
-               });
-            };  
+             
             
             /**
             * Меняет позиции выбранным элементам в блоках с мультивыбором
@@ -199,22 +191,48 @@
                // Если блоки есть 
                $(data.options.multiSelectBlock, $this).each(function(){
                    var have_checked = false;
-                   var block        = $(this);       
+                   var block        = $(this);      
                    $('input', $(this)).each(function(){
-                        var wrapper = $(this).closest(data.options.multiSelectRow); //Обёртка
+                        var wrapperLi = $(this).closest(data.options.multiSelectRow); //Обёртка
                         if ($(this).prop('checked')){ //Если установлена галочка
                            have_checked = true; 
-                           wrapper.insertBefore($(data.options.multiSelectRow+":eq(0)", block));
-                        }
+                           wrapperLi.appendTo($(data.options.multiSelectInsertBlock, block));
+                        }else{ //Если характеристика не выбрана, то проверим где-то она находится и поместим обратно в нужный блок, если нужно
+                           if ($(this).closest(data.options.multiSelectInsertBlock).length){
+                               wrapperLi.prependTo($(data.options.multiSelectRowsBlock, block)); 
+                           }
+                        } 
                    });
-                   //Если выбранных нет, то вернём всё по своим местам, как было сначала.
-                   if (!have_checked){
-                        $(data.options.multiSelectRow, block).each(function(){
-                            var position = $(this).data('start-position'); //Первоначальная позиция
-                            $(this).insertBefore($(data.options.multiSelectRow+":eq("+position+")", block)); 
-                        });
-                   }
+                   //Переключим элементы для отображения
+                   toggleMultiSelectHideElements(block, have_checked);
                }); 
+            };
+            
+            /**
+            * Отображает или прячет элементы в блоке с выбором характеристик в блоке
+            * 
+            * @param block - объект блока с характеристиками
+            */
+            var toggleMultiSelectHideElements = function (block, have_checked){
+                if (have_checked){
+                   $(data.options.multiSelectInsertBlock, block).removeClass(data.options.multiHideClass); 
+                   $(data.options.multiSelectRemoveProps, block).removeClass(data.options.multiHideClass); 
+                }else{
+                   $(data.options.multiSelectInsertBlock, block).addClass(data.options.multiHideClass);  
+                   $(data.options.multiSelectRemoveProps, block).addClass(data.options.multiHideClass);  
+                }                                                   
+            };
+            
+            /**
+            * Снимает все выбранные характеристики в одном блоке
+            * 
+            * @param block - объект блока с характеристиками
+            */
+            var cleanBlockProps = function (){
+                var block = $(this).closest(data.options.multiSelectBlock); 
+                $("input[type='checkbox']", block).prop('checked', false).trigger('change', true);
+                methods.applyFilters();
+                return false;
             };
 
             /**
@@ -224,6 +242,7 @@
             bindChanges = function() {
                 $(data.options.form).submit(methods.applyFilters);
                 $('select, input[type="checkbox"], input[type="hidden"]', $this).change(methods.applyFilters);
+                $(data.options.multiSelectRemoveProps, $this).on('click', cleanBlockProps);
                 $('input[type="text"]', $this).keyup(function(e) {
                     clearTimeout(this.keyupTimer);
                     if (e.keyCode == 13) {

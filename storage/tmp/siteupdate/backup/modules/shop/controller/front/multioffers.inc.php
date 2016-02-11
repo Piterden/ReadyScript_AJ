@@ -35,6 +35,8 @@ class MultiOffers extends \RS\Controller\Front
               $multioffers = $product->fillMultiOffers();  //Получим все мног. коплектации товара  
            } 
        } 
+       //Добавим товар в текущий маршрут
+       $this->router->getCurrentRoute()->product = $product;
        
        $this->view->assign(array(
           'product'     => $product,  

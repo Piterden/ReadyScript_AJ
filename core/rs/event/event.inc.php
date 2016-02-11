@@ -15,8 +15,7 @@ class Event
     private
         $errors = array(),
         $stopped = false,
-        $event,
-        $module;
+        $event;
     
     /**
     * Конструктор объектов события
@@ -25,10 +24,9 @@ class Event
     * @param string $module - имя модуля, который вызывает данное событие
     * @return Event
     */
-    function __construct($event, $module)
+    function __construct($event)
     {
         $this->event = $event;
-        $this->module = $module;
     }
     
     /**
@@ -39,16 +37,6 @@ class Event
     function getEvent()
     {
         return $this->event;
-    }
-    
-    /**
-    * Возвращает имя модуля, вызвавшего событие
-    * 
-    * @return string
-    */
-    function getModule()
-    {
-        return $this->module;
     }
     
     /**

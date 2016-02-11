@@ -1,166 +1,89 @@
 {assign var=catalog_config value=ConfigLoader::byModule('catalog')}
-{if $order->hasError()}
-<div class="pageError">
-    {foreach $order->getErrors() as $item}
-    <p>{$item}</p>
-    {/foreach}
-</div>
-{/if}
-
 <form method="POST" class="formStyle checkoutBox">
-        <h3>Подтверждение заказа</h3>                
-        <div class="coInfo">
-            <div class="grayblock">
-                {$user=$order->getUser()}
-                <h2>Сведения о заказе</h2>
-                <table>
-                        <tr>
-                            <td class="key">Заказчик</td>
-                            <td>{$user.surname} {$user.name}</td>
-                        </tr>
-                        <tr>
-                            <td class="key">Телефон</td>
-                            <td>{$user.phone}</td>
-                        </tr>
-                        <tr class="preSep">
-                            <td class="key">e-mail</td>
-                            <td>{$user.e_mail}</td>
-                        </tr>
-                        {$fmanager=$order->getFieldsManager()}
-                        {if $fmanager->notEmpty()}
-                            {foreach $fmanager->getStructure() as $field}
-                                <tr class="{if $field@first}postSep{/if} {if $field@last}preSep{/if}">
-                                    <td class="key">{$field.title}</td>
-                                    <td><a href="{$router->getUrl(null, ['Act' => 'address'])}">{$fmanager->textView($field.alias)}</a></td>
-                                </tr>
-                            {/foreach}
-                        {/if}
-                        {$delivery=$order->getDelivery()}
-                        {$address=$order->getAddress()}
-                        {$pay=$order->getPayment()}
-                        <tr class="postSep">
-                            <td class="key">Доставка</td>
-                            <td><a href="{$router->getUrl(null, ['Act' => 'delivery'])}">{$delivery.title}</a></td>
-                        </tr>
-                        <tr>
-                            <td class="key">Адрес</td>
-                            <td><a href="{$router->getUrl(null, ['Act' => 'address'])}">{$address->getLineView()}</a></td>
-                        </tr>
-                        <tr>
-                            <td class="key">Оплата</td>
-                            <td><a href="{$router->getUrl(null, ['Act' => 'payment'])}">{$pay.title}</a></td>
-                        </tr>
-                    </table>
-            </div>
-        </div>            
-        
-        {$products=$cart->getProductItems()}
-        {$cartdata=$cart->getCartData()}        
-        <div class="coItems">
-            <table class="themeTable">
-                <thead>
-                    <tr>
-                        <td>Товар</td>
-                        <td>Количество</td>
-                        <td class="price">Цена</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {foreach $products as $n=>$item}
-                    {$barcode=$item.product->getBarCode($item.cartitem.offer)}
-                    {$offer_title=$item.product->getOfferTitle($item.cartitem.offer)}                        
-                    {$multioffer_titles=$item.cartitem->getMultiOfferTitles()}
-                    <tr>
-                        <td><a href="{$item.product->getUrl()}">{$item.product.title}</a>
-                            <div class="codeLine">
-                                {if $barcode != ''}Артикул:<span class="value">{$barcode}</span><br>{/if}
-                                {if $multioffer_titles || ($offer_title && $item.product->isOffersUse())}
-                                    <div class="multioffersWrap">
-                                        {foreach $multioffer_titles as $multioffer}
-                                            <p class="value">{$multioffer.title} - <strong>{$multioffer.value}</strong></p>
-                                        {/foreach}
-                                        {if !$multioffer_titles}
-                                            <p class="value"><strong>{$offer_title}</strong></p>
-                                        {/if}
-                                    </div>
-                                {/if}
-                            </div>
-                        </td>
-                        <td>
-                         {$item.cartitem.amount}
-                         {if $catalog_config.use_offer_unit}
-                            {$item.product.offers.items[$item.cartitem.offer]->getUnit()->stitle}
-                         {else}
-                            {$item.product->getUnit()->stitle}
-                         {/if}
-                         
-                            {if !empty($cartdata.items[$n].amount_error)}<div class="amountError">{$cartdata.items[$n].amount_error}</div>{/if}
-                        </td>
-                        <td class="price">
-                            {$cartdata.items[$n].cost}
-                            <div class="discount">
-                                {if $cartdata.items[$n].discount>0}
-                                скидка {$cartdata.items[$n].discount}
-                                {/if}
-                            </div>
-                        </td>
-                    </tr>
-                    {/foreach}
-                </tbody>
-            </table>
-            <br>
-            <table class="themeTable">
-                <tbody>
-                    {foreach $cart->getCouponItems() as $id=>$item}
-                    <tr>
-                        <td>Купон на скидку {$item.coupon.code}</td>
-                        <td></td>
-                    </tr>
-                    {/foreach}
-                    {if $cartdata.total_discount>0}
-                    <tr>
-                        <td>Скидка на заказ</td>
-                        <td>{$cartdata.total_discount}</td>
-                    </tr>
-                    {/if}
-                    {foreach $cartdata.taxes as $tax}
-                    <tr {if !$tax.tax.included}class="bold"{/if}>
-                        <td>{$tax.tax->getTitle()}</td>
-                        <td>{$tax.cost}</td>
-                    </tr>
-                    
-                    {/foreach}
-                    <tr>
-                        <td>Доставка: {$delivery.title}</td>
-                        <td class="price">{$cartdata.delivery.cost}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="summary">
-                <span class="text">Итого: </span> 
-                <span class="price">{$cartdata.total}</span>
-            </div>
-            <div class="commentSection">
-                <label class="commentLabel">Комментарий к заказу</label>
-                {$order.__comments->formView()}
-            </div>
-            {if $this_controller->getModuleConfig()->require_license_agree}
-            <br>
-            <input type="checkbox" name="iagree" value="1" id="iagree"> <label for="iagree">{t}Я согласен с <a href="{$router->getUrl('shop-front-licenseagreement')}" class="licAgreement inDialog">условиями предоставления услуг</a>{/t}</label>
-            <script type="text/javascript">
-                $(function() {
-                    $('.formSave').click(function() {
-                        if (!$('#iagree').prop('checked')) {
-                            alert('Подтвердите согласие с условиями предоставления услуг');
-                            return false;
-                        }
-                    });
-                });
-            </script>
-            {/if}             
-        </div>
-        <div class="clearBoth"></div>
-        <div class="buttons">
-            <input type="submit" value="Подтвердить заказ" class="formSave">
-        </div>
+	{if $order->hasError()}
+		<div class="row">
+			<div class="pageError col-sm-14 col-sm-offset-5">
+				{foreach $order->getErrors() as $item}
+					<p>{$item}</p>
+				{/foreach}
+			</div>
+		</div>
+	{/if}
+	<div class="row">
+		<div class="titleWrap col-sm-24 text-center">
+			<h3>Информация о покупателе</h3>
+		</div>
+	</div>
+	{$user=$order->getUser()}
+	<div class="coInfo">
+		<ul class="vertItems">
+			<li class="row byerRow">
+				<div class="labelWrap col-sm-8 text-right">
+					<label class="forByer">Заказчик</label>
+				</div>
+				<div class="infoWrap col-sm-13">
+					<div class="line">{$user.surname} {$user.name}</div>
+				</div>
+			</li>
+			<li class="row byerRow">
+				<div class="labelWrap col-sm-8 text-right">
+					<label class="forByer">Телефон</label>
+				</div>
+				<div class="infoWrap col-sm-13">
+					<div class="line">{$user.phone}</div>
+				</div>
+			</li>
+			<li class="row byerRow">
+				<div class="labelWrap col-sm-8 text-right">
+					<label class="forByer">Email</label>
+				</div>
+				<div class="infoWrap col-sm-13">
+					<div class="line">{$user.e_mail}</div>
+				</div>
+			</li>
+			<li class="row byerRow">
+				<div class="labelWrap col-sm-8 text-right">
+					<label class="forByer">Адрес</label>
+				</div>
+				<div class="infoWrap col-sm-13">
+					<div class="city">
+						<span class="text-capitalize">{$order.order_extra.delivery.region_id_to|lower}</span><br>
+					</div>
+					<div class="line">
+						{if $order.use_addr=='-1'}
+							{$order.order_extra.delivery.sd_html|unescape:'html'}
+						{else}
+							{$order->getAddress()->getLineView()}
+						{/if}
+					</div>
+				</div>
+			</li>
+			<li class="row commentSection">
+				<label class="commentLabel col-sm-8 text-right">Комментарий к заказу</label>
+				<div class="infoWrap col-sm-13">
+					{$order.__comments->formView()}
+					<span class="commentLable">Например лицо, которое встретит доставку или особенности местности.</span>
+				</div>
+			</li>
+		</ul>
+	</div>
+	{if $this_controller->getModuleConfig()->require_license_agree}
+		<div class="col-xs-24 text-center">
+			<input type="checkbox" name="iagree" value="1" id="iagree"> <label for="iagree">{t}Я согласен с <a href="{$router->getUrl('shop-front-licenseagreement')}" class="licAgreement inDialog">условиями предоставления услуг</a>{/t}</label>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				$('.formSave').click(function() {
+					if (!$('#iagree').prop('checked')) {
+						alert('Подтвердите согласие с условиями предоставления услуг');
+						return false;
+					}
+				});
+			});
+		</script>
+	{/if}
+	<div class="clearBoth"></div>
+	<div class="buttons col-xs-24 text-center">
+		<button type="submit" class="button cornered formSave wideVer">Подтвердить заказ</button>
+	</div>
 </form>

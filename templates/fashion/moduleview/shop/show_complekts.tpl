@@ -17,7 +17,7 @@
                 <p class="descr">{$product.short_description|nl2br}</p>
             {/if}
             <div class="fcost">
-                {assign var=last_price value=$product->getCost('Зачеркнутая цена')}
+                {assign var=last_price value=$product->getOldCost()}
                 {if $last_price>0}<div class="lastPrice">{$last_price}</div>{/if}
                 <span class="price"><strong class="myCost">{$product->getCost()}</strong> {$product->getCurrency()}</span>
             </div>
@@ -56,7 +56,7 @@
                 </div>
                 {if $product->isOffersUse()}
                     {foreach from=$product.offers.items key=key item=offer name=offers}
-                        <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
+                        <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
                     {/foreach}
                     
                     <input type="hidden" name="offer" value="0"/>
@@ -70,18 +70,25 @@
                             {if count($product.offers.items)>5}
                                 <select name="offer">
                                     {foreach from=$product.offers.items key=key item=offer name=offers}
-                                    <option value="{$key}" {if $smarty.foreach.offers.first}checked{/if} data-num="{$offer.num}" data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>{$offer.title}</option>
+                                    <option value="{$key}" {if $smarty.foreach.offers.first}checked{/if} {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>{$offer.title}</option>
                                     {/foreach}
                                 </select>
                             {else}
                                 {foreach from=$product.offers.items key=key item=offer name=offers}
-                                    <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-num="{$offer.num}" data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
-                                    <label for="offer_{$key}">{$offer.title}</label><br>
+                                    <div class="packageItem">
+                                        <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
+                                        <label for="offer_{$key}">{$offer.title}</label><br>
+                                    </div>
                                 {/foreach}
                             {/if}
                         </div>
                     </div>
                 </div>
+            {/if}
+            
+            {if $shop_config}
+                {* Блок с сопутствующими товарами *}
+                {moduleinsert name="\Shop\Controller\Block\Concomitant"}
             {/if}
 
             <div class="buttons">

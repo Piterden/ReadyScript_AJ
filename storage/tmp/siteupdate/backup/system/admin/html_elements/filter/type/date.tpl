@@ -1,1 +1,0 @@
-<input type="text" name="{$fitem->getName()}" value="{$fitem->getValue()}" {$fitem->getAttrString()} datefilter="datefilter">

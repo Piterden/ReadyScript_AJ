@@ -101,7 +101,7 @@ class Manager
     * Возвращает список сайтов
     * 
     * @param bool $cache - возвращать кэшированное значение
-    * @return \RS\Orm\ObjectList
+    * @return array
     */
     public static function getSiteList($cache = true)
     {

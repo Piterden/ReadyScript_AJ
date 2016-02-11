@@ -18,13 +18,10 @@ namespace RS\Orm\Storage;
 * Каждый объект должен сохраняться в отдельный файл.
 */
 class Arrayfile extends AbstractStorage
-{
-    protected
-        $Core_Object;
-    
+{    
     public 
-        $head_comment,
-        $store_file; //Полный путь к файлу, в котором будут храниться данные объекта
+        $head_comment,//Текстовый заголовок файла
+        $store_file;  //Полный путь к файлу, в котором будут храниться данные объекта
     
     function _init()
     {
@@ -42,20 +39,25 @@ class Arrayfile extends AbstractStorage
     {
         if ( file_exists($this->store_file) ) {            
             $data = include($this->store_file);
-            $this->Core_Object->getFromArray($data);
+            $this->orm_object->getFromArray($data);
             return true;
         }
         return false;
     }
     
+    /**
+    * Добавляет объект в хранилище
+    * 
+    * @return bool
+    */    
     public function insert()
     {
-        $properties = $this->Core_Object->getProperties();
+        $properties = $this->orm_object->getProperties();
         
         $tmp = array();
         foreach ($properties as $key=>$property) {
             if ($property->beforesave()) {
-                $this->Core_Object[$key] = $property->get();
+                $this->orm_object[$key] = $property->get();
             }            
             if (!$property->isUseToSave()) continue;
             if (!$property->isRuntime()) $tmp[$key] = $property->get();
@@ -65,16 +67,32 @@ class Arrayfile extends AbstractStorage
         return $this->saveToFile($write_data);
     }
     
+    /**
+    * Перезаписывает объект в хранилище
+    * 
+    * @return bool
+    */
     public function replace()
     {
         return $this->insert();
     }
     
+    /**
+    * Обновляет объект в хранилище
+    * 
+    * @param $primaryKey - значение первичного ключа
+    * @return bool
+    */
     public function update($primaryKey = null)
     {
         return $this->insert();
     }
     
+    /**
+    * Удаляет объект из хранилища
+    * 
+    * @return bool
+    */
     public function delete()
     {
         if (file_exists($this->store_file)) {
@@ -82,6 +100,12 @@ class Arrayfile extends AbstractStorage
         }
     }
     
+    /**
+    * Сохраняет данные в файл
+    * 
+    * @param string $write_data - PHP код для сохранения
+    * @return integer 
+    */
     protected function saveToFile($write_data)
     {
         $write_data = "<?php

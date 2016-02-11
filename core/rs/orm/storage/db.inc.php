@@ -7,59 +7,74 @@
 */
 
 namespace RS\Orm\Storage;
+use \RS\Db\Adapter;
 
 /**
-* Класс обеспечивающий хранение core объекта в базе данных
+* Класс обеспечивающий хранение ORM объекта в базе данных
 */
-class Db extends AbstractStorage
+class Db extends AbstractTableStorage
 {
-    protected
-        $table;
-
-    function _init()
-    {
-        $this->table = $this->Core_Object->_getTable();
-    }
-    
+    /**
+    * Загружает объект по первичному ключу
+    * 
+    * @param mixed $primaryKey - значение первичного ключа
+    * @return object
+    */
     public function load($primaryKeyValue = null)
     {
-        if (!isset($primaryKeyValue)) return false;
-
-        $primary = $this->Core_Object->getPrimaryKeyProperty();        
-        $dbresult = \RS\Db\Adapter::sqlExec("select * from {$this->table} where `$primary`='".\RS\Db\Adapter::escape($primaryKeyValue)."'");
-        $row = $dbresult -> fetchRow();        
-        if ($row === false) return false;
-        $this->Core_Object->getFromArray($row);
-        return true;
+        if ($primaryKeyValue !== null) {
+            $primary = $this->orm_object->getPrimaryKeyProperty();        
+            $dbresult = Adapter::sqlExec("SELECT * FROM {$this->table} 
+                                            WHERE ".$this->getPrimaryKeyExprStr($primaryKeyValue));                                            
+            $row = $dbresult -> fetchRow();        
+            if ($row !== false) {
+                $this->orm_object->getFromArray($row);
+                return true;
+            }
+        }
+        return false;
     }
     
+    /**
+    * Возвращает true, если объект существует в базе
+    * 
+    * @param mixed $primaryKeyValue - значение первичного ключа
+    * @return bool
+    */
     public function exists($primaryKeyValue)
     {
-        $primary = $this->Core_Object->getPrimaryKeyProperty();
-        $dbresult = \RS\Db\Adapter::sqlExec("select count(*) as cnt from {$this->table} where `$primary`='".\RS\Db\Adapter::escape($primaryKeyValue)."'");
+        $primary = $this->orm_object->getPrimaryKeyProperty();
+        $dbresult = Adapter::sqlExec("SELECT COUNT(*) as cnt FROM {$this->table} 
+                                                WHERE ".$this->getPrimaryKeyExprStr($primaryKeyValue));
         $row = $dbresult -> fetchRow();
         return ($row["cnt"] == "1");
     }
     
+    /**
+    * Возвращает подготовленные данные для сохранения в БД
+    * 
+    * @param bool $only_modified - если true, то будут возвращены только 
+    * измененные данные, иначе - все.
+    * @return array
+    */
     protected function prepareForDB($only_modified = false)
     {
         $query = array();
-        $properties = $this->Core_Object->getProperties();
+        $properties = $this->orm_object->getProperties();
         
-        foreach ($properties as $key=>$property)
-        {
+        foreach ($properties as $key=>$property) {
             if ($property->beforesave()) {
-                $this->Core_Object[$key] = $property->get();
+                $this->orm_object[$key] = $property->get();
             }
             
-            if ($only_modified && !$this->Core_Object->isModified($key)) continue;
+            if ($only_modified && !$this->orm_object->isModified($key)) continue;
             if (!$property->isUseToSave()) continue;
             
-            if (!$property->isRuntime() && ($this->Core_Object->isModified($key) || $this->Core_Object->offsetExists($key)) ) {
+            if (!$property->isRuntime() && ($this->orm_object->isModified($key) || $this->orm_object->offsetExists($key)) ) {
                 if (is_null($property->get()) && $property->isAllowEmpty()) {
                     $query[] = "`$key` = NULL";
                 } else {
-                    $query[] = "`$key` = '".\RS\Db\Adapter::escape($property->get())."'";
+                    $query[] = "`$key` = '".Adapter::escape($property->get())."'";
                 }
             }
         }
@@ -74,10 +89,11 @@ class Db extends AbstractStorage
     * @param array $on_duplicate_uniq_fields - поля, которые точно идетифицируют текущаю запись, для подгрузки id объекта при обновлении
     * @return bool
     */
-    public function insert($type = 'insert', $on_duplicate_update_keys = array(), $on_duplicate_uniq_fields = array())
+    public function insert($type = 'INSERT', $on_duplicate_update_keys = array(), $on_duplicate_uniq_fields = array())
     {
-        $sql = "$type into {$this->table} set ";
+        $sql = "$type INTO {$this->table} SET ";
         $query = $this->prepareForDB();
+        
         if (empty($query)) return true; //Ни одно свойство не изменилось, запрос выполнять не нужно
         
         $sql .= implode(",",$query);
@@ -94,75 +110,132 @@ class Db extends AbstractStorage
         }
         
         try {
-            $dbresult = \RS\Db\Adapter::sqlExec($sql);
+            $dbresult = Adapter::sqlExec($sql);
         } catch (\RS\Db\Exception $e) {
             if ($e->getCode() == 1062) {
-                $this->Core_Object->addError(t('Запись с таким уникальным идентификатором уже присутствует'));
+                $index_fields = $this->parseDuplicateIndexName($e->getMessage());
+                $this->orm_object->addError(t('Запись с таким уникальным идентификатором уже присутствует %0', array($index_fields)));
             } else {
                 throw new \RS\Db\Exception($e->getMessage(), $e->getCode());
             }
           return false;
         }
-        if ($primary_key = $this->Core_Object->getPrimaryKeyProperty()) {
-            $primary_key_value = $this->Core_Object[$this->Core_Object->getPrimaryKeyProperty()];            
-        }
-        
+        $primary_key = $this->orm_object->getPrimaryKeyProperty();
+            
         if ($on_duplicate_update_keys) {
             //Сообщаем ORM объекту, что он был обновлен а не создан.
-            $updated = $dbresult->affectedRows()!=1;
-            $this->Core_Object->setLocalParameter('duplicate_updated', $updated );
+            $updated = $dbresult->affectedRows() != 1;
+            $this->orm_object->setLocalParameter('duplicate_updated', $updated );
             
-            if ($updated && $primary_key !==false && empty($primary_key_value)) {
+            if ($updated && $primary_key !==false) {
+                //Если произошло обновление объекта, то устанавливаем объекту значение первичного ключа
                 $expr = array();
                 foreach($on_duplicate_uniq_fields as $field) {
-                    $expr[] = "`$field` = '".\RS\Db\Adapter::escape($this->Core_Object[$field])."'";
+                    $expr[] = "`$field` = '".Adapter::escape($this->orm_object[$field])."'";
                 }
             
-                $sql = "SELECT $primary_key FROM {$this->table} WHERE ".implode(' AND ', $expr)." LIMIT 1";
-                $primary_key_value = \RS\Db\Adapter::sqlExec($sql)->getOneField($primary_key);
-                $this->Core_Object[$primary_key] = $primary_key_value;
+                $sql = "SELECT ".implode(',', (array)$primary_key)." FROM {$this->table} WHERE ".implode(' AND ', $expr)." LIMIT 1";
+                if ($row = Adapter::sqlExec($sql)->fetchRow()) {
+                    foreach($row as $key => $value) {
+                        $this->orm_object[$key] = $value;
+                    }
+                }
             }
+        } 
+        
+        if (is_string($primary_key) && empty($this->orm_object[$primary_key]) && empty($updated)) {
+            //Устанавливаем объекту автоинкрементный ID
+            $this->orm_object[$primary_key] = Adapter::lastInsertId();
         }
         
-        if ($primary_key !==false && empty($primary_key_value)) $this->Core_Object[$primary_key] = \RS\Db\Adapter::lastInsertId();
         return true;
     }
     
+    /**
+    * Обновляет объект в хранилище
+    * 
+    * @param $primaryKey - значение первичного ключа
+    * @return bool
+    */
     public function update($primaryKey = null)
     {
-        $sql = "update {$this->table} set ";
+        $sql = "UPDATE {$this->table} SET ";
         $query = $this->prepareForDB(true);
         if (empty($query)) return true; //Ни одно свойство не изменилось, запрос выполнять не нужно
-
-        $prop = $this->Core_Object->getPrimaryKeyProperty();
-        if (!isset($primaryKey)) $primaryKey = $this->Core_Object[$prop];
         
-        $sql .= implode(",",$query) . " where $prop='" . $primaryKey."'";
-
+        $sql .= implode(",",$query) . " WHERE ".$this->getPrimaryKeyExprStr($primaryKey);
+        
         try {
-            \RS\Db\Adapter::sqlExec($sql);
+            Adapter::sqlExec($sql);
         } catch (\RS\Db\Exception $e) {
             if ($e->getCode() == 1062) {
-                $this->Core_Object->addError(t('Запись с таким уникальным идентификатором уже присутствует'));
+                $index_fields = $this->parseDuplicateIndexName($e->getMessage());
+                $this->orm_object->addError(t('Запись с таким уникальным идентификатором уже присутствует %0', array($index_fields)));
             } else {
                 throw new \RS\Db\Exception($e->getMessage(), $e->getCode());
             }                
-                return false;
+            return false;
         }        
         return true;
     }
     
+    /**
+    * Перезаписывает объект в хранилище
+    * 
+    * @return bool
+    */
     public function replace()
     {
-        return $this->insert('replace');
+        return $this->insert('REPLACE');
     }
     
+    /**
+    * Удаляет объект из хранилища
+    * 
+    * @return bool
+    */
     public function delete()
     {
-        $prop = $this->Core_Object->getPrimaryKeyProperty();
-        $sql = "delete from {$this->table} where $prop='" . \RS\Db\Adapter::escape($this->Core_Object[$prop]) . "'";
-        \RS\Db\Adapter::sqlExec($sql);
-        return \RS\Db\Adapter::affectedRows();
+        $sql = "DELETE FROM {$this->table} WHERE ".$this->getPrimaryKeyExprStr();
+        return Adapter::sqlExec($sql)->affectedRows();
+    }
+    
+    /**
+    * Возвращает условие для выборки по первичному ключу в виде для SQL Where
+    * 
+    * @param mixed $primaryKey - значение первичного ключа
+    * @return string
+    */
+    protected function getPrimaryKeyExprStr($primaryKey = null)
+    {
+        $pk = $this->getPrimaryKeyExpr($primaryKey);
+        $expr = array();
+        foreach($pk as $key => $value) {
+            $expr[] = "`$key` = '".Adapter::escape($value)."'";
+        }
+        return implode(' AND ', $expr);
+    }
+    
+    /**
+    * Парсит ошибку о дублировании записи и возвращает названия полей, 
+    * по которым произошло дублирование
+    * 
+    * @param string $error_text - текст ошибки, который возвращает Mysql
+    * @return string
+    */
+    protected function parseDuplicateIndexName($error_text)
+    {
+        if (preg_match('/for key \'(.*?)\'/', $error_text, $match)) {
+            $result = array();
+            $index_name = $match[1];
+            $indexes = $this->orm_object->getIndexes();
+            if (isset($indexes[$index_name])) {
+                foreach($indexes[$index_name]['fields'] as $field) {
+                    $result[] = $this->orm_object["__{$field}"]->getDescription();
+                }
+            }
+            return '('.implode(',', $result).')';
+        }
     }
     
 }

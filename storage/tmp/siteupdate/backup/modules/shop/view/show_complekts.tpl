@@ -84,8 +84,10 @@
                                 </select>
                             {else}
                                 {foreach from=$product.offers.items key=key item=offer name=offers}
-                                    <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
-                                    <label for="offer_{$key}">{$offer.title}</label><br>
+                                    <div class="packageItem">
+                                        <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
+                                        <label for="offer_{$key}">{$offer.title}</label>
+                                    </div>
                                 {/foreach}
                             {/if}
                         </div>
@@ -93,6 +95,8 @@
                 </div><br>
             {/if}
             
+            {* Блок с сопутствующими товарами *}
+            {moduleinsert name="\Shop\Controller\Block\Concomitant"}
             
             {* Вывод наличия на складах *}
             {assign var=stick_info value=$product->getWarehouseStickInfo()}

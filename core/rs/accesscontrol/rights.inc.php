@@ -14,6 +14,9 @@ namespace RS\AccessControl;
 class Rights
 {
     protected static
+        /**
+        * Идентификатор системного модуля
+        */
         $default_module = 'main';
         
     /**
@@ -31,7 +34,9 @@ class Rights
         }
         
         //Если у модуля нет конфигурационного файла, то уравниваем его права с системным модулем
-        if (!\RS\Module\Manager::staticModuleExists($mod_name)) $mod_name = self::$default_module;
+        if (!\RS\Module\Manager::staticModuleExists($mod_name)) {
+            $mod_name = self::$default_module;
+        }
         
         $user = \RS\Application\Auth::getCurrentUser();
         

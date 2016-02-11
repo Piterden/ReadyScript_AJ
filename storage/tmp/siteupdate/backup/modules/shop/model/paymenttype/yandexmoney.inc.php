@@ -105,7 +105,15 @@ class YandexMoney extends AbstractType
                     'QW' => 'Оплата через QIWI Wallet',
                     'KV' => 'Оплата через КупиВкредит (Тинькофф Банк)',
                     'QP' => 'Оплата через сервис Доверительный платеж (Куппи.ру)'
-                ))
+                )),
+                'template' => '%shop%/form/payment/yandexmoney/payment_type.tpl'
+            )),
+            'category_code' => new Type\Integer(array(
+                'description' => t('Характеристика отвечающая за категорию товаров по версии Яндекс для банков<br/>
+                Смотрите <a href="https://money.yandex.ru/i/forms/types_of_products.xls"></a>'),
+                'maxLength'    => 11,
+                'visible' => false,
+                'list' => array(array('\Catalog\Model\PropertyApi','staticSelectList'),true),
             )),
             'cps_provider' => new Type\String(array(
                 'description' => t('Провайдер для терминалов'),
@@ -138,7 +146,7 @@ class YandexMoney extends AbstractType
     function canOnlinePay()
     {
         return true;
-    }
+    }                         
     
     /**
     * Возвращает URL для перехода на сайт сервиса оплаты
@@ -214,9 +222,75 @@ class YandexMoney extends AbstractType
         
         $params['inv_id']         = $inv_id;
         
+        //Если это купи в кредит, то надо дописать некоторые дополнительные параметры
+        if ($this->getOption('payment_type') == 'KV') {
+            //мы платим не как пополнение лицевого счёт
+            if ($transaction->order_id){
+               $params = $this->addKVAdditionalOptions($transaction, $params); 
+            }else{ //Если всё же поставили оплату, то выведем ошибку
+               echo t("Вид оплаты КупиВКредит от Yandex невозможно использовать для пополнения счёта");
+               exit(); 
+            }
+        }
+        
         $this->addPostParams($params); //Добавим пост параметры
         
         return $url;
+    }
+    
+    
+    /**
+    * Добавление дополнительных сведений для КупиВКредит
+    * 
+    * @param Transaction $transaction - текущая транзакция
+    * @param array $params
+    * @return array
+    */
+    function addKVAdditionalOptions(Transaction $transaction, $params=array())
+    {
+        $params['seller_id'] = $params['shopId']; //seller_id Равен ShopId
+        $order = $transaction->getOrder();
+        //А также добавим сведения о товарах 
+        $cart = $order->getCart();
+        $products = $cart->getProductItems();
+        $cartdata = $cart->getPriceItemsData();
+        $i=0;
+        foreach ($products as $n=>$item){
+           /**
+           * @var \Catalog\Model\Orm\Product
+           */
+           $product     = $item['product']; 
+           $product->fillProperty(); //Заполним характеристики
+           $offer_title = $product->getOfferTitle($item['cartitem']['offer']);
+           $title       = $offer_title ? $offer_title : $product['title'];
+           if (mb_strlen($title)>256){ //Если превышает лимит, то обрежем
+              $title = mb_substr($title, 0, 255); 
+           }
+           
+           $params['category_code_'.$i]        = $product->getPropertyValueById($this->getOption('category_code'), null, false);
+           $params['goods_name_'.$i]        = $title;
+           $params['goods_description_'.$i] = $title;
+           $params['goods_quantity_'.$i]    = $item['cartitem']['amount'];
+           $params['goods_cost_'.$i]        = $cartdata['items'][$n]['single_cost'];
+           $i++;
+        }
+        
+        //Добавим сумму доставки если есть                        
+        $delivery_items = $cart->getCartItemsByType('delivery');
+        if (!empty($delivery_items)){
+           foreach ($delivery_items as $n=>$item){
+              if ($item['price']>0){
+                 $params['category_code_'.$i]        = "11111";
+                 $params['goods_name_'.$i]        = t('Доставка');
+                 $params['goods_description_'.$i] = t('Цена за доставку');
+                 $params['goods_quantity_'.$i]    = 1;
+                 $params['goods_cost_'.$i]        = $item['price']; 
+              }
+           } 
+        }
+        
+        
+        return $params;
     }
     
     /**
@@ -236,7 +310,7 @@ class YandexMoney extends AbstractType
     * @param string $action - команда от сервера
     * @param array $params  - параметры для XML
     */
-    private function sendXMLAnswer($action,$params)
+    private function sendXMLAnswer($action, $params)
     {
        $dom     = new \DOMDocument('1.0','utf-8');
        $element = $dom->createElement($action."Response");
@@ -284,7 +358,7 @@ class YandexMoney extends AbstractType
     function onResult(\Shop\Model\Orm\Transaction $transaction, \RS\Http\Request $request)
     {
         $action = $request->request('action',TYPE_STRING);
-        
+                                                                  
         // Проверка подписи запроса
         if(!$this->checkSign($action, $transaction, $request)){
             $exception = new ResultException(t('Не правильная подпись ответа. Невозможно идентифицировать хэш.'),1);
@@ -300,6 +374,19 @@ class YandexMoney extends AbstractType
             throw $exception;
         }
         
+        if ($action == 'cancelOrder') { //Если пришёл запрос на отмену оплаты заказа
+            $exception = new ResultException(t('Платёж по транзакции был отменён'),1);
+            $exception->setResponse($this->sendXMLAnswer($action, array(
+               'performedDatetime' => date('c'),
+               'code'              => 0,
+               'invoiceId'         => $request->request('invoiceId', TYPE_STRING),
+               'shopId'            => $this->getOption('shop_id'),
+               'message'           => t('Пришлё запрос на отмену заказа.'),
+               'techMessage'       => t('Платёж по транзакции был отменён.'),
+            )));
+            
+            throw $exception;
+        } 
         
         
         // Проверка, соответсвует ли сумма платежа сумме, сохраненной в транзакции
@@ -308,7 +395,7 @@ class YandexMoney extends AbstractType
             $exception->setResponse($this->sendXMLAnswer($action,array(
                'performedDatetime' => date('c'),
                'code'              => 1,
-               'invoiceId'         => $request->request('invoiceId',TYPE_STRING),
+               'invoiceId'         => $request->request('invoiceId', TYPE_STRING),
                'shopId'            => $this->getOption('shop_id'),
                'message'           => t('Не правильная сумма платежа.'),
                'techMessage'       => t('Сумма платежа не совпадает с запрошенной изначально.'),
@@ -320,7 +407,7 @@ class YandexMoney extends AbstractType
         $result = $this->sendXMLAnswer($action,array(
            'performedDatetime' => date('c'),
            'code'              => 0,
-           'invoiceId'         => $request->request('invoiceId',TYPE_STRING),
+           'invoiceId'         => $request->request('invoiceId', TYPE_STRING),
            'shopId'            => $this->getOption('shop_id'),
         ));
         

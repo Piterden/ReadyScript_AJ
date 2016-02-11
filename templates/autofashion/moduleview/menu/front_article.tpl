@@ -1,15 +1,11 @@
 <div class="container article">
-	{if !empty($article.image)} 
-		<img src="{$article.__image->getLink()}" alt="{$article.title}">
-		<div class="title text-center onImage" style="position:absolute;">
-		    <h1>{$article.title}</h1>
-		</div>
-	{else}
-	<div class="title text-center">
-	    <h1>{$article.title}</h1>
+	<div class="row text-center mainTitle">
+	    <h1><span class="whiteBack">{$menu_item.title}</span></h1>
 	</div>
-	{/if}	
 	<div class="col-md-16 col-md-offset-4 content">
-	    {$article.content}
+		{if !empty($menu_item.img)}
+	        <img class="mainImage" src="{$menu_item.__img->getUrl(770, 770, 'xy')}" alt="{$menu_item.title}"/>
+	    {/if}
+	    {$menu_item.content}
 	</div>
 </div>

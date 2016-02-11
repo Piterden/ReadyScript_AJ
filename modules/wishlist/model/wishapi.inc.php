@@ -16,7 +16,7 @@ class WishApi extends \RS\Module\AbstractModel\EntityList
 
     /**
      * Проверим авторизацию
-     * 
+     *
      * @return bool
      */
     public function checkAuth()
@@ -26,7 +26,7 @@ class WishApi extends \RS\Module\AbstractModel\EntityList
 
     /**
      * Добавим желание
-     * 
+     *
      * @param \Catalog\Model\Orm\Product $product
      * @param \Users\Model\Orm\User      $user
      * @return bool
@@ -45,41 +45,41 @@ class WishApi extends \RS\Module\AbstractModel\EntityList
     	if (self::getElement()->checkData($data))
     	{
     		return self::save(null, $data);
-    	} 
-        else 
+    	}
+        else
     	{
         	return false;
     	}
     }
 
     /**
-     * Получим массив объектов желаемых товаров 
-     * 
+     * Получим массив объектов желаемых товаров
+     *
      * @param  array  $wishes
      * @return array of \Catalog\Model\Orm\Product
      */
     public function getWishedProductsList(array $wishes)
     {
     	$products = array();
-    	foreach ($wishes as $wish) 
+    	foreach ($wishes as $wish)
     	{
     		$products[] = \Catalog\Model\Orm\Product::loadByWhere(array(
 			    'id' => $wish->product_id,
 			));
     	}
     	return $products;
-    }    
-     
+    }
+
     /**
      * Получим массив id желаемых товаров одного пользователя
-     * 
+     *
      * @param  int $user_id
      * @return array
      */
     static public function getWishedProductIds($user_id)
     {
     	$ids = array();
-    	foreach (self::getSelfList($user_id) as $wish) 
+    	foreach (self::getSelfList($user_id) as $wish)
     	{
     		$ids[] = $wish['product_id'];
     	}
@@ -88,14 +88,14 @@ class WishApi extends \RS\Module\AbstractModel\EntityList
 
     /**
      * Получим массив объектов желаний одного пользователя
-     * 
+     *
      * @param  int $user_id
      * @return array of \Wishlist\Model\Orm\Wish
      */
     static private function getSelfList($user_id)
     {
     	return \RS\Orm\Request::make()
-	        ->from(new \Wishlist\Model\Orm\Wish()) 
+	        ->from(new \Wishlist\Model\Orm\Wish())
 	        ->where(array( //Условие
 	            'user_id' => $user_id, //id пользователя
 	        ))
@@ -104,7 +104,7 @@ class WishApi extends \RS\Module\AbstractModel\EntityList
 
     /**
      * Удалим желание
-     * 
+     *
      * @param  int $wish_id
      * @return bool
      */
@@ -121,17 +121,17 @@ class WishApi extends \RS\Module\AbstractModel\EntityList
 
     /**
      * Получим желание по id пользователя и продукта
-     * 
+     *
      * @param  int $user_id
      * @param  int $product_id
      * @return array of objects \Wishlist\Model\Orm\Wish
      */
-    public function getCurrentWish($user_id, $product_id)
+    public function getCurrentWish($product_id, $user_id)
     {
         return \RS\Orm\Request::make()
             ->from(new \Wishlist\Model\Orm\Wish())
             ->where(array(
-                'user_id'       => $user_id, 
+                'user_id'       => $user_id,
                 'product_id'    => $product_id))
             ->objects();
     }

@@ -26,7 +26,7 @@
             <ul class="cats {$widthClass}">
              {foreach $dirs as $dir}
                 <li>
-                    <a href="{$router->getUrl('catalog-front-listproducts',['category'=>$dir.alias,'bfilter'=> ["brand" => [$brand.id]]])}">{$dir.name}</a> <sup>({$dir.brands_cnt})</sup>
+                    <a href="{$router->getUrl('catalog-front-listproducts',['category'=>$dir._alias,'bfilter'=> ["brand" => [$brand.id]]])}">{$dir.name}</a> <sup>({$dir.brands_cnt})</sup>
                 </li>
              {/foreach}
             </ul>

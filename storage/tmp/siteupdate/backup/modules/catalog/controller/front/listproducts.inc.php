@@ -52,7 +52,7 @@ class ListProducts extends \RS\Controller\Front
         $this->view_as = $this->url->request('viewAs', TYPE_STRING, $this->config['list_default_view_as']);
         
         //Сортировка 
-        $allow_sort = array('dateof', 'rating', 'cost', 'title', 'num');
+        $allow_sort = array('dateof', 'rating', 'cost', 'title', 'num', 'barcode');
         if ($this->can_rank_sort) {
             $allow_sort[] = 'rank';
         }
@@ -145,7 +145,8 @@ class ListProducts extends \RS\Controller\Front
                     'cost' => 'asc',
                     'rating' => 'desc',
                     'rank' => 'desc',
-                    'num' => 'desc'
+                    'num' => 'desc',
+                    'barcode' => 'asc'
                 );
                 if ($sort[$this->cur_sort] == $this->cur_n_sort) {
                     $sort[$this->cur_sort] = ($sort[$this->cur_sort] == 'asc') ? 'desc' : 'asc';
@@ -206,7 +207,7 @@ class ListProducts extends \RS\Controller\Front
                 $list = $this->api->getList($this->page, $this->pageSize);
                 $list = $this->api->addProductsPhotos($list);
                 $list = $this->api->addProductsCost($list);
-                $list = $this->api->addProductsDirs($list);
+                $list = $this->api->addProductsProperty($list);
                 
                 //Заполняем meta - теги
                 $path = $this->dirapi->getPathToFirst($dir_id);
@@ -269,6 +270,7 @@ class ListProducts extends \RS\Controller\Front
                 ));
             } else {
                 $this->view->assign(array(
+                    'list' => array(),
                     'no_query_error' => true
                 ));
             }

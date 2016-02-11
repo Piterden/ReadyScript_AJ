@@ -217,7 +217,11 @@ $.extend({
 
             updateCartBlock: function(serverData) {
                 if (serverData) {
-                    $(data.options.cartTotalItems, $this).text(serverData.cart.items_count);
+                	if (serverData.cart.items_count > 0) {
+	                    $(data.options.cartTotalItems, $this).text(serverData.cart.items_count).show();
+                	} else {
+	                    $(data.options.cartTotalItems, $this).text(serverData.cart.items_count).hide();
+                	}
                     $(data.options.cartTotalPrice, $this).text(serverData.cart.total_price);
                     $(data.options.cartPriceBlock).toggle(parseInt(serverData.cart.total_price) > 0);
                     $(data.options.checkoutButton).toggleClass(data.options.checkoutButtonActiveClass, serverData.cart.can_checkout && parseInt(serverData.cart.items_count) > 0);

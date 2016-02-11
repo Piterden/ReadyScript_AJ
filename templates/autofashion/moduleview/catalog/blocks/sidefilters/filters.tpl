@@ -42,7 +42,7 @@
                                 </tbody>
                             </table>
                             <input type="hidden" data-slider='{ "from":{$prop.interval_from}, "to":{$prop.interval_to}, "step": "{$prop.step}", "round": {$prop->getRound()}, "dimension": " {$prop.unit}", "heterogeneity": [{$prop->getHeterogeneity()}], "scale": [{$prop->getScale()}]  }' value="{$filters[$prop.id].from|default:$prop.interval_from};{$filters[$prop.id].to|default:$prop.interval_to}" class="pluginInput" data-start-value="{$prop.interval_from};{$prop.interval_to}">
-                        </div>                
+                        </div>
                     {elseif $prop.type == 'list'}
                         <div class="filter typeMultiselect {$prop.title|@translit}">
                             <h4>{$prop.title}:</h4>
@@ -70,7 +70,7 @@
                             <h4>{$prop.title}:</h4>
                             <input type="text" class="textinp string" name="f[{$prop.id}]" value="{$filters[$prop.id]}">
                         </div>
-                    {/if}               
+                    {/if}
                 {/foreach}
                 {if $param.show_cost_filter && ($moneyArray.interval_to>$moneyArray.interval_from)}
                     <div class="filter typeInterval">
@@ -80,12 +80,12 @@
                                 <td class="p50">от</td>
                                 <td></td>
                                 <td class="p50">до</td>
-                            </tr>                
+                            </tr>
                             <tr>
                                 <td><input type="text" class="textinp fromto" name="bfilter[cost][from]" value="{if !$catalog_config.price_like_slider}{$basefilters.cost.from}{else}{$basefilters.cost.from|default:$moneyArray.interval_from}{/if}" data-start-value="{if $catalog_config.price_like_slider}{$moneyArray.interval_from|intval}{/if}"></td>
                                 <td class="padd4">&mdash;</td>
                                 <td><input type="text" class="textinp fromto" name="bfilter[cost][to]" value="{if !$catalog_config.price_like_slider}{$basefilters.cost.to}{else}{$basefilters.cost.to|default:$moneyArray.interval_to}{/if}" data-start-value="{if $catalog_config.price_like_slider}{$moneyArray.interval_to|intval}{/if}"></td>
-                            </tr>                    
+                            </tr>
                         </table>
                         {if $catalog_config.price_like_slider} {* Если нужно показать как слайдер*}
                             <input type="hidden" data-slider='{ "from":{$moneyArray.interval_from}, "to":{$moneyArray.interval_to}, "step": "{$moneyArray.step}", "round": {$moneyArray.round}, "dimension": " {$moneyArray.unit}", "heterogeneity": [{$moneyArray.heterogeneity}]  }' value="{$basefilters.cost.from|default:$moneyArray.interval_from};{$basefilters.cost.to|default:$moneyArray.interval_to}" class="pluginInput" data-closest=".fromToPrice" data-start-value="{$basefilters.cost.from|default:$moneyArray.interval_from};{$basefilters.cost.to|default:$moneyArray.interval_to}"/>
@@ -94,7 +94,10 @@
                 {/if}
                 </div>
             {elseif $item.group.title == 'Спецификации'}
-                <div class="filtersGroup {$item.group.title|@translit}">
+            	<div class="specToggler text-center">
+            		<a role="button" data-toggle="collapse" href="#filtersGroup" aria-expanded="false" aria-controls="collapseExample">Дополнительные фильтры <i class="fa fa-chevron-down"></i></a>
+            	</div>
+                <div id="filtersGroup" class="filtersGroup collapse {$item.group.title|@translit}">
                 {foreach $item.properties as $prop}
                     {if $prop.type == 'int'}
                         <div class="filter typeInterval {$prop.title|@translit}">
@@ -114,7 +117,7 @@
                                 </tbody>
                             </table>
                             <input type="hidden" data-slider='{ "from":{$prop.interval_from}, "to":{$prop.interval_to}, "step": "{$prop.step}", "round": {$prop->getRound()}, "dimension": " {$prop.unit}", "heterogeneity": [{$prop->getHeterogeneity()}], "scale": [{$prop->getScale()}]  }' value="{$filters[$prop.id].from|default:$prop.interval_from};{$filters[$prop.id].to|default:$prop.interval_to}" class="pluginInput" data-start-value="{$prop.interval_from};{$prop.interval_to}">
-                        </div>                
+                        </div>
                     {elseif $prop.type == 'list'}
                         <div class="filter typeMultiselect {$prop.title|@translit}">
                             <h4>{$prop.title}:</h4>
@@ -131,7 +134,7 @@
                                 {foreach $prop->getAllowedValues() as $key => $value}
                                 <li><input type="checkbox" {if is_array($filters[$prop.id]) && in_array($value, $filters[$prop.id])}checked{/if} name="f[{$prop.id}][]" value="{$value}" class="cb" id="cb_{$prop.id}_{$value@iteration}">
                                 <label for="cb_{$prop.id}_{$value@iteration}">
-                                    <div>{$value}</div>    
+                                    <div>{$value}</div>
                                 </label></li>
                                 {/foreach}
                             </ul> -->
@@ -150,17 +153,17 @@
                             <h4>{$prop.title}:</h4>
                             <input type="text" class="textinp string" name="f[{$prop.id}]" value="{$filters[$prop.id]}">
                         </div>
-                    {/if}               
+                    {/if}
                 {/foreach}
                 </div>
             {/if}
         {/foreach}
-        
+
         <div class="buttons">
             <input type="submit" class="button submitFilter" value="Применить">
             <a href="{urlmake f=null p=null bfilter=null}" class="button cleanFilter{if empty($filters) && empty($basefilters)} hidden{/if}">сбросить фильтр</a>
-        </div> 
-        
+        </div>
+
         <script type="text/javascript">
             $(function() {
                 $('.typeInterval .pluginInput').each(function() {
@@ -173,7 +176,7 @@
                         console.log($('input[name$="[from]"]', fromTo));
                         $this.trigger('change');
                     }}));
-                    
+
                     $('input[name$="[from]"], input[name$="[to]"]', fromTo).change(function() {
                         var from = $('input[name$="[from]"]', fromTo).val();
                         var to = $('input[name$="[to]"]', fromTo).val();
@@ -188,7 +191,7 @@
                     $this.prev('input').trigger('click');
                     console.log($this);
                 });
-                
+
                 $('.multiselectItem input').each(function() {
                     if ($(this).attr('checked') == 'checked') {
                         $(this).parent().addClass('active');
@@ -202,7 +205,7 @@
                             $this.parent().addClass('selected');
                         } else {
                             $this.parent().removeClass('selected');
-                        }; 
+                        };
                     }
                 });
                 $('.sod_select').each(function() {
@@ -216,6 +219,6 @@
                     $('.multiselectItem').removeClass('active');
                 });
             });
-        </script>        
+        </script>
     </form>
 </section>

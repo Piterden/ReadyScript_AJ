@@ -386,7 +386,7 @@ class Cdek extends AbstractType
     private function requestOrderStatus(\Shop\Model\Orm\Order $order)
     {
         $extra_info = $order->getExtraInfo();
-        
+
         if (!isset($extra_info['cdek_order_id']['data']['orderId'])){
             throw new \RS\Exception('[Ошибка] Не удалось получить сведения о заказе СДЕК');
         }
@@ -445,13 +445,18 @@ class Cdek extends AbstractType
         $user     = $order->getUser(); //Получим пользователя 
         
         $sxml->Order['Number']                = $order['order_num'];    //Номер заказа
-        $sxml->Order['RecCityCode']           = $extra_info['cityCode'];  //код города получателя
-        $sxml->Order['SendCityPostCode']      = $address['zipcode'];     //Индекс города отправителя
+        if (isset($extra_info['cityCode'])){ //код города получателя если выбран какой-то пункт выдачи
+            $sxml->Order['RecCityCode'] = $extra_info['cityCode']; //код города получателя
+        }else{
+            $sxml->Order['RecCityPostCode'] = $address['zipcode']; //Почтовый индекс города получателя
+        }
+                                                           
+        $sxml->Order['SendCityPostCode']      = $this->getOption('city_from_zipcode');     //Индекс города отправителя
         $sxml->Order['RecipientName']         = !empty($address['contact_person']) ? $address['contact_person'] : $user->getFio(); //ФИО получателя
         $sxml->Order['RecipientEmail']        = $user['e_mail']; //E-mail получателя
         $sxml->Order['Phone']                 = $user['phone'];  //Телефон получателя
         $sxml->Order['TariffTypeCode']        = $extra_info['tariffId']; //Тип тарифа, по которому будет доставка
-        $sxml->Order['DeliveryRecipientCost'] = $delivery->getDeliveryCost($order,null,false); //Цена за доставку
+        $sxml->Order['DeliveryRecipientCost'] = $delivery->getDeliveryCost($order, null, false); //Цена за доставку
         $sxml->Order['RecipientCurrency']     = "RUB"; //Валюта доставки
         $sxml->Order['Comment']               = $order['comments']; //Комментарий заказа
         $sxml->Order['SellerName']            = $site_config['firm_name']; //Имя фирмы отправителя
@@ -465,7 +470,10 @@ class Cdek extends AbstractType
         $sxml->Order->Address['Street']  = $address['address'];
         $sxml->Order->Address['House']   = "-";
         $sxml->Order->Address['Flat']    = "-";
-        $sxml->Order->Address['PvzCode'] = $extra_info['code'];
+        if (isset($extra_info['code'])){ //Если есть место забора товара
+            $sxml->Order->Address['PvzCode'] = $extra_info['code'];
+            $order->addExtraInfoLine(t('Выбран пункт забора'), $extra_info['addressInfo']);
+        }
         
         //Упаковка с товарами
         $products = $order->getCart()->getProductItems();
@@ -503,8 +511,7 @@ class Cdek extends AbstractType
            } 
         }
         
-        
-        $xml = $sxml->asXML(); //XML заказа
+        $xml = $this->toFormatedXML($sxml->asXML()); //XML заказа
         
         try{
            return @simplexml_load_string($this->apiRequest("new_orders.php",array(
@@ -1016,7 +1023,7 @@ class Cdek extends AbstractType
             'cdek'        => $this,
             'pochtomates' => $pochtomates,
         )+ \RS\Module\Item::getResourceFolders($this));
-        
+                                  
         return $view->fetch("%shop%/delivery/cdek/pochtomates.tpl");
     }
     

@@ -29,7 +29,7 @@ $(function() {
     });
     
     $('.userType input').click(function() {
-        $(this).closest('.checkoutBox').removeClass('person company user').addClass( $(this).val() );
+        $(this).closest('.checkoutBox').removeClass('person company noregister user').addClass( $(this).val() );
         $('#doAuth').attr('disabled', $(this).val()!='user');
     });
 

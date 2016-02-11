@@ -114,6 +114,7 @@ class AbstractSeoGen
                 }
             }
         }
+        
         return $newArray;
     }
     

@@ -12,12 +12,12 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
     const
         COOKIE_CURRENCY_KEY = 'currency',
         CBR_LINK = "http://www.cbr.ru/scripts/XML_daily.asp"; //ссылка получения курса ЦБ РФ
-        
+
     protected static
         $current_currency,
         $default_currency,
         $base_currency;
-    
+
     function __construct()
     {
         parent::__construct(new \Catalog\Model\Orm\Currency,
@@ -25,11 +25,11 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
             'multisite' => true,
             'nameField' => 'title'
         ));
-    }    
-    
+    }
+
     /**
     * Возращает объект текущей валюты
-    * 
+    *
     * @return Orm\Currency
     */
     public static function getCurrentCurrency()
@@ -41,9 +41,9 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
                self::$current_currency = \RS\Orm\Request::make()
                 ->from(new Orm\Currency())
                 ->where(array('site_id' => \RS\Site\Manager::getSiteId(), 'title' => $cookie))
-                ->object(); 
+                ->object();
             }
-                        
+
             if (self::$current_currency === null) {
                 //Возвращаем валюту по-умолчанию
                 self::$current_currency = self::getDefaultCurrency();
@@ -51,26 +51,26 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
         }
         return self::$current_currency;
     }
-    
+
     /**
     * Возвращает валюту по-умолчанию для текущего сайта
-    * 
+    *
     * @return Orm\Currency
     */
     public static function getDefaultCurrency()
     {
         if (!self::$default_currency) {
-            self::$default_currency = Orm\Currency::loadByWhere(array('site_id' => \RS\Site\Manager::getSiteId(), 'default' => 1));        
+            self::$default_currency = Orm\Currency::loadByWhere(array('site_id' => \RS\Site\Manager::getSiteId(), 'default' => 1));
             if (!self::$default_currency) {
                 self::$default_currency = Orm\Currency::loadByWhere(array('site_id' => \RS\Site\Manager::getSiteId()));
             }
         }
         return self::$default_currency;
     }
-    
+
     /**
-    * Возвращает объект с базовой валютой. (базовой считается валюта, в которой цены в системе) 
-    * 
+    * Возвращает объект с базовой валютой. (базовой считается валюта, в которой цены в системе)
+    *
     * @return Orm\Currency
     */
     public static function getBaseCurrency()
@@ -78,13 +78,13 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
         if (!self::$base_currency) {
             self::$base_currency = Orm\Currency::loadByWhere(array('site_id' => \RS\Site\Manager::getSiteId(), 'is_base' => 1));
         }
-        return self::$base_currency;        
+        return self::$base_currency;
     }
-    
-    
+
+
     /**
     * Устанавливает текущую валюту в системе
-    * 
+    *
     * @param string $alias - трехсимвольный идентификатор валюты
     * @return bool Возвращает true, если установка валюты прошла успешно
     */
@@ -94,18 +94,18 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
             'site_id' => \RS\Site\Manager::getSiteId(),
             'title' => $alias
         ));
-        
+
         if ($currency['id']) {
-            \RS\Application\Application::getInstance()->headers->addCookie(self::COOKIE_CURRENCY_KEY, $alias, time()+60*60*24*720, '/');    
+            \RS\Application\Application::getInstance()->headers->addCookie(self::COOKIE_CURRENCY_KEY, $alias, time()+60*60*24*720, '/');
             self::$current_currency = $currency;
             return true;
         }
         return false;
     }
-    
+
     /**
     * Возвращает символ текущей валюты
-    * 
+    *
     * @return string
     */
     public static function getCurrecyLiter()
@@ -113,10 +113,10 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
         $currency = self::getCurrentCurrency();
         return $currency['stitle'];
     }
-    
+
     /**
     * Корректирует цену с учетом курса валюты относительно базовой валюты
-    * 
+    *
     * @param float $cost - Цена в базовой валюте
     * @param  $currency - объект валюты
     */
@@ -125,43 +125,43 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
         if (!$currency) {
             $currency = self::getCurrentCurrency();
         }
-        
+
         $ratio = $currency['ratio'] >0 ? 1/$currency['ratio'] : 0;
         return $currency['is_base'] ? $cost : round($cost * $ratio, 2);
     }
-    
+
     /**
     * Конвертирует цену в текущей валюте к базовой валюте
-    * 
+    *
     * @param float $cost - цена
     * @param Orm\Currency $cost_currency - валюта, в которой указана $cost. Если null, то текущая валюта
     * @return float
     */
     public static function convertToBase($cost, Orm\Currency $cost_currency = null)
     {
-        static 
+        static
             $update_price_round,
             $update_price_round_value;
-            
-        if ($update_price_round === null){ //Подгрузим сведения о округлении 
-           $config = \RS\Config\Loader::byModule('catalog'); 
-           $update_price_round       = $config['update_price_round']; 
+
+        if ($update_price_round === null){ //Подгрузим сведения о округлении
+           $config = \RS\Config\Loader::byModule('catalog');
+           $update_price_round       = $config['update_price_round'];
            $update_price_round_value = $config['update_price_round_value'];
         }
-        
+
         $base = self::getBaseCurrency();
         $cost_currency = $cost_currency ?: self::getCurrentCurrency();
         if ($base['id'] == $cost_currency['id']) {
             return $cost;
         } else {
             $decimal = $update_price_round ? $update_price_round_value : 2; //Если обновлять всегда до целых
-            return round($cost / (1/$cost_currency['ratio']), $decimal); 
+            return round($cost / (1/$cost_currency['ratio']), $decimal);
         }
     }
-    
+
     /**
     * Возвращает объект валюты по трехсимвольному идентификатору
-    * 
+    *
     * @return Orm\Currency
     */
     public static function getByUid($uid)
@@ -170,10 +170,10 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
             'title' => $uid
         ))->object();
     }
-    
+
     /**
     * Получает курсы валют с сайта ЦБ РФ
-    * 
+    *
     * @param string $date - дата за которую нужно получить данные
     * @return \SimpleXMLElement
     */
@@ -190,28 +190,28 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
        $url     = $config['cbr_link'] ? $config['cbr_link'] : self::CBR_LINK;
 
        if (!($cbr_xml =  @simplexml_load_string(file_get_contents($url."?date_req=".rawurlencode($date),false,$context)))){
-          return $this->addError('Невозможно получить данные по курсам по адресу '.$url."?date_req=".$date); 
-       } 
-       
-       return $cbr_xml; 
+          return $this->addError('Невозможно получить данные по курсам по адресу '.$url."?date_req=".$date);
+       }
+
+       return $cbr_xml;
     }
-    
+
     /**
     * Получает курсы ЦБ РФ всех валют за исключением базовой (Рублей)
-    * И обновляет у них не только значение, но и у товаров обновляются цены, если они указаны 
-    * в этих валютах 
+    * И обновляет у них не только значение, но и у товаров обновляются цены, если они указаны
+    * в этих валютах
     * Если удалось обновить возвращается true
-    * 
+    *
     * @param $cur_site - по умолчанию true;
-    * если true        - то делать для текщего сайта с обновлением, 
+    * если true        - то делать для текщего сайта с обновлением,
     * если integer     - Если задано значение то для конкретного сайта
-    * если false|null  - Обновить для всех валют всех сайтов 
-    * 
+    * если false|null  - Обновить для всех валют всех сайтов
+    *
     * @return boolean
     */
     function getCBRFCourseWithUpdate($cur_site = true){
-       $config = \RS\Config\Loader::byModule($this); 
-        
+       $config = \RS\Config\Loader::byModule($this);
+
        //Получим наши валюты за исключением базовой.
        $q = \RS\Orm\Request::make()
                 ->from(new \Catalog\Model\Orm\Currency())
@@ -220,18 +220,18 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
                 ));
        if ($cur_site === true){ //Если для текущего сайта
           $q->where(array(
-             'site_id' => \RS\Site\Manager::getSiteId() 
-          )); 
+             'site_id' => \RS\Site\Manager::getSiteId()
+          ));
        }
        if ($cur_site>0 && !is_bool($cur_site)){ //Если для конкретного сайта
           $q->where(array(
              'site_id' => $cur_site
-          )); 
+          ));
        }
-                    
+
        $currencies = $q->objects(null,'title');
        $curr_keys = array_keys($currencies); //Имена валют
-        
+
        //Получим xml от ЦБ c валютами
        $cbr_xml =  $this->getCBRFCourse();
        if ($cbr_xml){
@@ -244,9 +244,9 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
                  //Увеличим или уменьшим на определнённый процент
                  $percent = (str_replace(",",".",$currencies[$code]['percent'])/100)*$currencies[$code]['ratio'];
                  $currencies[$code]['ratio'] = $currencies[$code]['ratio']+$percent;
-                 
+
                  if ($config['cbr_percent_update']){ //Если нужно проверить на разницу c прошлым значением коэфициента
-                    $delta = abs($currencies[$code]['ratio']-$old_ratio); 
+                    $delta = abs($currencies[$code]['ratio']-$old_ratio);
                     $delta_percent = floor(($delta/$currencies[$code]['ratio'])*100);
                     if ($delta_percent<(int)$config['cbr_percent_update']){ //Если процент установленный для проверки отличается в меньшую сторону
                         continue; //Пропустим обновление
@@ -255,7 +255,7 @@ class CurrencyApi extends \RS\Module\AbstractModel\EntityList
                  $currencies[$code]->update();
               }
           }
-          return true; 
+          return true;
        }
        return false;
     }

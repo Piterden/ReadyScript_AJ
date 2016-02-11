@@ -33,7 +33,7 @@ abstract class HandlerAbstract
         if ($callback_class === null) {
             $callback_class = $this;
         }
-        \RS\Event\Manager::bind($event, $callback_class, $callback_method, $priority);
+        \RS\Event\Manager::bind($event, array($callback_class, $callback_method), $priority);
         return $this;
     }
 }

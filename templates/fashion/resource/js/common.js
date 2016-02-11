@@ -135,6 +135,7 @@ $.extend({
             alreadyInCartClassTimeout:5,
             alreadyInCartBlock: false,
             alreadyInCartBlockTimeout:5,
+            concomitantCheckboxName: 'concomitant[',
             concomitantField: '.fieldConcomitant',
             concomitantAmountClass: 'concomitant', //Класс на вводе количества сопутствующих товаров
             continueButton: '.continue'
@@ -175,10 +176,12 @@ $.extend({
             * 
             * @param url - ссылка на добавление товара в корзину
             * @param offer - номер комплектации 0,1,2...
+            * @param multioffers - массив многомерных комплектаций 
+            * @param concomitants - массив сопутствующих товаров
             * @param amount - количество товаров, которое необходимо добавить
             * @param noShowCartDialog - не показывать корзину пользователя
             */
-            add: function(url, offer, multioffers, amount, noShowCartDialog) {
+            add: function(url, offer, multioffers, concomitants, amount, noShowCartDialog) {
                 
                 
                 if ($.detectMedia && ($.detectMedia('mobile') || $.detectMedia('portrait')) ) return true; //Не открываем окна в мобильной версии
@@ -186,7 +189,9 @@ $.extend({
                 var params = {};
                 if (offer) params.offer = offer;
                 if (amount) params.amount = amount;
-                if (multioffers) params = $.extend(params, multioffers);
+                if (multioffers) params = $.extend(params, multioffers); // Многомерных комплектаций
+                if (concomitants) params = $.extend(params, concomitants);  // Сопутствующие товары
+
                 
                 if (!noShowCartDialog) {
                     methods.showCart(url, params);
@@ -323,11 +328,21 @@ $.extend({
                }); 
             }            
             
+            //Сопутствующие товары
+            if ($('[name^="'+data.options.concomitantCheckboxName+'"]:checked', context).length){
+                var concomitants = {};
+                $('[name^="'+data.options.concomitantCheckboxName+'"]:checked',context).each(function(i){
+                   var cname = 'concomitant[' + i + ']'; 
+                   concomitants[cname] = $(this).val();
+                });
+            }
+            
             var noShowCart = $(this).hasClass('noShowCart') || data.options.noShowCart;
             var url = $(this).data('href') ? $(this).data('href') : $(this).attr('href');
             var amountValue = amount ? amount : 1;
             var offerValue = (offer) ? offer : 0;
-            var multioffersValues = (multioffers) ? multioffers : false;            
+            var multioffersValues = (multioffers) ? multioffers : false;
+            var concomitantValues = (concomitants) ? concomitants : false;               
             
             //Не открываем окна в мобильной версии
             if ($.detectMedia && ($.detectMedia('mobile') || $.detectMedia('portrait'))) {
@@ -336,17 +351,28 @@ $.extend({
                     offer:offerValue,                    
                 };
                 
+                //Добавим многомерные комплектации к запросу
                 if (multioffersValues) {
                     $.extend(params, multioffersValues);
+                }
+                //Добавим сопутствующие товары к запросу
+                if (concomitantValues) {
+                    $.extend(params, concomitantValues);
                 }
                 
                 location.href = url + (url.indexOf('?') == -1 ? '?' : '&') + $.param(params);
                 return false;
             }
             
-            return methods['add'].call(this, url, offerValue, multioffersValues, amount, noShowCart);
+            closeDlg();
+            return methods['add'].call(this, url, offerValue, multioffersValues, concomitantValues, amount, noShowCart);
         },
         
+        /**
+        * Инициализация страницы корзины и навешивание событий на действия в ней
+        * 
+        * @param serverData - данные от сервера
+        */
         initCart = function(serverData) {
             $cartBlock = $(data.options.cartBlock);
             if ($cartBlock.length) {
@@ -378,10 +404,6 @@ $.extend({
                 .on('click', data.options.checkout, checkout)
                 .on('click', data.options.closeDlg, closeDlg)
                 .bind('click', function(e) { e.stopPropagation(); });
-                
-                $('html, body').unbind('.cart').one('click.cart', function() {
-                    closeDlg();
-                });
                 
                 $(data.options.cartForm, $cartBlock).submit(function() {
                     clearTimeout($cartBlock.data('changeTimer'));

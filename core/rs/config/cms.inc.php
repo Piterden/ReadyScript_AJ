@@ -154,8 +154,6 @@ class Cms extends \RS\Orm\AbstractObject
                         'maxLength' => 100
                     ))
         ));
-        
-        $this->setClassParameter('storage_class', '\RS\Orm\Storage\Arrayfile');
     }
     
     function _initDefaults()
@@ -164,7 +162,11 @@ class Cms extends \RS\Orm\AbstractObject
         $this['show_debug_header'] = 1;
         $this['notice_from'] = 'robot@'.\Setup::$DOMAIN;
         $this['notice_reply'] = 'no-reply@'.\Setup::$DOMAIN;
-        $this->setClassParameter('storage_options', array('store_file' => \Setup::$PATH.'/config.auto.php'));
+    }
+    
+    protected function getStorageInstance()
+    {
+        return new \RS\Orm\Storage\Arrayfile($this, array('store_file' => \Setup::$PATH.'/config.auto.php'));
     }
     
     /**

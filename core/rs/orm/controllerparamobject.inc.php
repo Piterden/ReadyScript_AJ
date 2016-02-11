@@ -26,8 +26,15 @@ class ControllerParamObject extends AbstractObject
     }
     
     function _init()
+    {}
+    
+    /**
+    * Возвращает объект хранилища
+    * @return \RS\Orm\Storage\AbstractStorage
+    */
+    function getStorageInstance()
     {
-        $this->setClassParameter('storage_class', '\RS\Orm\Storage\Stub');
-    }    
+        return new \RS\Orm\Storage\Stub($this);
+    }
 }
 

@@ -7,8 +7,9 @@
 */
 
 namespace RS\Event;
-use RS\Cache\Manager as CacheManager;
-use RS\Module\Manager as ModuleManager;
+use RS\Cache\Manager as CacheManager,
+    RS\Module\Manager as ModuleManager,
+    RS\Module\Item as ModuleItem;
 
 /**
 * Класс обработки событий. Во время инициализации системы событий (выполняется в \Setup::init),
@@ -89,40 +90,39 @@ class Manager
     * 
     * @param string | object $module Название модуля. Например: MSystem
     * @param string $event Событие
-    * @param callback | object | string $callback_class - Имя класса обработчика события или callback для вызова
-    * @param string $callback_method Имя статического метода класса обработчика события
+    * @param callback $callback - callback для вызова. 
+    * Вместо имени метода можно указывать null, в таком случае оно будет сгенерировано из названия события
     * @return bool
     */
-    public static function bind($event, $callback_class, $callback_method = null, $priority = 10)
+    public static function bind($event, $callback, $priority = 10)
     {
         $event = self::prepare($event);
-
-        if (is_object($callback_class)) {
-            if ($callback_class instanceof Closure) {
-                $callback = $callback_class;
-                $callback_class = 'closure_'.self::$closure++;
-            } else {
-                if ($callback_class instanceof \RS\Event\HandlerAbstract) {
-                    $callback_class = get_class($callback_class);
-                } else {
-                    $module = \RS\Module\Item::nameByObject($callback_class);
-                    $callback_class = class_exists($module.self::USER_CALLBACK_CLASS) ? $module.self::USER_CALLBACK_CLASS : $module.self::DEFAULT_CALLBACK_CLASS;
-                }
-                
-                if ($callback_method === null) $callback_method = str_replace(array('.','-'), '', $event);
-                $callback = array($callback_class, $callback_method);
+        
+        if ($callback instanceof Closure) {
+            $callback_class = 'closure_'.self::$closure++;
+            $callback_method = '';
+        }
+        if (is_array($callback)) {
+            if (!isset($callback[1])) {
+                //Если не передано имя метода, то генерируем его из названия события
+                $callback[1] = str_replace(array('.','-'), '', $event);
             }
-        } elseif (is_array($callback_class)) {
-            $callback = $callback_class;
-            $callback_class = is_object($callback_class[0]) ? get_class($callback_class[0]) : $callback_class;
-            $callback_method = $callback_class[1];
-        } else {
-            if ($callback_method === null) $callback_method = str_replace(array('.','-'), '', $event);
-            $callback = array($callback_class, $callback_method);
+            
+            if ($callback[0] instanceof HandlerAbstract) {
+                $module = ModuleItem::nameByObject($callback[0]);
+                $custom_handlers = array($module.self::USER_CALLBACK_CLASS, $callback[1]);
+                if (is_callable($custom_handlers)) { //Попытаемся сперва вызвать обработчик MyHandlers
+                    $callback = $custom_handlers;
+                }
+            }
+            
+            $callback_class = is_object($callback[0]) ? get_class($callback[0]) : $callback[0];
+            $callback_method = $callback[1];
         }
 
         self::$base[$event][$callback_class.'.'.$callback_method] 
             = array('callback' => array($callback_class, $callback_method), 'priority' => $priority );
+            
         return true;
     }
     
@@ -198,28 +198,27 @@ class Manager
         $event = self::prepare($event);
 
         $original_params = $params;
-        $this_event = new Event($event, null);
-            if (isset(self::$base[$event])) 
-            {
-                $params_type = gettype($params);            
-                foreach(self::$base[$event] as $event_params) 
-                {
-                    $callback = $event_params['callback'];
-                    if (is_callable($callback)) 
-                    {
-                        $new_params = call_user_func($callback, $params, $this_event);
-                        if ($new_params !== null) {
-                            $params = $new_params;
-                            if (gettype($params) != $params_type) {
-                                throw new Exception('Обработчик '.$callback[0].'::'.$callback[1]." события $event должен вернуть значение того же типа, что и 'params' ($params_type) или NULL");
-                            }
+        $this_event = new Event($event);
+        
+        if (isset(self::$base[$event])) {
+            $params_type = gettype($params);            
+            foreach(self::$base[$event] as $event_params) {
+                $callback = $event_params['callback'];
+                if (is_callable($callback)) {
+                    $new_params = call_user_func($callback, $params, $this_event);
+                    if ($new_params !== null) {
+                        $params = $new_params;
+                        if (gettype($params) != $params_type) {
+                            throw new Exception('Обработчик '.$callback[0].'::'.$callback[1]." события $event должен вернуть значение того же типа, что и 'params' ($params_type) или NULL");
                         }
-                        if ($this_event->isStopped()) break;
-                    } else {
-                        throw new Exception(t("Не найден обработчик '%0' события '%1'", array(implode('::', $callback), $event)));
                     }
+                    if ($this_event->isStopped()) break;
+                } else {
+                    throw new Exception(t("Не найден обработчик '%0' события '%1'", array(implode('::', $callback), $event)));
                 }
             }
+        }
+        
         return new Result($original_params, $params, $this_event);
     }
     

@@ -51,6 +51,16 @@ class OrmObject extends AbstractObject
     }
     
     /**
+    * Возвращает имя свойства, которое помечено как первичный ключ.
+    * 
+    * @return string
+    */
+    public function getPrimaryKeyProperty()
+    {
+        return 'id';
+    }
+    
+    /**
     * Сохраняет в статической переменной значение свойств объекта
     * 
     * @param mixed $id
@@ -58,7 +68,7 @@ class OrmObject extends AbstractObject
     */
     function saveInCache($id)
     {
-        self::$self_cache[$this->_self_class][$id] = $this->_values;
+        self::$self_cache[$this->_self_class][self::getIdHash($id)] = $this->_values;
     }
     
     /**
@@ -69,22 +79,12 @@ class OrmObject extends AbstractObject
     */
     function loadFromCache($id)
     {
+        $id = self::getIdHash($id);
         if (isset(self::$self_cache[$this->_self_class][$id])) {
             $this->getFromArray(self::$self_cache[$this->_self_class][$id]);
             return true;
         }
         return false;
-    }
-    
-
-    /**
-    * Загружает объект из хранилища
-    * 
-    * @param mixed $primaryKeyValue - уникальный идентификатор
-    */
-    public function load($primaryKeyValue = null)
-    {
-        return $this->getStorageInstance()->load($primaryKeyValue);
     }
     
     /**
@@ -96,9 +96,22 @@ class OrmObject extends AbstractObject
     public static function loadSingle($id)
     {
         $self_class = get_called_class();
-        if (!isset(self::$self_singleton_cache[$self_class][$id])) {
-            self::$self_singleton_cache[$self_class][$id] = new $self_class($id, false);
+        $id_hash = self::getIdHash($id);
+        if (!isset(self::$self_singleton_cache[$self_class][$id_hash])) {
+            self::$self_singleton_cache[$self_class][$id_hash] = new $self_class($id, false);
         }
-        return self::$self_singleton_cache[$self_class][$id];
+        return self::$self_singleton_cache[$self_class][$id_hash];
     }
+    
+    /**
+    * Возвращает хэш от ID
+    * 
+    * @param mixed $id
+    * @return string
+    */
+    protected static function getIdHash($id)
+    {
+        return is_scalar($id) ? (string)$id : md5(json_encode($id));
+    }
+    
 }

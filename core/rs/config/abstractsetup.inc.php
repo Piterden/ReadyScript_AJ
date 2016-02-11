@@ -18,7 +18,7 @@ abstract class AbstractSetup
         $INSTALLED,
         
         //Общие параметры
-        $VERSION          = '2.0.0.180',  //Текущая версия ядра      
+        $VERSION          = '2.0.1.190',  //Текущая версия ядра      
         $CLASS_EXT        = 'inc.php',    //Расширение файлов с классами
         $CUSTOM_CLASS_EXT = 'my.inc.php', //Расширение файлов с перегруженными классами
         $PATH,   //Путь к корневому каталогу системы = DOCUMENT_ROOT + FOLDER
@@ -182,6 +182,8 @@ abstract class AbstractSetup
         include(self::$PATH.'/core/system/licenser.inc.php');        
         \RS\Event\Manager::init(); //Инициализируем события        
         \RS\Language\Core::initThemeLang(); //Подключаем языковые файлы темы
+        
+        \RS\Event\Manager::fire('initialize'); //Вызываем событие инициализации
     }
     
     /**

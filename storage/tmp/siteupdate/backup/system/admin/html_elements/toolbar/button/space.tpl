@@ -1,1 +1,0 @@
-<span class="button button-space">&nbsp;</span>

@@ -2490,6 +2490,10 @@ article h3 {
     display:block;
 }
 
+.product .share .block .text {
+    margin-bottom:5px;
+}
+
 .properties .kv {
     width:100%;
     border-collapse:collapse;

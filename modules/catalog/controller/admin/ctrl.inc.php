@@ -319,7 +319,8 @@ class Ctrl extends \RS\Controller\Admin\Crud
                                     new Filter\Line( array('Items' => array(
                                                             new Filter\Type\String('id','№', array('attr' => array('class' => 'w50'))),                                    
                                                             new Filter\Type\String('title', t('Название'), array('SearchType' => '%like%')),
-                                                            new Filter\Type\String('barcode', t('Артикул'), array('SearchType' => '%like%', 'Attr' => array('class' => 'w60')))
+                                                            new Filter\Type\String('barcode', t('Артикул'), array('SearchType' => '%like%', 'Attr' => array('class' => 'w60'))),
+                                                            new Filter\Type\String('num', t('Общий остаток'), array('Attr' => array('class' => 'w60'), 'showType' => true))
                                                         )
                                     ))
                                 ),

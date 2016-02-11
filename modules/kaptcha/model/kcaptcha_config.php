@@ -10,11 +10,11 @@ $allowed_symbols = "0123456789"; #alphabet without similar symbols (o=0, 1=l, i=
 
 $no_fonts = true;
 # folder with fonts
-$fontsdir = 'fonts';	
+$fontsdir = 'fonts';
 
 # CAPTCHA string length
 //$length = mt_rand(5,6); # random 5 or 6
-$length = 6;
+$length = 4;
 
 # CAPTCHA image size (you do not need to change it, whis parameters is optimal)
 $width = 100;

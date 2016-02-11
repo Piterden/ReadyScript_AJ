@@ -1,3 +1,4 @@
+{addjs file="profile.js" basepath="theme" header=true}
 <div class="col-md-12 col-md-offset-6">
     <form method="POST" class="formStyle profile">
         {csrf}
@@ -5,35 +6,35 @@
         <div class="userType">
             <input type="radio" id="ut_user" name="is_company" value="0" {if !$user.is_company}checked{/if}><label for="ut_user" class="userLabel f14">Частное лицо</label>
             <input type="radio" id="ut_company" name="is_company" value="1" {if $user.is_company}checked{/if}><label for="ut_company" class="f14">Компания</label>
-        </div>        
-        
+        </div>
+
         {if count($user->getNonFormErrors())>0}
             <div class="pageError">
                 {foreach $user->getNonFormErrors() as $item}
                 <p>{$item}</p>
                 {/foreach}
             </div>
-        {/if}    
+        {/if}
 
         {if $result}
             <div class="formResult success">{$result}</div>
-        {/if}           
+        {/if}
         <div class="oh">
             <div class="{if $user.is_company} thiscompany{/if}" id="fieldsBlock">
                 <div class="companyFields">
                     <div class="formLine">
                         <label class="fieldName">Название организации</label>
                         {$user->getPropertyView('company')}
-                    </div>                            
+                    </div>
                     <div class="formLine">
                         <label class="fieldName">ИНН</label>
                         {$user->getPropertyView('company_inn')}
-                    </div>                                
+                    </div>
                 </div>
                 <div class="formLine">
                     <label class="fieldName">Фамилия</label>
                     {$user->getPropertyView('surname', ['size'=>'0','placeholder'=>'Фамилия'])}
-                </div>                    
+                </div>
                 <div class="formLine">
                     <label class="fieldName">Имя</label>
                     {$user->getPropertyView('name', ['size'=>'0','placeholder'=>'Имя'])}
@@ -62,7 +63,7 @@
                         {/if}
                     </div>
                     {/foreach}
-                {/if}                 
+                {/if}
             </div>
             <div class="changePassWrap">
                 <div class="formLine">
@@ -77,7 +78,7 @@
                             <label class="fieldName">Новый пароль</label>
                             <input placeholder="Новый пароль" type="password" name="openpass" {if count($user->getErrorsByForm('pass'))}class="has-error"{/if}>
                             <span class="formFieldError">{$user->getErrorsByForm('openpass', ',')}</span>
-                        </div>                        
+                        </div>
                         <div class="formLine">
                             <label class="fieldName">Повторить пароль</label>
                             <input placeholder="Повторите пароль" type="password" name="openpass_confirm" {if count($user->getErrorsByForm('openpass'))}class="has-error"{/if}>
@@ -89,16 +90,5 @@
         <div class="buttons">
             <button type="submit">Сохранить</button>
         </div>
-    </form>  
-</div>  
-<script type="text/javascript">
-    $(function() {
-        $('#changePass').change(function() {
-            $('.changePass').toggleClass('hidden', !this.checked);
-        });            
-        
-        $('.profile .userType input').click(function() {
-            $('#fieldsBlock').toggleClass('thiscompany', $(this).val() == 1);
-        });
-    });        
-</script>    
+    </form>
+</div>

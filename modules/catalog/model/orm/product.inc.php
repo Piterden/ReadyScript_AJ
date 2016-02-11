@@ -439,7 +439,30 @@ class Product extends \RS\Orm\OrmObject
      */
     function afterWrite($flag)
     {
-        //Сохраняем категории
+        //Переносим временные объекты, если таковые имелись
+        if ($this['_tmpid']<0) {
+            \RS\Orm\Request::make()
+                    ->update(new \Photo\Model\Orm\Image())
+                    ->set(array('linkid' => $this['id']))
+                    ->where(array(
+                        'type' => self::IMAGES_TYPE,
+                        'linkid' => $this['_tmpid']
+                    ))->exec();
+                    
+            \RS\Orm\Request::make()
+                    ->update(new \Catalog\Model\Orm\Offer())
+                    ->set(array('product_id' => $this['id']))
+                    ->where(array(
+                        'product_id' => $this['_tmpid']
+                    ))->exec();
+            
+            \RS\Orm\Request::make()
+                    ->update(new \Catalog\Model\Orm\Xstock(), true)
+                    ->set(array('product_id' => $this['id']))
+                    ->where(array(
+                        'product_id' => $this['_tmpid']
+                    ))->exec();
+        }
         
         // Если указано, не обновлять категории у товара при обновлении товара
         if (!$this->keep_update_prod_cat && $this->getLocalParameter('duplicate_updated')){
@@ -516,26 +539,7 @@ class Product extends \RS\Orm\OrmObject
         //Обновляем счетчики товаров у категорий
         if ($this->update_dir_counter) {
             \Catalog\Model\Dirapi::updateCounts(); //Обновляем счетчики у категорий
-        }
-    
-        //Переносим временные объекты, если таковые имелись
-        if ($this['_tmpid']<0) {
-            \RS\Orm\Request::make()
-                    ->update(new \Photo\Model\Orm\Image())
-                    ->set(array('linkid' => $this['id']))
-                    ->where(array(
-                        'type' => self::IMAGES_TYPE,
-                        'linkid' => $this['_tmpid']
-                    ))->exec();
-                    
-            \RS\Orm\Request::make()
-                    ->update(new \Catalog\Model\Orm\Offer())
-                    ->set(array('product_id' => $this['id']))
-                    ->where(array(
-                        'product_id' => $this['_tmpid']
-                    ))->exec();
-        }
-        
+        }        
     }
 
     /**
@@ -984,22 +988,26 @@ class Product extends \RS\Orm\OrmObject
     */
     function getSearchText()
     {
+        $config = \RS\Config\Loader::byModule($this);
         //Для поиска: Штрих-код, Краткое опиание, Характеристики, мета ключевые слова
         $properties = '';
-        if ($this->use_property_in_search_index) {
-            foreach ($this->fillProperty() as $groups) {
-                foreach ($groups['properties'] as $prop) {
-                    $properties .= $prop['title'] . ' : ' . $prop->textView() . ' , ';
+        if (in_array('properties', $config['search_fields'])) {
+            if ($this->use_property_in_search_index) {
+                foreach ($this->fillProperty() as $groups) {
+                    foreach ($groups['properties'] as $prop) {
+                        $properties .= $prop['title'] . ' : ' . $prop->textView() . ' , ';
+                    }
                 }
             }
         }
 
-        $text = array(
-            $this['barcode'],
-            $this['short_description'],
-            $properties,
-            $this['meta_keywords']
-        );
+        $text = array();
+        
+        if (in_array('barcode', $config['search_fields'])) $text[] = $this['barcode'];
+        if (in_array('short_description', $config['search_fields'])) $text[] = $this['short_description'];
+        if (in_array('properties', $config['search_fields'])) $text[] = $properties;
+        if (in_array('meta_keywords', $config['search_fields'])) $text[] = $this['meta_keywords'];
+        
         return trim(strip_tags(implode(' , ', $text)));
     }
 
@@ -1573,8 +1581,9 @@ class Product extends \RS\Orm\OrmObject
                $offer['barcode'] = $clone['barcode']."-".($key+1); 
             }          
             unset($offer['xml_id']); //Очищаем лишние id
-            unset($offer['id']);
-            $offer->insert();
+            unset($offer['id']);            
+            
+            $offer->insert(); //Дублируем не дополнительные комплектаци
         }
         
         return $clone;

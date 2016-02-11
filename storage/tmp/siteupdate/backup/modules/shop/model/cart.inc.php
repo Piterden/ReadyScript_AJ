@@ -441,23 +441,29 @@ class Cart
     * @param integer $id - id товара
     * @param integer $amount - количество
     * @param mixed $package - комплектация
+    * @param array $multioffers - многомерная комплектация
+    * @param array $concomitants - сопутствующие товары
+    * 
     * @return string - возвращает йникальный идентификтор элемента корзины
     */
-    function addProduct($product_id, $amount = 1, $offer = 0, $multioffers = array())
+    function addProduct($product_id, $amount = 1, $offer = 0, $multioffers = array(), $concomitants = array())
     {
         //Приготовим мультикомплектации
         $multioffers = $this->prepareMultiOffersInfo($product_id, $multioffers);   
         
         $eresult = \RS\Event\Manager::fire('cart.addproduct.before', array(
-            'cart'        => $this,
-            'product_id'  => $product_id, 
-            'amount'      => $amount, 
-            'offer'       => $offer,
-            'multioffers' => $multioffers,
+            'product_id'   => $product_id, 
+            'amount'       => $amount, 
+            'offer'        => $offer,
+            'multioffers'  => $multioffers,
+            'concomitants' => $concomitants,
+            'cart'         => $this,            
         ));
         if($eresult->getEvent()->isStopped()){
             return;
         }
+        
+        list($product_id, $amount, $offer, $multioffers, $concomitants) = $eresult->extract();
         
         // Производим очистку устаревших корзин
         self::deleteExpiredCartItems();
@@ -465,7 +471,7 @@ class Cart
         $amount = (int)$amount;
         $offer  = (int)$offer;
         if ($amount < 1) $amount = 1;
-        $product_uniq = $this->exists($product_id, $offer, serialize($multioffers));
+        $product_uniq = $this->exists($product_id, $offer, serialize($multioffers), serialize($concomitants));
         
         if (!$product_uniq) { 
             $api = new \Catalog\Model\Api();
@@ -480,7 +486,7 @@ class Cart
             
             
             if ($product) {
-                $item = clone $this->cartitem;
+                $item                = clone $this->cartitem;
                 $item['session_id']  = $this->session_id;
                 $item['uniq']        = $this->generateId();
                 $item['dateof']      = date('Y-m-d H:i:s');
@@ -491,6 +497,11 @@ class Cart
                 $item['multioffers'] = serialize($multioffers);
                 $item['amount']      = $amount;
                 $item['title']       = $product['title'];
+                
+                if (!empty($concomitants)){
+                    $extra         = array('sub_products' => $concomitants);
+                    $item['extra'] = serialize($extra);
+                }
                 
                 if($this->mode != self::MODE_PREORDER){
                     $item->insert();
@@ -517,11 +528,12 @@ class Cart
         $this->cleanInfoCache();        
         
         $eresult = \RS\Event\Manager::fire('cart.addproduct.after', array(
-            'cart' => $this,
             'product_id' => $product_id, 
             'amount' => $amount, 
             'offer' => $offer,
             'multioffers' => $multioffers,
+            'concomitants' => $concomitants,
+            'cart' => $this,            
         ));
         
         return $product_uniq;
@@ -564,18 +576,26 @@ class Cart
     * Проверяет существование элемента в корзине.
     * 
     * @param mixed $id          
-    * @param integer $offer     - комплектация
-    * @param array $multioffers - многомерная комплектация
-    * @param mixed $type        - тип позиции в корзине
+    * @param integer $offer      - комплектация
+    * @param array $multioffers  - многомерная комплектация
+    * @param array $concomitants - сопутствующие товары
+    * @param mixed $type         - тип позиции в корзине
     * @return Возвращает уникальный идентификатор позиции в корзине или false
     */
-    function exists($id, $offer = null, $multioffers = null, $type = self::TYPE_PRODUCT)
+    function exists($id, $offer = null, $multioffers = null, $concomitants = null , $type = self::TYPE_PRODUCT)
     {
         foreach($this->items as $uniq => $cartitem) {
+            
+            $sub_products = array();
+            $extra = unserialize($cartitem['extra']);
+            if ( isset($extra['sub_products']) ) {
+               $sub_products = $extra['sub_products']; 
+            }    
             if ($cartitem['type'] == $type 
                 && $cartitem['entity_id'] == $id 
                 && ($offer === null || $cartitem['offer'] == $offer)
-                && ($multioffers === null || $cartitem['multioffers'] == $multioffers)) {
+                && ($multioffers === null || $cartitem['multioffers'] == $multioffers)
+                && ($concomitants === null || (serialize($sub_products) == $concomitants))) {
                 return $uniq;
             }
         }
@@ -605,13 +625,13 @@ class Cart
     {
         $shop_config = \RS\Config\Loader::byModule('shop');
         $eresult = \RS\Event\Manager::fire('cart.update.before', array(
-            'cart' => $this,
             'products' => $products, 
-            'coupon' => $coupon
+            'coupon' => $coupon,
+            'cart' => $this
         ));    
         
         if ($eresult->getEvent()->isStopped()) return false;
-        list($cart, $products, $coupon) = $eresult->extract();
+        list($products, $coupon) = $eresult->extract();
         
         $result = true;
         foreach($products as $uniq => $product) {
@@ -654,7 +674,6 @@ class Cart
                 }
                 
                 $sub_products_amount = array();
-                
                 //Проводим валидацию количества сопутствующих товаров
                 if ($shop_config['allow_concomitant_count_edit'] && !empty($product['concomitant_amount'])) { 
                     foreach($product['concomitant_amount'] as $sub_product_id => $amount) {
@@ -691,9 +710,9 @@ class Cart
         $this->cleanInfoCache();
         
         $eresult = \RS\Event\Manager::fire('cart.update.after', array(
-            'cart' => $this,
             'products' => $products, 
-            'coupon' => $coupon
+            'coupon' => $coupon,
+            'cart' => $this            
         ));        
         
         return $result;

@@ -2,7 +2,7 @@
 {strip}
 {addcss file="/rss-news/" basepath="root" rel="alternate" type="application/rss+xml" title="t('Новости')"}
 {addcss file="reset.css"}
-{addcss file="style.css?v=3"}
+{addcss file="style.css?v=4"}
 {if $THEME_SHADE !== 'orange'}
     {addcss file="{$THEME_SHADE}.css"}
 {/if}

@@ -1,10 +1,11 @@
 {addjs file="jquery.slider.min.js"}
 {addjs file="history.min.js" basepath="common"}
 {addjs file="{$mod_js}jquery.filter.js" basepath="root"}
+{assign var=catalog_config value=ConfigLoader::byModule('catalog')}
 
 <section class="block filterSection">
     <div class="loadOverlay"></div>
-    <form method="GET" class="filters" action="{urlmake f=null bfilter=null p=null}">
+    <form method="GET" class="filters" action="{urlmake f=null bfilter=null p=null}" autocomplete="off">
         {if $param.show_cost_filter}
             <div class="filter typeInterval">
                 <h4>Цена:</h4>
@@ -15,17 +16,21 @@
                         <td class="p50">до</td>
                     </tr>                
                     <tr>
-                        <td><input type="text" class="textinp fromto" name="bfilter[cost][from]" value="{$basefilters.cost.from}" data-start-value=""></td>
+                        <td><input type="text" class="textinp fromto" name="bfilter[cost][from]" value="{if !$catalog_config.price_like_slider}{$basefilters.cost.from}{else}{$basefilters.cost.from|default:$moneyArray.interval_from}{/if}" data-start-value="{if $catalog_config.price_like_slider}{$moneyArray.interval_from|intval}{/if}"></td>
                         <td class="padd4">&mdash;</td>
-                        <td><input type="text" class="textinp fromto" name="bfilter[cost][to]" value="{$basefilters.cost.to}" data-start-value=""></td>
+                        <td><input type="text" class="textinp fromto" name="bfilter[cost][to]" value="{if !$catalog_config.price_like_slider}{$basefilters.cost.to}{else}{$basefilters.cost.to|default:$moneyArray.interval_to}{/if}" data-start-value="{if $catalog_config.price_like_slider}{$moneyArray.interval_to|intval}{/if}"></td>
                     </tr>                    
                 </table>
+                {if $catalog_config.price_like_slider && ($moneyArray.interval_to>$moneyArray.interval_from)} {* Если нужно показать как слайдер*}
+                    <input type="hidden" data-slider='{ "from":{$moneyArray.interval_from}, "to":{$moneyArray.interval_to}, "step": "{$moneyArray.step}", "round": {$moneyArray.round}, "dimension": " {$moneyArray.unit}", "heterogeneity": [{$moneyArray.heterogeneity}]  }' value="{$basefilters.cost.from|default:$moneyArray.interval_from};{$basefilters.cost.to|default:$moneyArray.interval_to}" class="pluginInput" data-closest=".fromToPrice" data-start-value="{$basefilters.cost.from|default:$moneyArray.interval_from};{$basefilters.cost.to|default:$moneyArray.interval_to}"/>
+                {/if}
             </div>
         {/if}
         {if $param.show_brand_filter && count($brands)>1}
             <div class="filter typeMultiselect">
-                <h4>{t}Производитель{/t}:</h4>
-                <ul>
+                <h4>{t}Производитель{/t}: <a class="removeBlockProps hidden" title="{t}Сбросить выбранные параметры{/t}"></a></h4>
+                <ul class="propsContentSelected hidden"></ul>
+                <ul class="propsContent">
                     {foreach $brands as $brand}
                     <li>
                         <input type="checkbox" {if is_array($basefilters.brand) && in_array($brand.id, $basefilters.brand)}checked{/if} name="bfilter[brand][]" value="{$brand.id}" class="cb" id="cb_{$brand.id}_{$smarty.foreach.i.iteration}">
@@ -58,8 +63,9 @@
                 </div>                
             {elseif $prop.type == 'list'}
                 <div class="filter typeMultiselect">
-                    <h4>{$prop.title}:</h4>
-                    <ul>
+                    <h4>{$prop.title}: <a class="removeBlockProps hidden" title="{t}Сбросить выбранные параметры{/t}"></a></h4>
+                    <ul class="propsContentSelected hidden"></ul>
+                    <ul class="propsContent">
                         {foreach $prop->getAllowedValues() as $key => $value}
                         <li><input type="checkbox" {if is_array($filters[$prop.id]) && in_array($value, $filters[$prop.id])}checked{/if} name="f[{$prop.id}][]" value="{$value}" class="cb" id="cb_{$prop.id}_{$value@iteration}">
                         <label for="cb_{$prop.id}_{$value@iteration}">{$value}</label></li>

@@ -7,5 +7,11 @@
 */
 namespace RS\Img;
 
-class Exception extends \RS\Exception {}  
+class Exception extends \RS\Exception {
+    
+    const
+        IMG_FILE_NOT_FOUND = 1,
+        IMG_BAD_LINK_SIGN = 2;
+    
+}  
 

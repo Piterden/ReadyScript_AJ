@@ -67,10 +67,12 @@
         <td class="key">Дата заказа</td>
         <td class="value">{$order.dateof|dateformat}</td>
     </tr>
-    <tr>
-        <td class="key">Тип доставки</td>
-        <td class="value">{$order->getDelivery()->title}</td>
-    </tr>                
+    {if $order.delivery}
+        <tr>
+            <td class="key">Тип доставки</td>
+            <td class="value">{$order->getDelivery()->title}</td>
+        </tr>    
+    {/if}            
     <tr>
         <td class="key">Адрес получения</td>
         <td class="value">{$order->getAddress()->getLineView()}</td>
@@ -88,7 +90,18 @@
             <td class="value">{$item.current_val}</td>
         </tr>
     {/foreach}    
-    {foreach $order_data.other as $item}
+    {if $files=$order->getFiles()}
+    <tr>
+        <td class="key">Файлы</td>
+        <td class="value">            
+        {assign var=type_object value=$order->getPayment()->getTypeObject()}
+        {foreach $files as $file}
+            <a href="{$file->getUrl()}" class="underline" target="_blank">{$file.name}</a>{if !$file@last},{/if}
+        {/foreach}
+        </td>
+    </tr>
+    {/if}        
+    {foreach $order_data.other as $item}    
     {if $item.cartitem.type != 'coupon'}
     <tr>
         <td class="key">{$item.cartitem.title}</td>

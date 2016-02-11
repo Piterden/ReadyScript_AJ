@@ -82,10 +82,14 @@
                 var parent   = checkBoxObj.data('cdek-div-id');
                 var selected = $(data.options.select+" option:selected",$(parent));
                 var info     = selected.data('info');
-                //Покажем доп. данные
-                insertAdditionalData($(data.options.additionalInfo,$(parent)),info);
-                //Запишем данные
-                $(data.options.deliveryExtra,$(parent)).prop('disabled',false).val(selected.val()); 
+                if (info){ //Если есть дополнительная информация
+                    //Покажем доп. данные
+                    insertAdditionalData($(data.options.additionalInfo,$(parent)), info);
+                    //Запишем данные
+                    $(data.options.deliveryExtra,$(parent)).prop('disabled',false).val(selected.val()); 
+                }else{ //Если доставка до двери
+                    $(data.options.deliveryExtra,$(parent)).prop('disabled',false);
+                }
             },
             
             /**
@@ -163,7 +167,7 @@
         */
         insertAdditionalData = function (divObj, info)
         {
-            divObj.html("\
+           divObj.html("\
             <span class='row'><span class='key'>Город:</span><span class='val'>"+info.city+"</span></span>\
             <span class='row'><span class='key'>Адрес:</span><span class='val'>"+info.adress+"</span></span>\
             <span class='row'><span class='key'>Время работы:</span><span class='val'>"+info.WorkTime+"</span></span>\
@@ -272,8 +276,10 @@
                        hidden.val(option.val());
                        
                        var info     = option.data('info');
-                       //Покажем доп. данные
-                       insertAdditionalData($(data.options.additionalInfo, $(parent)),info);
+                       if (info){
+                           //Покажем доп. данные
+                           insertAdditionalData($(data.options.additionalInfo, $(parent)), info);
+                       }
                    });
                    myCollection.add(myPlacemark);
                });
@@ -320,10 +326,12 @@
             
             var selected = $(data.options.select+" option:selected",$(parent));
             var info     = selected.data('info');
-            //Покажем доп. данные
-            insertAdditionalData($(data.options.additionalInfo, $(parent)),info);
-            //Запишем данные
-            $(data.options.deliveryExtra, $(parent)).val(info.code);
+            if (info){
+                //Покажем доп. данные
+                insertAdditionalData($(data.options.additionalInfo, $(parent)),info);
+                //Запишем данные
+                $(data.options.deliveryExtra, $(parent)).val(selected.val());
+            }
         }
         
        

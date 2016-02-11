@@ -4,12 +4,12 @@
 {addcss file="reset.css"}
 {addcss file="bootstrap.min.css"}
 {addcss file="selectordie.css"}
+{addcss file="colorbox.css"}
 {addcss file="style.css?v=3"}
 {addcss file="style-j.css?v=3"}
 {if $THEME_SHADE !== 'orange'}
     {addcss file="{$THEME_SHADE}.css"}
 {/if}
-{addcss file="colorbox.css"}
 {addjs file="bootstrap.min.js" unshift=true header=true}
 {addjs file="html5shiv.js" unshift=true header=true}
 {addjs file="jquery.min.js" name="jquery" basepath="common" unshift=true header=true}
@@ -33,6 +33,6 @@
 {/strip}
 {$app->blocks->renderLayout()}
 
-{* Подключаем файл scripts.tpl, если он существует в папке темы. В данном файле 
+{* Подключаем файл scripts.tpl, если он существует в папке темы. В данном файле
 рекомендуется добавлять JavaScript код, который должен присутствовать на всех страницах сайта *}
 {tryinclude file="%THEME%/scripts.tpl"}

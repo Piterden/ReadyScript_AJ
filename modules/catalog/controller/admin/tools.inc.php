@@ -38,4 +38,27 @@ class Tools extends \RS\Controller\Admin\Front
         
         return $this->result->setSuccess(true)->addMessage(t('Удалено %0 комплектаций', array($delete_count)));
     }
+    
+    function actionajaxReIndexProducts()
+    {
+        $config = $this->getModuleConfig();
+        $property_index = in_array('properties', $config['search_fields']);
+        
+        $api = new \Catalog\Model\Api();
+        $count = 0;
+        $page = 1;
+        while($list = $api->getList($page, 200)) {
+            if ($property_index) {
+                $list = $api->addProductsProperty($list);
+            }
+            
+            foreach($list as $product) {
+                $product->updateSearchIndex();
+            }
+            $count += count($list);
+            $page++;
+        }
+        
+        return $this->result->setSuccess(true)->addMessage(t('Обновлено %0 товаров', array($count)));
+    }
 }

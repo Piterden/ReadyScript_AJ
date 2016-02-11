@@ -38,18 +38,22 @@
                         {$delivery=$order->getDelivery()}
                         {$address=$order->getAddress()}
                         {$pay=$order->getPayment()}
-                        <tr class="postSep">
-                            <td class="key">Доставка</td>
-                            <td><a href="{$router->getUrl(null, ['Act' => 'delivery'])}">{$delivery.title}</a></td>
-                        </tr>
+                        {if $order.delivery}
+                            <tr class="postSep">
+                                <td class="key">Доставка</td>
+                                <td><a href="{$router->getUrl(null, ['Act' => 'delivery'])}">{$delivery.title}</a></td>
+                            </tr>
+                        {/if}
                         <tr>
                             <td class="key">Адрес</td>
                             <td><a href="{$router->getUrl(null, ['Act' => 'address'])}">{$address->getLineView()}</a></td>
                         </tr>
-                        <tr>
-                            <td class="key">Оплата</td>
-                            <td><a href="{$router->getUrl(null, ['Act' => 'payment'])}">{$pay.title}</a></td>
-                        </tr>
+                        {if $order.payment}
+                            <tr>
+                                <td class="key">Оплата</td>
+                                <td><a href="{$router->getUrl(null, ['Act' => 'payment'])}">{$pay.title}</a></td>
+                            </tr>
+                        {/if}
                     </table>
             </div>
         </div>            
@@ -130,10 +134,12 @@
                     </tr>
                     
                     {/foreach}
-                    <tr>
-                        <td>Доставка: {$delivery.title}</td>
-                        <td class="price">{$cartdata.delivery.cost}</td>
-                    </tr>
+                    {if $order.delivery}
+                        <tr>
+                            <td>Доставка: {$delivery.title}</td>
+                            <td class="price">{$cartdata.delivery.cost}</td>
+                        </tr>
+                    {/if}
                 </tbody>
             </table>
             <div class="summary">

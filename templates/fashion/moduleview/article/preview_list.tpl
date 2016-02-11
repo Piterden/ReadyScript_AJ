@@ -6,8 +6,8 @@
             <p class="date">{$item.dateof|date_format:"d.m.Y H:i"}</p>
             <a href="{$item->getUrl()}" class="title">{$item.title}</a>
             <p class="shortinfo">{$item->getPreview()}</p>
-        </li>                  
+        </li>
         {/foreach}
     </ul>
-    {include file="%THEME%/paginator.tpl"}          
+    {include file="%THEME%/paginator.tpl"}
 </div>

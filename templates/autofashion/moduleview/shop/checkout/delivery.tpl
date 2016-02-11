@@ -3,12 +3,12 @@
         <div class="row">
             <div class="pageError col-sm-14 col-sm-offset-5">
                 {foreach $order->getErrors() as $item}
-                    <p>{$item}</p>
+                    <div class="text-danger">{$item}</div>
                 {/foreach}
             </div>
         </div>
     {/if}
-    <input type="hidden" name="delivery" value="0">
+    <!-- <input type="hidden" name="delivery" value="0"> -->
     <div class="row">
         <div class="titleWrap col-sm-24 text-center">
             <h3>Способ доставки</h3>
@@ -24,7 +24,9 @@
                         <img class="" src="{$item.__picture->getUrl(100, 100, 'xy')}" alt="{$item.title}"/>
                     </label>
                 {/if}
-                <input type="radio" name="delivery" value="{$item.id}" id="dlv_{$item.id}" {if $order.delivery==$item.id}checked{/if} {if $something_wrong}disabled="disabled"{/if}>
+                <input type="radio" name="delivery" value="{$item.id}" id="dlv_{$item.id}"
+	                {if $order.delivery==$item.id || ($order.use_addr==-1 && $item.id==7)} checked="checked"{/if}
+	                {if $something_wrong} disabled="disabled"{/if}>
                 <span class="back"></span>
             </div>
             <div class="info col-sm-10">
@@ -55,7 +57,9 @@
                         <span style="color:red;">{$something_wrong}</span>
                     {else}
                         <span class="help">{$order->getDeliveryExtraText($item)}</span>
-                        {$order->getDeliveryCostText($item)}
+                        {*$order->getDeliveryCostText($item)*}
+                        {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
+                        <span>300 {$currencyLiter|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
                     {/if}
                 </div>
             </div>

@@ -27,15 +27,16 @@ class CartPage extends \RS\Controller\Front
     */
     function actionIndex()
     {
-        $add_product_id          = $this->url->request('add', TYPE_INTEGER);
-        $add_product_amount      = $this->url->request('amount', TYPE_INTEGER);
-        $add_product_offer       = $this->url->request('offer', TYPE_STRING);
-        $add_product_multioffers = $this->url->request('multioffers', TYPE_ARRAY);
-        $checkout                = $this->url->request('checkout', TYPE_BOOLEAN);
+        $add_product_id           = $this->url->request('add', TYPE_INTEGER);       //id товара
+        $add_product_amount       = $this->url->request('amount', TYPE_INTEGER);    //Количество
+        $add_product_offer        = $this->url->request('offer', TYPE_STRING);      //Комплектация
+        $add_product_multioffers  = $this->url->request('multioffers', TYPE_ARRAY); //Многомерные комплектации
+        $add_product_concomitants = $this->url->request('concomitant', TYPE_ARRAY); //Сопутствующие товары
+        $checkout                 = $this->url->request('checkout', TYPE_BOOLEAN);
         
         if (!empty($add_product_id)) {
             
-            $this->cart->addProduct($add_product_id, $add_product_amount, $add_product_offer, $add_product_multioffers);
+            $this->cart->addProduct($add_product_id, $add_product_amount, $add_product_offer, $add_product_multioffers, $add_product_concomitants);
             if (!$this->url->isAjax()) {
                 $this->redirect( $this->router->getUrl('shop-front-cartpage') );
             }

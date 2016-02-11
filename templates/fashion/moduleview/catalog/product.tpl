@@ -14,8 +14,9 @@
                 <div class="socialLinks">
                     <i class="corner"></i>
                     <p class="caption">Поделиться с друзьями:</p>
-                    <script type="text/javascript" src="//yandex.st/share/share.js" charset="utf-8"></script>
-                    <div class="yashare-auto-init" data-yashareL10n="ru" data-yashareType="none" data-yashareQuickServices="yaru,vkontakte,facebook,twitter,odnoklassniki,moimir"></div>             
+                    <script type="text/javascript" src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js" charset="utf-8"></script>
+                    <script type="text/javascript" src="//yastatic.net/share2/share.js" charset="utf-8"></script>
+                    <div class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,moimir,twitter"></div>
                 </div>                        
             </div>
                                     
@@ -70,7 +71,7 @@
             </div>
             {if $product->isOffersUse()}
                 {foreach from=$product.offers.items key=key item=offer name=offers}
-                    <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
+                    <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'/>
                 {/foreach}
                 <input type="hidden" name="offer" value="0"/>
             {/if}
@@ -83,19 +84,27 @@
                     {if count($product.offers.items)>5}
                         <select name="offer">
                             {foreach from=$product.offers.items key=key item=offer name=offers}
-                            <option value="{$key}" {if $smarty.foreach.offers.first}checked{/if} {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>{$offer.title}</option>
+                            <option value="{$key}" {if $smarty.foreach.offers.first}checked{/if} {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>{$offer.title}</option>
                             {/foreach}
                         </select>
                     {else}
                         {foreach from=$product.offers.items key=key item=offer name=offers}
-                            <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
-                            <label for="offer_{$key}">{$offer.title}</label><br>
+                            <div class="packageItem">
+                                <input value="{$key}" type="radio" name="offer" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} {if $catalog_config.use_offer_unit}data-unit="{$offer->getUnit()->stitle}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}' data-images='{$offer->getPhotosJson()}' data-sticks='{$offer->getStickJson()}'>
+                                <label for="offer_{$key}">{$offer.title}</label>
+                            </div>
                         {/foreach}
                     {/if}
                 </div>
             </div>
-        {/if}                
-        {assign var=last_price value=$product->getCost('Зачеркнутая цена')}
+        {/if}      
+        
+        {if $shop_config}
+            {* Блок с сопутствующими товарами *}
+            {moduleinsert name="\Shop\Controller\Block\Concomitant"}
+        {/if}
+                  
+        {assign var=last_price value=$product->getOldCost()}
         <div class="price">
                 {if $last_price>0}<p class="lastPrice">{$last_price}</p>{/if}
                 <strong class="myCost">{$product->getCost()}</strong> {$product->getCurrency()}
@@ -147,6 +156,7 @@
         {$properties = $product->fillProperty()}        
         {if $properties || $product->isOffersUse()} {$tabs["property"] = 'Характеристики'} {/if}
         {if $product.description} {$tabs["description"] = 'Описание'} {/if}
+        {if $files=$product->getFiles()} {$tabs["files"] = 'Файлы'} {/if}
         {$tabs["comments"] = 'Отзывы'}
         
         <div class="tabs gray productTabs">
@@ -200,7 +210,20 @@
                 <article>{$product.description}</article>
             </div>
             {/if}
-        
+            
+            {if $tabs.files}
+                <div class="tab tab-files {if $act_tab == 'files'}act{/if}">
+                    <ul class="filesList">
+                        {foreach $files as $file}
+                        <li>
+                            <a href="{$file->getUrl()}">{$file.name} ({$file.size|format_filesize})</a>
+                            {if $file.description}<div class="fileDescription">{$file.description}</div>{/if}
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+            {/if}            
+            
             {if $tabs.comments}
             <div class="tab tab-comments {if $act_tab == 'comments'}act{/if}">
                 <script type="text/javascript">

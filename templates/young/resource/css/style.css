@@ -1716,6 +1716,7 @@ a.remove:hover {
 .product .share .block .text {
     white-space:nowrap;
     color: #939384;
+    margin-bottom:5px;
 }
 
 .product .priceLine .prices {

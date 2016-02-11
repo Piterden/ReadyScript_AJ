@@ -5,55 +5,68 @@
 * @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
 * @license http://readyscript.ru/licenseAgreement/
 */
-
 namespace RS\Orm\Storage;
+use \RS\Orm\Request;
 
 /**
 * Класс обеспечивающий хранение orm объекта в базе данных в сериализованном виде
 */
-class Serialized extends AbstractStorage
+class Serialized extends AbstractTableStorage
 {
-    protected
-        $table;
-
-    function _init()
-    {
-        $this->table = $this->Core_Object->_getTable();
-    }
-    
+    /**
+    * Загружает объект по первичному ключу
+    * 
+    * @param mixed $primaryKey - значение первичного ключа
+    * @return object
+    */    
     public function load($primaryKeyValue = null)
-    {
-        $row = \RS\Orm\Request::make()
+    {        
+        $row = Request::make()
             ->from($this->table)
-            ->where($this->getOption('primary', array()))
+            ->where($this->getPrimaryKeyExpr($primaryKeyValue))
             ->exec()->fetchRow();
         
         if ($row === false) return false;
         
         $data = @unserialize($row[$this->getOption('data_field', 'data')]);
 
-        $this->Core_Object->getFromArray($data);
+        $this->orm_object->getFromArray($data);
         return true;
     }
     
+    /**
+    * Возвращает true, если объект с таким первичным ключем существует в хранилище
+    * 
+    * @param mixed $primaryKeyValue - значение первичного ключа
+    * @return boolean
+    */
     public function exists($primaryKeyValue)
     {
-        $row = \RS\Orm\Request::make()
+        $row = Request::make()
             ->from($this->table)
-            ->where($this->getOption('primary', array()))
+            ->where($this->getPrimaryKeyExpr($primaryKeyValue))
             ->count();
         return ($row > 0);
     }
     
+    /**
+    * Подготавливает сериализованные данные для сохранения
+    * 
+    * @return string
+    */
     protected function prepareForDB()
     {
         $query = array();
-        $properties = $this->Core_Object->getProperties();
+        $properties = $this->orm_object->getProperties();
+        $pk_field = (array)$this->orm_object->getPrimaryKeyProperty();
         $data = array();
         foreach ($properties as $key => $property)
         {
+            //Не сохраняем PrimaryKey в data
+            if (in_array($key, $pk_field)) continue;
+            
             if ($property->beforesave()) {
-                $this->Core_Object[$key] = $property->get();
+                $this->orm_object[$key] = $property->get();
             }            
             if (!$property->isUseToSave()) continue;
             if (!$property->isRuntime()) {
@@ -63,21 +76,37 @@ class Serialized extends AbstractStorage
         return serialize($data);
     }
 
+    /**
+    * Добавляет объект в хранилище
+    * 
+    * @return bool
+    */   
     public function insert()
     {
         return $this->replace();
     }
     
-    public function update($primaryKey = null)
+    /**
+    * Обновляет объект в хранилище
+    * 
+    * @param $primaryKey - значение первичного ключа
+    * @return bool
+    */    
+    public function update($primaryKeyValue = null)
     {
         return $this->insert();
     }
     
+    /**
+    * Перезаписывает объект в хранилище
+    * 
+    * @return bool
+    */    
     public function replace()
     {
         $sql = "replace into {$this->table} set ";
         
-        $arr_data = $this->getOption('primary', array());
+        $arr_data = $this->getPrimaryKeyExpr();
         $arr_data[$this->getOption('data_field', 'data')] = $this->prepareForDB();
 
         $fields = array();
@@ -90,7 +119,7 @@ class Serialized extends AbstractStorage
             $dbresult = \RS\Db\Adapter::sqlExec($sql);
         } catch (\RS\Db\Exception $e) {
             if ($e->getCode() == 1062) {
-                $this->Core_Object->addError(t('Запись с таким уникальным идентификатором уже присутствует'));
+                $this->orm_object->addError(t('Запись с таким уникальным идентификатором уже присутствует'));
             } else {
                 throw new \RS\Db\Exception($e->getMessage(), $e->getCode());
             }
@@ -100,13 +129,30 @@ class Serialized extends AbstractStorage
         return true;
     }
     
+    /**
+    * Удаляет объект из хранилища
+    * 
+    * @return bool
+    */    
     public function delete()
     {
-        return \RS\Orm\Request::make()
+        return Request::make()
             ->delete()
             ->from($this->table)
-            ->where($this->getOption('primary', array()))
+            ->where($this->getPrimaryKeyExpr())
             ->exec()->affectedRows();
-    }
+    }    
     
+    /**
+    * Возвращает условие для выборки по первичному ключу
+    * 
+    * @param array | string $primaryKeyValue - первичный ключ. Если первичный ключ простой, то ожидается скалярный тип, 
+    * если составной, то массив [поле1 => 'значение', поле2 => 'значение']
+    * @return array массив с парами ключ => значение
+    */
+    protected function getPrimaryKeyExpr($primaryKeyValue = null)
+    {
+        $result = parent::getPrimaryKeyExpr($primaryKeyValue);
+        return $this->getOption('primary', array()) + $result;
+    }
 }

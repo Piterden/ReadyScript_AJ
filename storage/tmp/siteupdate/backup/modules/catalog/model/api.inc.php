@@ -1047,6 +1047,8 @@ class Api extends \RS\Module\AbstractModel\EntityList
         $xdir_table = $xdir->_getTable();
 
         $merged_xdir = array();
+        $need_reindex = array_intersect(array('title', '_property_', 'barcode', 
+                                              'short_description', 'meta_keywords'), array_keys($data)) != false;
 
         //Загружаем фотографии к товарам
         if (isset($data['simage'])) {
@@ -1359,12 +1361,45 @@ class Api extends \RS\Module\AbstractModel\EntityList
         if (!empty($merged_xdir) || isset($data['public'])) {
             Dirapi::updateCounts();
         }
+        
+        //Если необходимо переиндексировать товары
+        if ($need_reindex) {
+            $this->updateProductSearchIndex($ids);
+        }
        
         //Добавим событие на обновлении
         \RS\Event\Manager::fire('orm.multiupdate.catalog-product',array(
             'ids' => $ids 
         ));
         return $ret;
+    }
+    
+    /**
+    * Обновляет поисковый индекс у товаров
+    * 
+    * @param array $ids - список id
+    * @return bool
+    */
+    function updateProductSearchIndex($ids)
+    {
+        if (empty($id)) return false;
+        
+        $i = 0;
+        $page_size = 100;
+        
+        $q = \RS\Orm\Request::make()
+            ->from($this->obj_instance)
+            ->whereIn('id', $ids)
+            ->limit($page_size);
+        
+        while($rows = $q->offset($i)->objects()) {
+            foreach($rows as $product) {
+                $product->updateSearchIndex();
+            }
+            $i = $i + $page_size;
+        }
+        
+        return true;
     }
 
     /**

@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"min",
+				"min-height"
+			],
+			[
+				"ma",
+				"materials"
+			],
+			[
+				"else",
+				"else	else"
+			],
+			[
+				"offe",
+				"offer	 style.css"
+			],
+			[
+				"foreach",
+				"foreach	foreach"
+			],
+			[
+				"docume",
+				"documents"
+			],
+			[
+				"sche",
+				"scheduler"
+			],
+			[
+				"do",
+				"documents"
+			],
+			[
 				"ar",
 				"array"
 			],
@@ -412,10 +444,6 @@
 				"deliveryItem"
 			],
 			[
-				"offe",
-				"offers"
-			],
-			[
 				"show",
 				"show_map	(iml.inc.php)"
 			],
@@ -486,34 +514,6 @@
 			[
 				"obj",
 				"object	(orderapi.inc.php)"
-			],
-			[
-				"arraymer",
-				"array_merge"
-			],
-			[
-				"pri",
-				"print_r($order	(iml.inc.php)"
-			],
-			[
-				"addr",
-				"address"
-			],
-			[
-				"list",
-				"list_id"
-			],
-			[
-				"sel",
-				"select_id"
-			],
-			[
-				"getE",
-				"getExtraInfo	(iml.inc.php)"
-			],
-			[
-				"order",
-				"order_extra"
 			]
 		]
 	},
@@ -523,33 +523,87 @@
 			"file": "templates/autofashion/resource/css/style.css",
 			"settings":
 			{
-				"buffer_size": 61271,
+				"buffer_size": 60838,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "Searching 4163 files for \"coupons\"\n\nD:\\Projects\\ReadyScript_AJ\\cache\\smarty\\compile\\templates_autofashion_moduleview_shop_cartpage_tpl.rs.tpl.php:\n  544   $_smarty_tpl->tpl_vars['item']->first = $_smarty_tpl->tpl_vars['item']->index === 0;\n  545  ?>\n  546:                     <tr class=\"coupons\" data-id=\"<?php echo $_smarty_tpl->tpl_vars['id']->value;?>\n  547  \">\n  548                          <td class=\"image\"></td>\n\nD:\\Projects\\ReadyScript_AJ\\modules\\shop\\model\\cart.inc.php:\n   55          $order_expression,\n   56          $session_id,\n   57:         $cache_coupons,\n   58          $cache_products,\n   59          /**\n   ..\n  748              unset($this->order_items[$uniq]);\n  749              unset($this->cache_products[$uniq]);\n  750:             unset($this->cache_coupons[$uniq]);\n  751  \n  752              \\RS\\Event\\Manager::fire('cart.removeitem.after', array(\n  ...\n  766          $this->items = array();\n  767          $this->order_items = array();\n  768:         $cache_coupons = null;\n  769          $cache_products = null;\n  770  \n  ...\n 1443      {\n 1444          $coupon_items = $this->getCouponItems();\n 1445:         $coupon_usage = $this->getCouponsUsage($coupon_items);\n 1446:         $type_order_coupons = array();\n 1447  \n 1448          foreach($coupon_items as $key => $item) {\n ....\n 1519      * Возвращает товары, на которые данный купон предоставляет скидку\n 1520      *\n 1521:     * @param array $coupons_items - результат выполнения getCouponItems()\n 1522      * @return array\n 1523      */\n 1524:     protected function getCouponsUsage($coupons_items)\n 1525      {\n 1526          $result = array();\n 1527          $products = $this->getProductItems();\n 1528  \n 1529:         foreach($coupons_items as $key => $coupon_item) {\n 1530              $coupon = $coupon_item['coupon'];\n 1531              $result[$key] = array(\n ....\n 1562      function getCouponItems()\n 1563      {\n 1564:         if ($this->cache_coupons === null) {\n 1565:             $this->cache_coupons = array();\n 1566              $ids = array();\n 1567              $cartitem_coupon = $this->getCartItemsByType(self::TYPE_COUPON);\n ....\n 1572                  $api = new \\Shop\\Model\\DiscountApi();\n 1573                  $api->setFilter('id', $ids, 'in');\n 1574:                 $coupons = $api->getAssocList('id');\n 1575  \n 1576                  foreach($cartitem_coupon as $key => $cartitem) {\n 1577  \n 1578:                     if (!isset($coupons[ $cartitem['entity_id'] ])\n 1579:                         || !$coupons[ $cartitem['entity_id'] ]->isActive())\n 1580                      {\n 1581                          $this->removeItem($key); //Если купон стал неактивным, то исключаем его\n 1582                      } else {\n 1583:                         $this->cache_coupons[$key] = array(\n 1584:                             'coupon' => $coupons[ $cartitem['entity_id'] ],\n 1585                              'cartitem' => $cartitem\n 1586                          );\n ....\n 1589              }\n 1590          }\n 1591:         return $this->cache_coupons;\n 1592      }\n 1593  \n ....\n 1648  \n 1649          if (($error = $coupon->isActive()) !== true) return $error;\n 1650:         $coupon_usage = $this->getCouponsUsage(array(\n 1651              'new' => array(\n 1652                  'coupon' => $coupon\n ....\n 1679  \n 1680          $this->items[$item['uniq']] = $item;\n 1681:         if ($this->cache_coupons) {\n 1682:             $this->cache_coupons[$item['uniq']] = array(\n 1683                  'coupon' => $coupon,\n 1684                  'cartitem' => $item\n\nD:\\Projects\\ReadyScript_AJ\\modules\\shop\\model\\orm\\order.inc.php:\n  515              if($this->session_cart){\n  516                  //Отмечаем, что скидочный купон использован, если он был привязан к корзине\n  517:                 $coupons = $this->session_cart->getCouponItems();\n  518:                 foreach($coupons as $coupon) {\n  519                      $coupon['coupon']->incrementUse();\n  520                  }\n\nD:\\Projects\\ReadyScript_AJ\\storage\\tmp\\siteupdate\\backup\\modules\\shop\\model\\cart.inc.php:\n   55          $order_expression,\n   56          $session_id,\n   57:         $cache_coupons,\n   58          $cache_products,\n   59          /**\n   ..\n  729              unset($this->order_items[$uniq]);\n  730              unset($this->cache_products[$uniq]);\n  731:             unset($this->cache_coupons[$uniq]);\n  732  \n  733              \\RS\\Event\\Manager::fire('cart.removeitem.after', array(\n  ...\n  747          $this->items = array();\n  748          $this->order_items = array();\n  749:         $cache_coupons = null;\n  750          $cache_products = null;\n  751          \n  ...\n 1424      {\n 1425          $coupon_items = $this->getCouponItems();       \n 1426:         $coupon_usage = $this->getCouponsUsage($coupon_items);\n 1427:         $type_order_coupons = array();\n 1428          \n 1429          foreach($coupon_items as $key => $item) {\n ....\n 1500      * Возвращает товары, на которые данный купон предоставляет скидку\n 1501      * \n 1502:     * @param array $coupons_items - результат выполнения getCouponItems()\n 1503      * @return array\n 1504      */\n 1505:     protected function getCouponsUsage($coupons_items)\n 1506      {\n 1507          $result = array();\n 1508          $products = $this->getProductItems();\n 1509          \n 1510:         foreach($coupons_items as $key => $coupon_item) {\n 1511              $coupon = $coupon_item['coupon'];\n 1512              $result[$key] = array(\n ....\n 1543      function getCouponItems()\n 1544      {\n 1545:         if ($this->cache_coupons === null) {\n 1546:             $this->cache_coupons = array();\n 1547              $ids = array();\n 1548              $cartitem_coupon = $this->getCartItemsByType(self::TYPE_COUPON);            \n ....\n 1553                  $api = new \\Shop\\Model\\DiscountApi();\n 1554                  $api->setFilter('id', $ids, 'in');\n 1555:                 $coupons = $api->getAssocList('id');\n 1556                  \n 1557                  foreach($cartitem_coupon as $key => $cartitem) {\n 1558                      \n 1559:                     if (!isset($coupons[ $cartitem['entity_id'] ]) \n 1560:                         || !$coupons[ $cartitem['entity_id'] ]->isActive()) \n 1561                      {\n 1562                          $this->removeItem($key); //Если купон стал неактивным, то исключаем его\n 1563                      } else {\n 1564:                         $this->cache_coupons[$key] = array(\n 1565:                             'coupon' => $coupons[ $cartitem['entity_id'] ],\n 1566                              'cartitem' => $cartitem\n 1567                          );\n ....\n 1570              }\n 1571          }\n 1572:         return $this->cache_coupons;        \n 1573      }\n 1574  \n ....\n 1629      \n 1630          if (($error = $coupon->isActive()) !== true) return $error;\n 1631:         $coupon_usage = $this->getCouponsUsage(array(\n 1632              'new' => array(\n 1633                  'coupon' => $coupon\n ....\n 1660          \n 1661          $this->items[$item['uniq']] = $item;\n 1662:         if ($this->cache_coupons) {        \n 1663:             $this->cache_coupons[$item['uniq']] = array(\n 1664                  'coupon' => $coupon,\n 1665                  'cartitem' => $item\n\nD:\\Projects\\ReadyScript_AJ\\storage\\tmp\\siteupdate\\backup\\modules\\shop\\model\\orm\\order.inc.php:\n  515              if($this->session_cart){\n  516                  //Отмечаем, что скидочный купон использован, если он был привязан к корзине\n  517:                 $coupons = $this->session_cart->getCouponItems();\n  518:                 foreach($coupons as $coupon) {\n  519                      $coupon['coupon']->incrementUse();\n  520                  }\n\nD:\\Projects\\ReadyScript_AJ\\storage\\tmp\\siteupdate\\backup\\templates\\perfume\\moduleview\\shop\\cartpage.tpl:\n  286                  <tbody>\n  287                  {foreach $cart->getCouponItems() as $id => $item}\n  288:                     <tr class=\"coupons\" data-id=\"{$id}\">\n  289                          <td class=\"image\"></td>\n  290                          <td class=\"title\">Купон на скидку {$item.coupon.code}</td>\n\nD:\\Projects\\ReadyScript_AJ\\storage\\tmp\\siteupdate\\backup\\templates\\young\\moduleview\\shop\\cartpage.tpl:\n  136              <tbody>\n  137              {foreach $cart->getCouponItems() as $id => $item}\n  138:                 <tr class=\"coupons\">\n  139                      <td class=\"image\"></td>\n  140                      <td class=\"title\">Купон на скидку {$item.coupon.code}</td>\n\nD:\\Projects\\ReadyScript_AJ\\storage\\tmp\\siteupdate\\backup\\templates\\young\\resource\\css\\style.css:\n 2781  \n 2782  .cartTable .orderDiscount .image,\n 2783: .cartTable .coupons .image,\n 2784  .cartTable .concomitant .image {\n 2785      height:auto;\n\nD:\\Projects\\ReadyScript_AJ\\templates\\autofashion\\moduleview\\shop\\cartpage.tpl:\n  302                  <tbody>\n  303                  {foreach $cart->getCouponItems() as $id => $item}\n  304:                     <tr class=\"coupons\" data-id=\"{$id}\">\n  305                          <td class=\"image\"></td>\n  306                          <td class=\"title\">Купон на скидку {$item.coupon.code}</td>\n\nD:\\Projects\\ReadyScript_AJ\\templates\\fashion\\moduleview\\shop\\cartpage.tpl:\n  291                  <tbody>\n  292                  {foreach $cart->getCouponItems() as $id => $item}\n  293:                     <tr class=\"coupons\" data-id=\"{$id}\">\n  294                          <td class=\"image\"></td>\n  295                          <td class=\"title\">Купон на скидку {$item.coupon.code}</td>\n\nD:\\Projects\\ReadyScript_AJ\\templates\\perfume\\moduleview\\shop\\cartpage.tpl:\n  286                  <tbody>\n  287                  {foreach $cart->getCouponItems() as $id => $item}\n  288:                     <tr class=\"coupons\" data-id=\"{$id}\">\n  289                          <td class=\"image\"></td>\n  290                          <td class=\"title\">Купон на скидку {$item.coupon.code}</td>\n\nD:\\Projects\\ReadyScript_AJ\\templates\\young\\moduleview\\shop\\cartpage.tpl:\n  136              <tbody>\n  137              {foreach $cart->getCouponItems() as $id => $item}\n  138:                 <tr class=\"coupons\">\n  139                      <td class=\"image\"></td>\n  140                      <td class=\"title\">Купон на скидку {$item.coupon.code}</td>\n\nD:\\Projects\\ReadyScript_AJ\\templates\\young\\resource\\css\\style.css:\n 2812  \n 2813  .cartTable .orderDiscount .image,\n 2814: .cartTable .coupons .image,\n 2815  .cartTable .concomitant .image {\n 2816      height:auto;\n\n53 matches across 13 files\n",
+			"file": "/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/client/index.html",
 			"settings":
 			{
-				"buffer_size": 10555,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "templates/autofashion/moduleview/shop/checkout/payment.tpl",
-			"settings":
-			{
-				"buffer_size": 2860,
+				"buffer_size": 3273,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "modules/shop/controller/block/cartlist.inc.php",
+			"file": "/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/.editorconfig",
 			"settings":
 			{
-				"buffer_size": 1341,
+				"buffer_size": 286,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/moduleview/catalog/list_products.tpl",
+			"settings":
+			{
+				"buffer_size": 9502,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/moduleview/catalog/blocks/sidefilters/filters.tpl",
+			"settings":
+			{
+				"buffer_size": 15513,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/wrapper_catalog.tpl",
+			"settings":
+			{
+				"buffer_size": 966,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/moduleview/catalog/product.tpl",
+			"settings":
+			{
+				"buffer_size": 17915,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/resource/js/product.js",
+			"settings":
+			{
+				"buffer_size": 2254,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "modules/materials/model/api.inc.php",
+			"settings":
+			{
+				"buffer_size": 196,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "templates/autofashion/resource/js/common.js",
+			"settings":
+			{
+				"buffer_size": 26195,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/resource/js/jquery.switcher.js",
+			"settings":
+			{
+				"buffer_size": 2755,
 				"line_ending": "Unix"
 			}
 		},
@@ -566,14 +620,6 @@
 			"settings":
 			{
 				"buffer_size": 23041,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "templates/autofashion/resource/js/common.js",
-			"settings":
-			{
-				"buffer_size": 26195,
 				"line_ending": "Unix"
 			}
 		},
@@ -602,37 +648,66 @@
 			}
 		},
 		{
-			"file": "modules/imldelivery/model/deliverytype/iml.inc.php",
+			"file": "templates/autofashion/moduleview/menu/blocks/menu/hor_menu.tpl",
 			"settings":
 			{
-				"buffer_size": 31505,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "modules/imldelivery/view/delivery/iml/simple_cost.tpl",
-			"settings":
-			{
-				"buffer_size": 98,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "templates/autofashion/wrapper_checkout.tpl",
-			"settings":
-			{
-				"buffer_size": 8479,
+				"buffer_size": 1392,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "<!DOCTYPE html>\n<html>\n\n<head>\n    <title>Loopdash</title>\n    <link href=\"styles/kendo.common.min.css\" rel=\"stylesheet\">\n    <link href=\"styles/kendo.default.min.css\" rel=\"stylesheet\">\n    <link href=\"styles/kendo.flat.min.css\" rel=\"stylesheet\">\n\n\n    <script src=\"js/jquery.min.js\"></script>\n    <script src=\"js/kendo.web.min.js\"></script>\n    <script src=\"js/kendo.timezones.min.js\"></script>\n    <script src=\"js/cultures/kendo.culture.ru-RU.min.js\"></script>\n    <script src=\"js/messages/kendo.messages.ru-RU.min.js\"></script>\n    <style>\n        html,\n        body {\n            font-family: Ubuntu;\n        }\n\n        body {\n            width: 100%;\n            height: 100%;\n            margin: 0;\n        }\n    </style>\n</head>\n\n<body>\n    <div id=\"scheduler\"></div>\n    <script>\n        WebFontConfig = {\n            google: {\n                families: ['Ubuntu:400,400italic:latin,cyrillic']\n            }\n        };\n        (function() {\n            var wf = document.createElement('script');\n            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +\n                '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';\n            wf.type = 'text/javascript';\n            wf.async = 'true';\n            var s = document.getElementsByTagName('script')[0];\n            s.parentNode.insertBefore(wf, s);\n        })();\n\n        kendo.culture(\"ru-RU\");\n        var nowDate = new Date();\n\n        var eventsData = new kendo.data.SchedulerDataSource({\n            batch: true,\n            transport: {\n                parameterMap: function(data, type) {\n                    if (type != \"read\") {\n                        return kendo.stringify(data);\n                    }\n                    if (data.filter === undefined) return data;\n                    var filter = [];\n                    data.filter.filters.every(function(e) {\n                        console.log(e);\n                        filter.push(e);\n                    });\n                    console.log(filter);\n                    return kendo.stringify(filter);\n                },\n                create: {\n                    contentType: \"application/json\",\n                    type: \"POST\",\n                    dataType: \"json\",\n                    data: function(data) {\n                        return data.models[0];\n                    },\n                    url: \"/api/events\"\n                },\n                read: {\n                    contentType: \"application/json\",\n                    type: \"GET\",\n                    dataType: \"json\",\n                    url: \"/api/events\"\n                },\n                update: {\n                    contentType: \"application/json\",\n                    type: \"PUT\",\n                    dataType: \"json\",\n                    data: function(data) {\n                        return data.models[0];\n                    },\n                    url: \"/api/events\"\n                },\n                destroy: {\n                    contentType: \"application/json\",\n                    type: \"DELETE\",\n                    dataType: \"json\",\n                    url: function(data) {\n                        return \"/api/events/\" + data.models[0].id;\n                    }\n                }\n            },\n            schema: {\n                model: {\n                    id: \"eventID\",\n                    fields: {\n                        eventID: {\n                            editable: false,\n                            nullable: true,\n                            from: \"id\",\n                            type: \"string\"\n                        },\n                        title: {\n                            from: \"name\",\n                            defaultValue: \"No title\",\n                            validation: {\n                                required: true\n                            }\n                        },\n                        start: {\n                            type: \"date\",\n                            from: \"start_date\",\n                            defaultValue: new Date(),\n                            validation: {\n                                required: true\n                            }\n                        },\n                        end: {\n                            type: \"date\",\n                            from: \"end_date\"\n                        },\n                        description: {\n                            from: \"text\"\n                        },\n                        isAllDay: {\n                            type: \"boolean\",\n                            from: \"IsAllDay\"\n                        },\n                        startTimezone: {\n                            from: \"StartTimezone\",\n                            defaultValue: \"Europe/Moscow\"\n                        },\n                        endTimezone: {\n                            from: \"EndTimezone\",\n                            defaultValue: \"Europe/Moscow\"\n                        },\n                        recurrenceId: {\n                            from: \"RecurrenceID\"\n                        },\n                        recurrenceRule: {\n                            from: \"RecurrenceRule\"\n                        },\n                        recurrenceException: {\n                            from: \"RecurrenceException\"\n                        },\n                        ownerId: {\n                            from: \"OwnerID\",\n                            defaultValue: 1\n                        }\n                    }\n                }\n            }\n        });\n\n        $(function() {\n            $(\"#scheduler\").kendoScheduler({\n                views: [{\n                    type: \"day\"\n                }, {\n                    type: \"week\"\n                }, {\n                    type: \"month\",\n                    selected: true\n                }, {\n                    type: \"agenda\"\n                }],\n                date: nowDate,\n                majorTick: 120,\n                timezone: \"Europe/Moscow\",\n                dataSource: eventsData,\n                selectable: true,\n                mobile: true,\n                snap: false,\n                workDayStart: new Date(\"2013/1/1 00:00 AM\"),\n                workDayEnd: new Date(\"2013/1/1 11:59 PM\"),\n                workWeekStart: 0,\n                workWeekEnd: 7,\n                footer: {\n                    command: \"workDay\"\n                }\n            });\n        });\n    </script>\n</body>\n\n</html>\n",
-			"file": "/D/Projects/loopdash/client/index.html",
-			"file_size": 6447,
-			"file_write_time": 130969280018797711,
+			"file": "robots.txt",
 			"settings":
 			{
-				"buffer_size": 6447,
+				"buffer_size": 36,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "modules/dadata/view/js/dadata.js",
+			"settings":
+			{
+				"buffer_size": 8787,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "package.inc.php",
+			"settings":
+			{
+				"buffer_size": 262,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "modules/main/view/blocks/logo/logo.tpl",
+			"settings":
+			{
+				"buffer_size": 435,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/moduleview/main/blocks/logo/logo.tpl",
+			"settings":
+			{
+				"buffer_size": 509,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "templates/autofashion/layout.tpl",
+			"settings":
+			{
+				"buffer_size": 1477,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/D/Projects/loopdash/client/styles/kendo.common.min.css",
+			"settings":
+			{
+				"buffer_size": 123021,
 				"line_ending": "Unix"
 			}
 		},
@@ -642,14 +717,6 @@
 			{
 				"buffer_size": 28991,
 				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "{\"where\": {\"or\": [{\"and\": [{\"start_date\": {\"gt\": \"2016-01-10\"}}, {\"start_date\": {\"lt\": \"2016-02-10\"}}]}, {\"and\": [{\"end_date\": {\"gt\": \"2016-01-10\"}}, {\"end_date\": {\"lt\": \"2016-02-10\"}}]}, {\"and\": [{\"end_date\": {\"gt\": \"2016-02-10\"}}, {\"start_date\": {\"lt\": \"2016-01-10\"}}]}]}}",
-			"settings":
-			{
-				"buffer_size": 274,
-				"line_ending": "Windows"
 			}
 		},
 		{
@@ -669,14 +736,6 @@
 			}
 		},
 		{
-			"contents": "filter[where][and][0][start_date][gt]:2015-12-09T13:57:10.286Z&filter[where][and][1][start_date][lt]:2016-01-09T13:57:10.286Z&\nfilter[where][and][1][end_date][gt]:2015-12-09T13:57:10.286Z&\nfilter[where][and][1][end_date][lt]:2016-01-09T13:57:10.286Z",
-			"settings":
-			{
-				"buffer_size": 249,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "/D/Projects/loopdash/server/models/event.json",
 			"settings":
 			{
@@ -693,16 +752,28 @@
 	"command_palette":
 	{
 		"height": 400.0,
-		"last_filter": "line",
+		"last_filter": "ins",
 		"selected_items":
 		[
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
 			[
 				"line",
 				"Emmet: Merge Lines"
 			],
 			[
-				"ins",
-				"Package Control: Install Package"
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"pack",
+				"Package Control: List Packages"
+			],
+			[
+				"log",
+				"Set Syntax: Logfile"
 			],
 			[
 				"html",
@@ -711,10 +782,6 @@
 			[
 				"fold",
 				"Code Folding: Fold Tag Attributes"
-			],
-			[
-				"json",
-				"Set Syntax: JSON"
 			],
 			[
 				"Package Control: ",
@@ -803,10 +870,6 @@
 			[
 				"fix",
 				"FixMyJS"
-			],
-			[
-				"pack",
-				"Package Control: Install Package"
 			],
 			[
 				"css del",
@@ -1010,15 +1073,84 @@
 	},
 	"expanded_folders":
 	[
-		"/D/Projects/loopdash",
-		"/D/Projects/loopdash/client",
-		"/D/Projects/loopdash/client/styles",
-		"/D/Projects/loopdash/server",
-		"/D/Projects/loopdash/server/boot",
-		"/D/Projects/loopdash/server/models"
+		"/D/Projects/ReadyScript_AJ/modules/banners/controller",
+		"/D/Projects/ReadyScript_AJ/modules/banners/controller/admin",
+		"/D/Projects/ReadyScript_AJ/modules/banners/model",
+		"/D/Projects/ReadyScript_AJ/modules/materials/controller",
+		"/D/Projects/ReadyScript_AJ/modules/materials/controller/admin",
+		"/D/Projects/ReadyScript_AJ/modules/materials/model",
+		"/D/Projects/ReadyScript_AJ/modules/materials/model/orm",
+		"/D/Projects/ReadyScript_AJ/modules/materials/view",
+		"/D/Projects/ReadyScript_AJ/modules/options",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/catalog",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/catalog/blocks",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/catalog/blocks/sidefilters",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/menu",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js",
+		"/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash",
+		"/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/client",
+		"/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/server"
 	],
 	"file_history":
 	[
+		"/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/.bowerrc",
+		"/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/client/index.html",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/exception.tpl",
+		"/D/Downloads/config.core.php",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/jquery.activetabs.js",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/main_slider.js",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/myorder_view.js",
+		"/D/Projects/ReadyScript_AJ/modules/shop/controller/block/cartlist.inc.php",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/shop/checkout/payment.tpl",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/jquery.changeoffer.js",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/theme.js",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/jquery.colorbox.js",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/jquery.slider.min.js",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/jquery.colorbox-min.js",
+		"/C/TEMP/_tcx/5/0/web/iport.yadenf.bget.ru/public_html/core/cache/resource/web/resources/135.cache.php",
+		"/D/Projects/salon-n/assets/css/style.css",
+		"/D/Projects/salon-n/.htaccess",
+		"/D/Sites/auto-jack_rs_backup_2016_01_05/db_groupvm_13.20160105033754.sql",
+		"/D/Downloads/db_groupvm_13_data.sql",
+		"/D/Downloads/options/model/api.inc.php",
+		"/C/MongoDB/bin/mongod.cfg",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/product.js",
+		"/D/Projects/ReadyScript_AJ/modules/banners/controller/admin/ctrl.inc.php",
+		"/D/Projects/ReadyScript_AJ/modules/materials/controller/admin/ctrl.inc.php",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/catalog/oneclick.tpl",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/catalog/product.tpl",
+		"/D/Projects/ReadyScript_AJ/sftp-config.json",
+		"/D/Downloads/.htaccess",
+		"/C/TEMP/_tcx/7/0/public_html/core/config/config.inc.php",
+		"/C/TEMP/_tcx/7/0/public_html/connectors/index.php",
+		"/C/TEMP/_tcx/7/0/public_html/manager/config.core.php",
+		"/C/TEMP/_tcx/7/0/public_html/config.core.php",
+		"/C/TEMP/_tcx/7/0/public_html/connectors/modx.config.js.php",
+		"/C/TEMP/_tcx/7/0/public_html/connectors/lang.js.php",
+		"/C/config.core.php",
+		"/D/Downloads/config.inc.php",
+		"/C/TEMP/_tcx/6/0/web/salon-n.yellowmarker.ru/public_html/.htaccess",
+		"/C/TEMP/_tcx/6/0/web/iport.yadenf.bget.ru/public_html/.htaccess",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/wrapper.tpl",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/index.tpl",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/html.tpl",
+		"/D/Projects/ReadyScript_AJ/templates/system/comexception.tpl",
+		"/D/Projects/ReadyScript_AJ/modules/imldelivery/model/deliverytype/iml.inc.php",
+		"/D/Projects/ReadyScript_AJ/modules/main/view/crud-options.tpl",
+		"/C/TEMP/_tcx/4/0/www/site22/public_html/modules/colors/controller/blockvalues.inc.php",
+		"/D/Projects/ReadyScript_AJ/modules/catalog/controller/block/sidefilters.inc.php",
+		"/D/Projects/ReadyScript_AJ/templates/autofashion/wrapper_checkout.tpl",
+		"/D/Projects/ReadyScript_AJ/modules/imldelivery/view/delivery/iml/simple_cost.tpl",
+		"/D/Downloads/admin_shop_temp.sql",
+		"/D/Downloads/db_groupvm_13.sql",
+		"/C/TEMP/_tc/db_groupvm_13.sql",
+		"/C/TEMP/_tc/db_groupvm_13.20160105033754.sql",
+		"/C/TEMP/_tcx/4/0/www/site22/public_html/local.php",
+		"/C/TEMP/_tcx/4/0/www/site22/public_html/index2.php",
+		"/D/Projects/ReadyScript_AJ/.gitignore",
+		"/D/Projects/loopdash/client/index.html",
 		"/D/Projects/loopdash/server/models/event.js",
 		"/D/Downloads/Kenju-master/examples/web/scheduler/api.html",
 		"/D/Projects/loopdash/server/models/event.json",
@@ -1045,13 +1177,11 @@
 		"/D/Projects/ReadyScript_AJ/modules/dadata/view/js/dadata.js",
 		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/users/blocks/authblock/authblock.tpl",
 		"/C/TEMP/_tcx/2/0/www/site22/public_html/cache/smarty/compile/templates_autofashion_moduleview_shop_blocks_cart_checkout_cart_tpl.rs.tpl.php",
-		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/shop/checkout/payment.tpl",
 		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/shop/checkout/delivery.tpl",
 		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/shop/checkout/address.tpl",
 		"/D/Projects/ReadyScript_AJ/templates/autofashion/moduleview/shop/blocks/checkoutstep/step.tpl",
 		"/D/Projects/loopdash/client/codebase/scheduler/dhtmlxscheduler.css",
 		"/C/TEMP/_tc/components-master/scheduler/sample.html",
-		"/D/Projects/loopdash/client/index.html",
 		"/D/Projects/loopdash/sftp-config.json",
 		"/D/Projects/loopdash/.editorconfig",
 		"/D/Projects/webix-dashboard/models/events.js",
@@ -1061,7 +1191,6 @@
 		"/D/Projects/loopdash/server/boot/root.js",
 		"/D/Projects/webix-dashboard/public/index.html",
 		"/D/Projects/webix-node/ftpsync.settings",
-		"/D/Projects/ReadyScript_AJ/sftp-config.json",
 		"/D/Projects/webix-node/index.js",
 		"/D/Projects/webix-node/public/webix.css",
 		"/C/TEMP/_tcx/2/1/scripts/node-scheduler-demo/public/codebase/dhtmlxscheduler.js",
@@ -1091,62 +1220,9 @@
 		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/phpcbf.sublime-settings",
 		"/D/Projects/salon-n/index.php",
 		"/D/Projects/salon-n/assets/fonts/glyphicons-halflings-regular.svg",
-		"/D/Projects/salon-n/assets/css/style.css",
 		"/D/Projects/salon-n/assets/js/common.js",
 		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/JSLint.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/JSLint/JSLint.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/CSScomb.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/CSScomb/CSScomb.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/JsFormat.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/CSScomb/README.md",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/FixMyJS.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/JsFormat/JsFormat.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/jsfmt.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/jsfmt/jsfmt.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/FixMyJS/FixMyJS.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/Side Bar.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/SideBarEnhancements/Side Bar.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Settings/SideBarEnhancements.json",
-		"/D/Projects/ReadyScript_AJ/modules/imldelivery/model/deliverytype/iml.inc.php",
-		"/D/Projects/ReadyScript_AJ/modules/imldelivery/view/delivery/iml/map.tpl",
-		"/D/Projects/ReadyScript_AJ/modules/shop/controller/front/checkout.inc.php",
-		"/D/Projects/new2016/index.html",
-		"/D/Projects/ReadyScript_AJ/modules/shop/view/myorders.tpl",
-		"/D/php/php.bat",
-		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/order.js",
-		"/D/Projects/ReadyScript_AJ/modules/shop/controller/block/cartlist.inc.php",
-		"/D/Projects/ReadyScript_AJ/modules/imldelivery/view/delivery/iml/widget.tpl",
-		"/D/php/phpl.bat",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/BufferScroll.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/BufferScroll/BufferScroll.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Sublimall/Sublimall.sublime-settings",
-		"/D/Projects/ReadyScript_AJ/templates/autofashion/resource/js/common.js",
-		"/D/Projects/keys",
-		"/D/Projects/salon-n/assets/css/slicknav.min.css",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/css_style_completions.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/CSS Extended Completions/css_style_completions.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/FindKeyConflicts/README.md",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/HTML-CSS-JS Prettify/HTMLPrettify.sublime-settings",
-		"/D/Projects/salon-n/assets/css/style.beautified.css",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/JSON.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Package Control/Package Control.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/Distraction Free.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/CSS3.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/CSS3/CSS3.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/Minify.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Minify/Minify.sublime-settings",
-		"/D/Projects/salon-n/assets/js/common.beautified.js",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Text Pastry/TextPastry.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Text Pastry/Default (Windows).sublime-keymap",
-		"/D/Projects/salon-n/assets/js/C:\\Users\\DEN\\AppData\\Roaming\\Sublime Text 3\\Packages/Text Pastry/TextPastry.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/User/PHP Companion.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/PHP Companion/PHP Companion.sublime-settings",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/DocBlockr/README.md",
-		"/D/Projects/salon-n/assets/components/gallery/css/web.css",
-		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/HTML-CSS-JS Prettify/Default (Windows).sublime-keymap"
+		"/C/Users/DEN/AppData/Roaming/Sublime Text 3/Packages/Default/Preferences.sublime-settings"
 	],
 	"find":
 	{
@@ -1246,6 +1322,42 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"../../",
+			"            ",
+			"materials",
+			"one_dir",
+			"offerProperty",
+			"}\">",
+			"stick",
+			"zone",
+			"collection",
+			"/home/admin/web/iport.yadenf.bget.ru/public_html/core/",
+			"iportfest",
+			"'iportfest.ru'",
+			"/home/admin/web/iport.yadenf.bget.ru/public_html",
+			"example-domain-please-change",
+			"fatal",
+			".userAuthBlock",
+			"dropdown",
+			"dropblock",
+			"av li",
+			"item",
+			"Исключение в модуле",
+			"side",
+			"db_groupvm_13",
+			"@",
+			"Скрипты",
+			"Нарушение защиты",
+			"Нарушение защиты. Скрипты не соответствуют базе данных",
+			"content",
+			"scheduler",
+			"name",
+			"Name",
+			"n",
+			"N",
+			"\"",
+			"id=\"",
+			"Content 2",
 			"#9b59b6",
 			"#2eb3a6",
 			"#27ae60",
@@ -1337,43 +1449,7 @@
 			"warning",
 			"error",
 			"addit",
-			"dp",
-			"bind",
-			"dp",
-			"getImlCost",
-			"$$(en",
-			"Ваш заказ",
-			"rest->",
-			"controls.gif",
-			".gif",
-			"this.getScheduler()",
-			"api/persons",
-			"persons",
-			"rest->",
-			"id: \"",
-			"Bear",
-			"things",
-			"\"",
-			"tityId",
-			"format",
-			"remove",
-			"var data = \"\";",
-			"en",
-			"eventname",
-			"\"name\"",
-			"name:",
-			"name",
-			"hidden",
-			"id:",
-			"form: ",
-			"editaction",
-			"showModal",
-			"a",
-			"obj.",
-			"bower_components",
-			"codebase",
-			"nodejs-demo",
-			"prepareModal"
+			"dp"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1391,7 +1467,7 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1400,15 +1476,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 61271,
+						"buffer_size": 60838,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								57732,
-								57732
+								40824,
+								40824
 							]
 						],
 						"settings":
@@ -1430,283 +1506,121 @@
 							"syntax": "Packages/CSS3/CSS3.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 45554.0,
+						"translation.y": 32860.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/client/index.html",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10555,
+						"buffer_size": 3273,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										288,
-										295
-									],
-									[
-										566,
-										573
-									],
-									[
-										779,
-										786
-									],
-									[
-										991,
-										998
-									],
-									[
-										1170,
-										1177
-									],
-									[
-										1226,
-										1233
-									],
-									[
-										1433,
-										1440
-									],
-									[
-										1561,
-										1568
-									],
-									[
-										1575,
-										1582
-									],
-									[
-										1722,
-										1729
-									],
-									[
-										1946,
-										1953
-									],
-									[
-										1998,
-										2005
-									],
-									[
-										2285,
-										2292
-									],
-									[
-										2448,
-										2455
-									],
-									[
-										2519,
-										2526
-									],
-									[
-										2778,
-										2785
-									],
-									[
-										2849,
-										2856
-									],
-									[
-										3056,
-										3063
-									],
-									[
-										3216,
-										3223
-									],
-									[
-										3412,
-										3419
-									],
-									[
-										3455,
-										3462
-									],
-									[
-										3807,
-										3814
-									],
-									[
-										3888,
-										3895
-									],
-									[
-										4172,
-										4179
-									],
-									[
-										4385,
-										4392
-									],
-									[
-										4597,
-										4604
-									],
-									[
-										4791,
-										4798
-									],
-									[
-										4847,
-										4854
-									],
-									[
-										5063,
-										5070
-									],
-									[
-										5191,
-										5198
-									],
-									[
-										5205,
-										5212
-									],
-									[
-										5360,
-										5367
-									],
-									[
-										5584,
-										5591
-									],
-									[
-										5636,
-										5643
-									],
-									[
-										5935,
-										5942
-									],
-									[
-										6134,
-										6141
-									],
-									[
-										6206,
-										6213
-									],
-									[
-										6466,
-										6473
-									],
-									[
-										6537,
-										6544
-									],
-									[
-										6744,
-										6751
-									],
-									[
-										6916,
-										6923
-									],
-									[
-										7120,
-										7127
-									],
-									[
-										7171,
-										7178
-									],
-									[
-										7553,
-										7560
-									],
-									[
-										7634,
-										7641
-									],
-									[
-										7991,
-										7998
-									],
-									[
-										8396,
-										8403
-									],
-									[
-										8709,
-										8716
-									],
-									[
-										9011,
-										9018
-									],
-									[
-										9400,
-										9407
-									],
-									[
-										9789,
-										9796
-									],
-									[
-										10164,
-										10171
-									],
-									[
-										10447,
-										10454
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2450,
+								2450
 							]
 						],
 						"settings":
 						{
-							"default_dir": "D:\\Projects\\ReadyScript_AJ",
-							"detect_indentation": false,
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
 							"incomplete_sync": null,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false,
+							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3256.0,
+						"translation.y": 864.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 2,
-					"file": "templates/autofashion/moduleview/shop/checkout/payment.tpl",
+					"file": "/C/Users/DEN/Documents/MobaXterm/home/apps/loopdash/.editorconfig",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2860,
+						"buffer_size": 286,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2860,
-								2860
+								176,
+								176
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"editorconfig": true,
+							"ensure_newline_at_eof_on_save": true,
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/EditorConfig/EditorConfig.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true,
+							"trim_trailing_white_space_on_save": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "templates/autofashion/moduleview/catalog/list_products.tpl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 9502,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								285,
+								285
 							]
 						],
 						"settings":
@@ -1728,27 +1642,195 @@
 							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 441.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "modules/shop/controller/block/cartlist.inc.php",
+					"buffer": 4,
+					"file": "templates/autofashion/moduleview/catalog/blocks/sidefilters/filters.tpl",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1341,
+						"buffer_size": 15513,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1341,
-								1341
+								7929,
+								7929
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1832.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "templates/autofashion/wrapper_catalog.tpl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 966,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								706,
+								706
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "templates/autofashion/moduleview/catalog/product.tpl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17915,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17281,
+								17291
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 5641.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "templates/autofashion/resource/js/product.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2254,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2249,
+								2249
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1056.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "modules/materials/model/api.inc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 196,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								186,
+								131
 							]
 						],
 						"settings":
@@ -1770,14 +1852,98 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 384.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 9,
+					"file": "templates/autofashion/resource/js/common.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 26195,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4105,
+								4107
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1517.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "templates/autofashion/resource/js/jquery.switcher.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2755,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
 					"file": "templates/autofashion/moduleview/shop/blocks/cart/checkout_cart.tpl",
 					"semi_transient": false,
 					"settings":
@@ -1815,11 +1981,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 12,
 					"file": "templates/autofashion/moduleview/shop/cartpage.tpl",
 					"semi_transient": false,
 					"settings":
@@ -1857,61 +2023,11 @@
 						"translation.y": 5370.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "templates/autofashion/resource/js/common.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 26195,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								9539,
-								9546
-							],
-							[
-								24344,
-								24337
-							],
-							[
-								24572,
-								24579
-							]
-						],
-						"settings":
-						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": "<",
-									"selector": "text.html"
-								},
-								{
-									"characters": ".#",
-									"selector": "text.html"
-								}
-							],
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 3577.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
+					"buffer": 13,
 					"file": "/D/Downloads/bootstrap-3.3.6/dist/css/bootstrap.css",
 					"semi_transient": false,
 					"settings":
@@ -1966,11 +2082,11 @@
 						"translation.y": 22073.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 14,
 					"file": "templates/autofashion/moduleview/shop/checkout/delivery.tpl",
 					"semi_transient": false,
 					"settings":
@@ -1982,8 +2098,8 @@
 						"selection":
 						[
 							[
-								2342,
-								2405
+								2254,
+								2254
 							]
 						],
 						"settings":
@@ -2008,11 +2124,11 @@
 						"translation.y": 425.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 15,
 					"file": "templates/autofashion/moduleview/shop/checkout/address.tpl",
 					"semi_transient": false,
 					"settings":
@@ -2050,24 +2166,150 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "modules/imldelivery/model/deliverytype/iml.inc.php",
+					"buffer": 16,
+					"file": "templates/autofashion/moduleview/menu/blocks/menu/hor_menu.tpl",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 31505,
+						"buffer_size": 1392,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								21970,
-								21975
+								576,
+								576
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 17,
+					"type": "text"
+				},
+				{
+					"buffer": 17,
+					"file": "robots.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 36,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								32,
+								32
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 18,
+					"file": "modules/dadata/view/js/dadata.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8787,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5821,
+								5826
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2300.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
+					"file": "package.inc.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -2089,27 +2331,27 @@
 							"syntax": "Packages/PHP/PHP.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 706.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "modules/imldelivery/view/delivery/iml/simple_cost.tpl",
+					"buffer": 20,
+					"file": "modules/main/view/blocks/logo/logo.tpl",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 98,
+						"buffer_size": 435,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								44,
-								44
+								179,
+								228
 							]
 						],
 						"settings":
@@ -2126,7 +2368,6 @@
 								}
 							],
 							"incomplete_sync": null,
-							"open_with_edit": true,
 							"remote_loading": false,
 							"synced": true,
 							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
@@ -2135,24 +2376,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
-					"file": "templates/autofashion/wrapper_checkout.tpl",
+					"buffer": 21,
+					"file": "templates/autofashion/moduleview/main/blocks/logo/logo.tpl",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8479,
+						"buffer_size": 509,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2081,
-								2081
+								249,
+								249
 							]
 						],
 						"settings":
@@ -2168,38 +2409,75 @@
 									"selector": "text.html"
 								}
 							],
-							"bs_sintax": "smarty",
-							"buffer_scroll_name": "9748a550",
 							"incomplete_sync": null,
 							"remote_loading": false,
-							"spell_check": false,
 							"synced": true,
-							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
-					"file": "/D/Projects/loopdash/client/index.html",
+					"buffer": 22,
+					"file": "templates/autofashion/layout.tpl",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6447,
+						"buffer_size": 1477,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6303,
-								6303
+								229,
+								290
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": "<",
+									"selector": "text.html"
+								},
+								{
+									"characters": ".#",
+									"selector": "text.html"
+								}
+							],
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": true,
+							"syntax": "Packages/Smarty/Syntaxes/Smarty.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 20,
+					"type": "text"
+				},
+				{
+					"buffer": 23,
+					"file": "/D/Projects/loopdash/client/styles/kendo.common.min.css",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 123021,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								34391,
+								34391
 							]
 						],
 						"settings":
@@ -2218,23 +2496,22 @@
 							"editorconfig": true,
 							"ensure_newline_at_eof_on_save": true,
 							"incomplete_sync": null,
-							"open_with_edit": true,
 							"remote_loading": false,
 							"synced": true,
-							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"syntax": "Packages/CSS3/CSS3.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": false,
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1536.0,
+						"translation.y": 4972.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 24,
 					"file": "/D/Projects/loopdash/client/styles/kendo.flat.min.css",
 					"semi_transient": false,
 					"settings":
@@ -2278,43 +2555,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 476.0,
+						"translation.y": 460.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 274,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								274
-							]
-						],
-						"settings":
-						{
-							"default_dir": "D:\\Projects\\ReadyScript_AJ",
-							"incomplete_sync": null,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 16,
+					"buffer": 25,
 					"file": "/D/Projects/loopdash/server/config.json",
 					"semi_transient": false,
 					"settings":
@@ -2357,11 +2605,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 26,
 					"file": "/D/Projects/loopdash/server/server.js",
 					"semi_transient": false,
 					"settings":
@@ -2401,43 +2649,14 @@
 							"trim_trailing_white_space_on_save": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 48.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 249,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								125
-							]
-						],
-						"settings":
-						{
-							"default_dir": "D:\\Projects\\ReadyScript_AJ",
-							"incomplete_sync": null,
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 19,
+					"buffer": 27,
 					"file": "/D/Projects/loopdash/server/models/event.json",
 					"semi_transient": false,
 					"settings":
@@ -2480,7 +2699,7 @@
 						"translation.y": 464.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 24,
 					"type": "text"
 				}
 			]
@@ -2531,7 +2750,7 @@
 	},
 	"output.sftp":
 	{
-		"height": 98.0
+		"height": 140.0
 	},
 	"output.unsaved_changes":
 	{

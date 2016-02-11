@@ -15,7 +15,6 @@ class Company extends \RS\Orm\AbstractObject
 {
     function _init()
     {
-        $this->setClassParameter('storage_class', '\RS\Orm\Storage\Stub');
         $this->getPropertyIterator()->append(array(
             'firm_name' => new Type\String(array(
                 'maxLength' => '255',
@@ -59,6 +58,16 @@ class Company extends \RS\Orm\AbstractObject
             ))
         ));
     }        
+    
+    /**
+    * Возвращает объект хранилища
+    * 
+    * @return \RS\Orm\Storage\AbstractStorage
+    */
+    protected function getStorageInstance()
+    {
+        return new \RS\Orm\Storage\Stub($this);
+    }
     
 }
 ?>

@@ -1,9 +1,8 @@
-<pre>
-Уважаемый, администратор! На сайте {$url->getDomainStr()} пополнен баланс пользователем.
+<p>Уважаемый, администратор! На сайте {$url->getDomainStr()} пополнен баланс пользователем.</p>
 
-<p>Сведения о клиенте:</p>
+<p><strong>Сведения о клиенте:</strong></p>
 
-<table>
+<table cellpadding="5" border="1" bordercolor="#969696" style="border-collapse:collapse; border:1px solid #969696">
     <tr>
         <td>
            id транзакции 
@@ -38,9 +37,5 @@
     </tr>
 </table>
 
-<div>
-    <a href="{$router->getAdminUrl(null, null,'shop-transactionctrl', true)}">Перейти к просмотру</a>
-</div>
-
-Автоматическая рассылка {$url->getDomainStr()}.
-</pre>
+<p><a href="{$router->getAdminUrl(null, null,'shop-transactionctrl', true)}">Перейти к просмотру</a></p>
+<p>Автоматическая рассылка {$url->getDomainStr()}.</p>

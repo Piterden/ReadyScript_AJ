@@ -124,22 +124,23 @@ class OfferPrice extends \Catalog\Model\CsvPreset\Cost
                 $price_arr = $offer['pricedata_arr'];
                 //Разберём цены в зависимости от типа заданных параметров цены
                 if (isset($price_arr['oneprice']) && $price_arr['oneprice']['use']) { //Если единая цена всех типов цен
-                    foreach (self::$type_cost_by_title as $title=>$cost_id){
+                    foreach (self::$type_cost_by_title as $title => $cost_id){
                         $znak     = ($price_arr['oneprice']['znak'] == "=") ? "" : "(".$price_arr['oneprice']['znak'].")"; 
                         
                         $currency = "%";
-                        if ($price_arr['oneprice']['unit']!="%"){ //Если числовое значение
-                          $currency = isset(self::$currencies[$price_arr['oneprice']['unit']]) ? self::$currencies[$price_arr['oneprice']['unit']] : ''; 
+                        if ($price_arr['oneprice']['unit'] != "%"){ //Если числовое значение
+                            $currency = isset(self::$currencies[$price_arr['oneprice']['unit']]) ? self::$currencies[$price_arr['oneprice']['unit']] : ''; 
                         }
                         $values_array[$this->id.'-costlistname_'.$cost_id]     = $znak.$price_arr['oneprice']['original_value']; 
                         $values_array[$this->id.'-costlistcurrency_'.$cost_id] = $currency;
                     }
-                }elseif (!isset($price_arr['oneprice']) && isset($price_arr['price'])){ //Если цены на комплектацию разные
-                    foreach ($price_arr['price'] as $cost_id=>$price_data){
+                }
+                elseif (!isset($price_arr['oneprice']) && isset($price_arr['price'])) { //Если цены на комплектацию разные
+                    foreach ($price_arr['price'] as $cost_id=>$price_data) {
                         $znak     = ($price_data['znak'] == "=") ? "" : "(".$price_data['znak'].")"; 
                         
                         $currency = "%";
-                        if ($price_data['unit']!="%"){ //Если числовое значение
+                        if ($price_data['unit'] != "%"){ //Если числовое значение
                           $currency = isset(self::$currencies[$price_data['unit']]) ? self::$currencies[$price_data['unit']] : ''; 
                         }
                         $values_array[$this->id.'-costlistname_'.$cost_id]     = $znak.$price_data['original_value']; 
@@ -182,9 +183,11 @@ class OfferPrice extends \Catalog\Model\CsvPreset\Cost
     */
     function addOnePriceIfNeeded($pricedata_arr)
     {
-       $one_price       = true;
-       $last_seriallize = ''; //Сериализованная строка для проверки 
-       foreach ($pricedata_arr['price'] as $cost_id=>$info){
+        if (!$pricedata_arr) return $pricedata_arr;
+        
+        $one_price       = true;
+        $last_seriallize = ''; //Сериализованная строка для проверки 
+        foreach ($pricedata_arr['price'] as $cost_id=>$info){
           if (empty($last_seriallize)){
               $last_seriallize = serialize($info);
           }else{
@@ -193,15 +196,15 @@ class OfferPrice extends \Catalog\Model\CsvPreset\Cost
                  break; 
               }
           } 
-       }
-       if ($one_price){ //Если "Для всех типов цен" признак найден
+        }
+        if ($one_price){ //Если "Для всех типов цен" признак найден
           $first = reset($pricedata_arr['price']);
           $pricedata_arr['oneprice']['use']            = 1; 
           $pricedata_arr['oneprice']['znak']           = $first['znak']; 
           $pricedata_arr['oneprice']['original_value'] = $first['original_value']; 
           $pricedata_arr['oneprice']['unit']           = $first['unit']; 
-       }
-       return $pricedata_arr;
+        }
+        return $pricedata_arr;
     }
     
     /**
@@ -213,7 +216,7 @@ class OfferPrice extends \Catalog\Model\CsvPreset\Cost
     */
     function addCostInPriceArray($pricedata_arr, $cost_id, $value)
     {
-        if (empty($value) && $value!='0'){
+        if ($value === ''){
             return $pricedata_arr;
         }
         $znak = "=";
@@ -250,10 +253,12 @@ class OfferPrice extends \Catalog\Model\CsvPreset\Cost
                             break;
                     case "costlistcurrency": //Валюта цены
                             $currency_id = $item;
-                            if ($currency_id!="%"){
+                            if ($currency_id != "%"){
                                $currency_id = isset(self::$currencies_by_title[$currency_id]) ? self::$currencies_by_title[$currency_id] : 0; 
                             }
-                            $pricedata_arr['price'][$cost_id]['unit']   = $currency_id; 
+                            if (isset($pricedata_arr['price'][$cost_id])) {
+                                $pricedata_arr['price'][$cost_id]['unit']   = $currency_id; 
+                            }
                             break;
                 }
             }

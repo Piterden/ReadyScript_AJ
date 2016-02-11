@@ -396,10 +396,12 @@ class Request
         if (!$class_name) throw new Exception('Не задан класс возвращаемых объектов');
         
         $resource = $this->exec();
-        
+
         $ret = array();
-        while($object = $resource -> fetchObject($class_name)) {
-            $object->afterObjectLoad();
+        while($row = $resource -> fetchRow()) {
+            $object = new $class_name();
+            $object->getFromArray($row, null, false);
+            
             if ($key === null) {
                 $ret[] = $object;
             } else {
@@ -412,64 +414,6 @@ class Request
         }
         return $ret;
     }
-    
-    /**
-    * Возвращает связанные объекты. 
-    * Если в select использовалась конструкция {ПОЛЕ, ПОЛЕ}:ПСЕВДОКЛАСС_1, {ПОЛЕ, ПОЛЕ}:ПСЕВДОКЛАСС_2
-    * @param array $rules - массив вида:
-    * 'ПСЕВДОКЛАСС_1' => 
-    *    array(
-    *        'class' => ИМЯ КЛАССА главного объекта(к нему будут линковаться другие объекты) или его экзкмпляр,
-    *    ),
-    * 'ПСЕВДОКЛАСС_2' => 
-    *    array(
-    *        'class' => ИМЯ КЛАССА объекта или его экзкмпляр,
-    *        'key' => 'comment_id', //Поле у данного объекта, для связки с основным
-    *        'foreign' => 'id', //Поле у основного объекта
-    *        'field' => 'votes' //Поле, в которое будет добавлен объект
-    *    )
-    * 
-    public function lnkObjects($rules)
-    {
-        $resource = $this->exec();
-        $resource->setResultType(MYSQL_NUM);
-        
-        $list = new \RS\Orm\ObjectList();
-        
-        $base = $this->map_obj[0]['class'];
-        
-        while($row = $resource->fetchRow()) {
-            
-            $pclass = array(); //поля по псевдоклассам            
-            foreach ($this->map_obj as $n => $one) {
-                $rule = $rules[$one['class']];
-                
-                $fields = isset($rule['fields']) ? $rule['fields'] : $one['fields'];
-                $data = array_combine($one['fields'], array_slice($row, $one['start'], $one['length']));                    
-                $object = new $rule['class']();
-                $object->getFromArray($data);
-                
-                if ($n == 0) {
-                    $list[ $data[$rule['key']] ] = $object;
-                } else {
-                    $parent = $list[ $data[$rule['key']] ];
-                    
-                    if ($parent[$rule['paste']] === null) $parent[$rule['paste']] = array();
-                    //$arr = $parent[$rule['paste']];
-                    //$arr[] = $object;
-                    //$parent[$rule['paste']] [] = 
-                }
-            }
-        }
-        
-        //Линкуем
-        //foreach($list[$one['class']] as $key) {
-        //}
-        
-        //print_r($list);
-        //return $list;
-    }
-    */
 
     /**
     * Возвращает первый объект в выборке

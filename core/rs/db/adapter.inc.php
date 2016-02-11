@@ -6,21 +6,31 @@
 * @license http://readyscript.ru/licenseAgreement/
 */
 namespace RS\Db;
+use \RS\Helper\Log,
+    \RS\Cache\Manager as CacheManager;
 
 /**
 * Класс работы с базой данных
 */
 class Adapter
 {
-    protected static $_conn; //Указатель на соединение с базой
+    protected static 
+        /**
+        * Указатель на соединение с базой
+        */
+        $connection,
+        /**
+        * Инстанс логирования
+        * 
+        * @var Log
+        */
+        $log;
     
     public static function init()
     {
         if (\Setup::$LOG_SQLQUERY_TIME) {
-            $log_file = \Setup::$PATH.\Setup::$LOG_SQLQUERY_FILE;
-            if (!is_dir(dirname($log_file))) \RS\File\Tools::makePath(dirname($log_file));
-            $str = "\n-------- Page: ".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']." \n\n";
-            file_put_contents($log_file, $str, FILE_APPEND);
+            $str = "\n-------- Page: ".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']." \n";
+            self::$log = Log::file(\Setup::$PATH.\Setup::$LOG_SQLQUERY_FILE)->append($str);
         }
         
         if (self::connect()) {
@@ -33,13 +43,13 @@ class Adapter
     */
     public static function connect()
     {
-        self::$_conn = @mysql_connect(\Setup::$DB_HOST, \Setup::$DB_USER, \Setup::$DB_PASS);
+        self::$connection = @mysqli_connect(\Setup::$DB_HOST, \Setup::$DB_USER, \Setup::$DB_PASS);
 
-        if(self::$_conn){
+        if(self::$connection){
             self::sqlExec("SET names utf8");
         }
 
-        return self::$_conn;
+        return self::$connection;
     }
     
     /**
@@ -47,7 +57,7 @@ class Adapter
     */
     public static function disconnect()
     {
-        return mysql_close(self::$_conn);        
+        return mysqli_close(self::$connection);        
     }
         
     /**
@@ -59,7 +69,7 @@ class Adapter
     */
     public static function sqlExec($sql, $values = null)
     {
-        if(!self::$_conn){
+        if(!self::$connection){
             if (\Setup::$INSTALLED) {
                 throw new Exception(t('Не установлено соединение с базой данных'));
             }
@@ -73,12 +83,11 @@ class Adapter
         }
         
         $start_time = microtime(true);
-        $resource = mysql_query($sql, self::$_conn);
+        $resource = mysqli_query(self::$connection, $sql);
         
         if (\Setup::$LOG_SQLQUERY_TIME) {
-            $log_file = \Setup::$PATH.\Setup::$LOG_SQLQUERY_FILE;
-            $str = (microtime(true)-$start_time)." - {$sql}\n";
-            file_put_contents($log_file, $str, FILE_APPEND);
+            $str = (microtime(true)-$start_time)." - {$sql}";
+            self::$log->append($str);
         }
         
         // Блок необходим для определения неактуальности кэша
@@ -86,11 +95,11 @@ class Adapter
             self::invalidateTables($sql);
         }
 
-        $error_no = mysql_errno(self::$_conn);
+        $error_no = mysqli_errno(self::$connection);
         if ($error_no != 0){
             //Не бросаем исключения об ошибках - неверено указана БД, не существует таблицы, не выбрана база данных, когда включен режим DB_INSTALL_MODE
             if ( !\Setup::$DB_INSTALL_MODE || !($error_no == 1102 || $error_no == 1146 || $error_no == 1046 || $error_no == 1142) ) {
-                throw new Exception($sql.mysql_error(self::$_conn), $error_no);
+                throw new Exception($sql.mysqli_error(self::$connection), $error_no);
             }
         }
         return new Result($resource);
@@ -118,10 +127,7 @@ class Adapter
             
             //Исключительно на время разработки
             if (\Setup::$LOG_SQLQUERY_TIME && !isset($tables_str)) {
-                $log_file = \Setup::$PATH.'/logs/parse_query.txt';
-                if (!is_dir(dirname($log_file))) \RS\File\Tools::makePath(dirname($log_file));
-                $str = (microtime(true)-$start_time)." - {$sql}\n";
-                file_put_contents($log_file, $str, FILE_APPEND);                
+                Log::file(\Setup::$PATH.'/logs/parse_query.txt')->append($sql);
             }
         
             $tables_arr = preg_split('/[,]+/', $tables_str, -1, PREG_SPLIT_NO_EMPTY);
@@ -130,7 +136,7 @@ class Adapter
                 if (preg_match('/(?:(.*?)\.)?(.*?)( (as)?.*?)?$/ui', $table, $match)) {
                     $db = trim($match[1],"` ");
                     $table = trim($match[2],"` ");
-                    \RS\Cache\Manager::obj()->tableIsChanged($table, $db);
+                    CacheManager::obj()->tableIsChanged($table, $db);
                 }
             }
         }
@@ -144,11 +150,11 @@ class Adapter
     */
     public static function escape($str)
     {
-        if(!self::$_conn) {
+        if(!self::$connection) {
             return $str;
         }
         
-        return mysql_real_escape_string($str, self::$_conn);
+        return mysqli_real_escape_string(self::$connection, $str);
     }
     
     /**
@@ -158,7 +164,7 @@ class Adapter
     */
     public static function lastInsertId()
     {
-        return mysql_insert_id(self::$_conn);
+        return mysqli_insert_id(self::$connection);
     }    
 
     /**
@@ -168,7 +174,7 @@ class Adapter
     */    
     public static function affectedRows()
     {
-        return mysql_affected_rows(self::$_conn);
+        return mysqli_affected_rows(self::$connection);
     }    
     
     /**
@@ -178,7 +184,7 @@ class Adapter
     */
     public static function getVersion()
     {
-        return mysql_get_server_info(self::$_conn);
+        return mysqli_get_server_info(self::$connection);
     }
     
 }

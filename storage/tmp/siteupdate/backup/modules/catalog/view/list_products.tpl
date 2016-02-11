@@ -4,6 +4,7 @@
 {assign var=shop_config value=ConfigLoader::byModule('shop')}
 {assign var=check_quantity value=$shop_config->check_quantity}
 {$list = $this_controller->api->addProductsMultiOffersInfo($list)}
+{$list = $this_controller->api->addProductsDirs($list)}
 
 {if $no_query_error}
 <div class="noQuery">

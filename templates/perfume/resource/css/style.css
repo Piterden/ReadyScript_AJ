@@ -4905,3 +4905,7 @@ h1 {
     color: #9e9e9e;
     margin-top:5px;
 }
+
+.ya-share2__list {
+    white-space:nowrap;
+}

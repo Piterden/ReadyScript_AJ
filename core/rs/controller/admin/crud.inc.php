@@ -266,6 +266,15 @@ abstract class Crud extends Front
             $post = array_intersect_key($post, array_flip($doedit));
             $this->result->setSuccess(empty($post));
             
+            $element_class = $this->api->getElementClass();                    
+            $prototype = new $element_class();
+            
+            //Экранируем необходимые значения
+            foreach($post as $key => $value) {
+                if (isset($prototype['__'.$key])) {
+                    $post[$key] = $prototype['__'.$key]->escape($value);
+                }
+            }
                         
             if (!empty($post)) {
                 $obj->setCheckFields($doedit);
@@ -279,8 +288,6 @@ abstract class Crud extends Front
                         $this->api->setFilter($this->api->getIdField(), $ids, 'in');
                         $this->api->multiUpdate($post, $ids);
                     } else {
-                        $element_class = $this->api->getElementClass();                    
-                        $prototype = new $element_class();
                         foreach($ids as $id) {
                             $prototype->load($id);
                             $prototype->setCheckFields($doedit);

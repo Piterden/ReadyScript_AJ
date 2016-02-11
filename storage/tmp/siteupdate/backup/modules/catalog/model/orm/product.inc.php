@@ -58,11 +58,6 @@ class Product extends \RS\Orm\OrmObject
 
     function _init()
     {
-        $this->addDebugActions(array(
-            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'catalog-ctrl')),
-            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'catalog-ctrl'))
-        ));
-
         parent::_init()->append(array(
             t('Основные'),
                     'site_id' => new Type\CurrentSite(),
@@ -320,6 +315,20 @@ class Product extends \RS\Orm\OrmObject
         $this->addIndex(array('site_id', 'xml_id'), self::INDEX_UNIQUE);
         $this->addIndex(array('site_id', 'alias'), self::INDEX_UNIQUE);
     }
+    
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    public function getDebugActions()
+    {
+        return array(
+            new \RS\Debug\Action\Edit(\RS\Router\Manager::obj()->getAdminPattern('edit', array(':id' => '{id}'), 'catalog-ctrl')),
+            new \RS\Debug\Action\Delete(\RS\Router\Manager::obj()->getAdminPattern('del', array(':chk[]' => '{id}'), 'catalog-ctrl'))        
+        );
+    }
+    
 
     /**
     * Устанавливает, сохранять ли связь со spec категориями
@@ -904,13 +913,14 @@ class Product extends \RS\Orm\OrmObject
     function getItemPathLine($dir_id = null)
     {
         $dir_api = \Catalog\Model\Dirapi::getInstance();
-
+        
         if (!empty($this['xdir'])) {
-            foreach ($this['xdir'] as $cat_id) {
+            foreach ($this['xdir'] as $cat_id) {               
                 $path = $dir_api->getPathToFirst($cat_id);
                 foreach ($path as $dir) {
-                    if ($dir['id'] == $dir_id)
-                        return $path;
+                    if ($dir['id'] == $dir_id){
+                        return $path = $dir_api->getPathToFirst($dir_id);
+                    }
                 }
             }
         }
@@ -974,22 +984,26 @@ class Product extends \RS\Orm\OrmObject
     */
     function getSearchText()
     {
+        $config = \RS\Config\Loader::byModule($this);
         //Для поиска: Штрих-код, Краткое опиание, Характеристики, мета ключевые слова
         $properties = '';
-        if ($this->use_property_in_search_index) {
-            foreach ($this->fillProperty() as $groups) {
-                foreach ($groups['properties'] as $prop) {
-                    $properties .= $prop['title'] . ' : ' . $prop->textView() . ' , ';
+        if (in_array('properties', $config['search_fields'])) {
+            if ($this->use_property_in_search_index) {
+                foreach ($this->fillProperty() as $groups) {
+                    foreach ($groups['properties'] as $prop) {
+                        $properties .= $prop['title'] . ' : ' . $prop->textView() . ' , ';
+                    }
                 }
             }
         }
 
-        $text = array(
-            $this['barcode'],
-            $this['short_description'],
-            $properties,
-            $this['meta_keywords']
-        );
+        $text = array();
+        
+        if (in_array('barcode', $config['search_fields'])) $text[] = $this['barcode'];
+        if (in_array('short_description', $config['search_fields'])) $text[] = $this['short_description'];
+        if (in_array('properties', $config['search_fields'])) $text[] = $properties;
+        if (in_array('meta_keywords', $config['search_fields'])) $text[] = $this['meta_keywords'];
+        
         return trim(strip_tags(implode(' , ', $text)));
     }
 
@@ -1543,10 +1557,25 @@ class Product extends \RS\Orm\OrmObject
             $new_photo_id[] = $image['id'];
         }
         
+        //Получим следующий максимальный номер id товара
+        $max = \RS\Orm\Request::make()
+            ->select('MAX(id) as m')
+            ->from(new \Catalog\Model\Orm\Product())
+            ->where(array(
+                'site_id' => \RS\Site\Manager::getSiteId()
+            ))->exec()
+            ->getOneField('m', 0) + 1;
+            
+        //Создадим следующий номер для артикула
+        $clone['barcode'] = sprintf('a%06s', $max);
+        
         //Заменяем ссылки на фото и создаем комплектации
-        foreach($this['offers']['items'] as $offer) {
+        foreach($this['offers']['items'] as $key=>$offer) {
             $offer['photos_arr'] = str_replace($old_photo_id, $new_photo_id, $offer['photos_arr']);
-            $offer['product_id'] = $clone['id'];            
+            $offer['product_id'] = $clone['id'];   
+            if ($key>0){ //Если не нулевая комплектация, то и артикулы сделаем разные
+               $offer['barcode'] = $clone['barcode']."-".($key+1); 
+            }          
             unset($offer['xml_id']); //Очищаем лишние id
             unset($offer['id']);
             $offer->insert();

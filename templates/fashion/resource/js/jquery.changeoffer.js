@@ -9,7 +9,6 @@
             buyOneClick      : '.buyOneClick', //Класс купить в один клик
             unitBlock        : '.unitBlock',
             dataAttribute    : 'changeCost',
-            addToCartButtons : '.addToCart',
             offerProperty    : '.offerProperty',
             notAvaliable     : 'notAvaliable',   // Класс для нет в наличии
             hiddenClass      : 'hidden',

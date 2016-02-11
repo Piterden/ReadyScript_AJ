@@ -146,13 +146,13 @@ abstract class AbstractType
     }
     
     /**
-    * Возвращает значение свойства
+    * Возвращает значение свойства или значение по-умолчанию
     * 
     * @return mixed
     */
     public function get()
     {
-        return $this->value;
+        return $this->value !== null ? $this->value : $this->getDefault();
     }
     
     /**

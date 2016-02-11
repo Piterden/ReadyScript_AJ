@@ -16,6 +16,7 @@ class Cost extends \RS\Csv\Preset\AbstractPreset
     protected static
         $type_cost = array(),
         $type_cost_by_title = array(),
+        $default_currency = null, //Валюта по умолчанию
         $currencies = array(),
         $currencies_by_title = array();
         
@@ -30,28 +31,34 @@ class Cost extends \RS\Csv\Preset\AbstractPreset
     
     function __construct($options)
     {
-        parent::__construct($options);
-        $this->orm_object = new Orm\Typecost();
-        $this->id_field = 'id';
-                
-        $this->manylink_orm = new Orm\Xcost();
+        $this->array_field = 'excost';
         $this->manylink_foreign_id_field = 'cost_id';
         $this->manylink_id_field = 'product_id';
-        
+        $this->manylink_orm = new Orm\Xcost();
+        $this->orm_object = new Orm\Typecost();
+        $this->id_field = 'id';
         $this->link_id_field = 'id';
+        parent::__construct($options);
+        
         $this->link_preset_id = 0;
-        $this->array_field = 'excost';
         $this->loadCurrencies();
     }
     
+    /**
+    * Подгрузка сведений о валютах и ценах присутствующих в системе
+    * 
+    */
     function loadCurrencies()
     {
         $api = new \Catalog\Model\CurrencyApi();
+        $api->setOrder('`default` DESC');
         $list = $api->getList();
         foreach($list as $cost) {
             self::$currencies[$cost['id']] = $cost['title'];
         }
         self::$currencies_by_title = array_flip(self::$currencies);
+        //Валюта по умолчанию
+        self::$default_currency = current(self::$currencies);
         
         $type_api = new \Catalog\Model\CostApi();
         $list = $type_api->getList();
@@ -59,6 +66,16 @@ class Cost extends \RS\Csv\Preset\AbstractPreset
             self::$type_cost[$typecost['id']] = $typecost['title'];
         }
         self::$type_cost_by_title = array_flip(self::$type_cost);
+    }
+    
+    /**
+    * Устанавливает объект, связанный с данным набором колонок
+    * 
+    * @param mixed $orm_object
+    */
+    function setOrmObject(\RS\Orm\AbstractObject $orm_object)
+    {
+        $this->orm_object = $orm_object;
     }
 
     /**
@@ -81,6 +98,7 @@ class Cost extends \RS\Csv\Preset\AbstractPreset
         }
     }    
     
+    
     /**
     * Возвращает ассоциативный массив с одной строкой данных, где ключ - это id колонки, а значение - это содержимое ячейки
     * 
@@ -88,24 +106,42 @@ class Cost extends \RS\Csv\Preset\AbstractPreset
     * @return array
     */
     function getColumnsData($n)
-    {
+    {   
         $id = $this->schema->rows[$n][$this->link_id_field];
-        $line = '';
-        if (isset($this->row[$id])) {
-            $lines = array();
-            foreach($this->row[$id] as $n => $item) {
-                $curr = isset(self::$currencies[$item['cost_original_currency']]) ? ' '.self::$currencies[$item['cost_original_currency']] : '';
-                if (isset(self::$type_cost[$item['cost_id']])) {
-                    $cost_title = self::$type_cost[$item['cost_id']];
-                    $lines[$n] = "{$cost_title}:{$item['cost_original_val']}".$curr;
-                }
-            }
-            $line = implode($this->delimiter."\n", $lines);
-        }
-        return array(
-            $this->id.'-costlist' => $line
-        );        
         
+        $values_array = array();
+        if (isset($this->row[$id])) {
+            foreach($this->row[$id] as $n => $item) {
+                $currency = isset(self::$currencies[$item['cost_original_currency']]) ? ' '.self::$currencies[$item['cost_original_currency']] : '';
+                $values_array[$this->id.'-costlistname_'.$item['cost_id']]     = str_replace(".",",",$item['cost_original_val']);
+                $values_array[$this->id.'-costlistcurrency_'.$item['cost_id']] = $currency;
+            }
+        }
+        return $values_array;        
+        
+    }
+    
+    /**
+    * Возвращает колонки, которые добавляются текущим набором 
+    * 
+    * @return array
+    */
+    function getColumns() {        
+        $columns = array();         
+        if (!empty(self::$type_cost)){
+           foreach (self::$type_cost as $cost_id => $cost_title){
+               $columns[$this->id.'-costlistname_'.$cost_id] = array(
+                    'key'   => 'costname_'.$cost_id,
+                    'title' => t('Цена_'.$cost_title)
+               ); 
+               $columns[$this->id.'-costlistcurrency_'.$cost_id] = array(
+                    'key'   => 'costlistcurrency_'.$cost_id,
+                    'title' => t('Цена_'.$cost_title.'_Валюта')
+               ); 
+           } 
+        }
+        
+        return $columns;
     }
     
     /**
@@ -115,45 +151,30 @@ class Cost extends \RS\Csv\Preset\AbstractPreset
     */
     function importColumnsData()
     {
-        if (isset($this->row['costlist'])) {
-            $items = explode($this->delimiter, $this->row['costlist']);
+        if (isset($this->row)) {  
             $excost = array();            
-            foreach($items as $item) {
-                $item = trim($item);
-                if (preg_match('/^(.*?):([0-9.]+)(.*?)?$/', $item, $match)) {
-                    $cost = trim($match[1]);
-                    if (isset(self::$type_cost_by_title[$cost])) {
-                        $cost_id = self::$type_cost_by_title[$cost];                        
-                        $original_val = trim($match[2]);
-                        $currency_id = 0;
-                        $currency = trim($match[3]);
-                        if (!empty($match[3]) && isset(self::$currencies_by_title[$currency])) {
-                            $currency_id =  self::$currencies_by_title[$currency];
-                        }
-                        $excost[$cost_id] = array(
-                            'cost_original_val' => $original_val,
-                            'cost_original_currency' => $currency_id
-                        );
-                    }
+            foreach($this->row as $key_info=>$item) {
+                $item     = trim($item);                  //Значение ячейки
+                $key_info = explode("_",trim($key_info)); //Получим информацию из поля
+                $cost_id  = $key_info[1];
+                
+                switch($key_info[0]){  //Пройдёмся по типу поля 
+                    case "costname": //Название цены
+                            $excost[$cost_id]['cost_original_val'] = str_replace(",",".",$item);
+                            break;
+                    case "costlistcurrency": //Валюта цены
+                            
+                            if (!isset(self::$currencies_by_title[$item])){ //Если валюты такой нет
+                               $currency_id = 0; 
+                            }else{  //Если есть такая валюта
+                               $currency_id = self::$currencies_by_title[$item];
+                            }
+                            $excost[$cost_id]['cost_original_currency'] = $currency_id;
+                            break;
                 }
             }
+           
             $this->schema->getPreset($this->link_preset_id)->row[$this->array_field] = $excost;
         }
     }
-    
-    /**
-    * Возвращает колонки, которые добавляются текущим набором 
-    * 
-    * @return array
-    */
-    function getColumns() {
-        return array(
-            $this->id.'-costlist' => array(
-                'key' => 'costlist',
-                'title' => t('Цены')
-            )
-        );
-    }
-    
 }
-?>

@@ -41,7 +41,7 @@ class File
     */
     function load()
     {
-        if (!file_exists($this->filename)) throw new Exception("Не найдена картинка {$this->filename}");
+        if (!file_exists($this->filename)) throw new Exception("Не найдена картинка {$this->filename}", Exception::IMG_FILE_NOT_FOUND);
         $image_info = getimagesize($this->filename);
         
         $this->width = $image_info[0];

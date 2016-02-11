@@ -28,7 +28,7 @@ class Smarty_Resource_RS extends Smarty_Internal_Resource_File {
                 $source->name = \Setup::$SM_TEMPLATE_PATH.$theme.'/'.$match[2];
             } else {
                 //Если указано %ИМЯ_МОДУЛЯ%
-                $in_theme_path = \Setup::$SM_TEMPLATE_PATH.$theme.\Setup::$MODULE_WATCH_TPL.'/'.$match[1].'/'.$match[2];
+                $in_theme_path = \Setup::$SM_TEMPLATE_PATH.$theme.\Setup::$MODULE_WATCH_TPL.'/'.strtolower($match[1]).'/'.$match[2];
                 if (file_exists($in_theme_path)) {
                     $source->name = $in_theme_path;
                 } else {

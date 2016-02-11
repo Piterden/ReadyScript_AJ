@@ -11,5 +11,5 @@ class ModelApi extends \RS\Module\AbstractModel\EntityList
     {
         parent::__construct(new Orm\Model);
     }
-    
+
 }

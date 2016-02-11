@@ -3,7 +3,7 @@
 <div class="commentBlock">
     <a name="comments"></a>
     <div class="commentFormBlock{if !empty($error) || !$total} open{/if}">
-        {if $mod_config.need_authorize == 'Y'}
+        {if $mod_config.need_authorize == 'Y' && !$is_auth}
             <span class="needAuth">Чтобы оставить отзыв необходимо <a href="{$router->getUrl('users-front-auth', ['referer' => $referer])}" class="inDialog">авторизоваться</a></span>
         {else}
             <a href="#" class="button handler" onclick="$(this).closest('.commentFormBlock').toggleClass('open');return false;">Написать отзыв и оценить товар</a>

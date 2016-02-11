@@ -9,7 +9,8 @@
                 {moduleinsert name="\Catalog\Controller\Block\SearchLine" hideAutoComplete=0 searchLimit=5}
             </div>
             <div class="phoneBlock col-md-8">
-                <a href="tel:+78123859787" class="phone"><img src="{$THEME_IMG}/header-icon-phone.png" alt="Позвонить" title="Позвонить" class="phoneIcon"><span class="region">Санкт-Петербург</span><br><span class="number">+7 (812) 385-97-87</span></a>
+                <a href="tel:+78007707978" class="phone"><img src="{$THEME_IMG}/header-icon-phone.png" alt="Позвонить" title="Позвонить" class="phoneIcon"><span class="region">По России бесплатно</span><br><span class="number">8 800 770-79-78</span></a>
+                <a href="tel:+78123367978" class="phone"><img src="{$THEME_IMG}/header-icon-phone.png" alt="Позвонить" title="Позвонить" class="phoneIcon"><span class="region">Санкт-Петербург</span><br><span class="number">8 812 336-79-78</span></a>
             </div>
         </div>
     </header>
@@ -81,24 +82,25 @@
                 </div>
                 <div class="row payMethods">
                     <div class="text-center col-md-4 col-md-offset-2">
-                        <img src="{$THEME_IMG}/big-icon-pay.png" alt="Способ оплаты">
+                        <a href="{$router->getUrl('menu.item_4')}" data-toggle="tooltip" title="Оплата наличными" target="_blank" rel="nofollow"><img src="{$THEME_IMG}/paysystems-cash.png" alt="Оплата наличными" width="85" height="85"></a>
                     </div>
                     <div class="text-center col-md-4">
-                        <img src="{$THEME_IMG}/big-icon-pay.png" alt="Способ оплаты">
+                        <a href="{$router->getUrl('menu.item_4')}" data-toggle="tooltip" title="Оплата банковскими картами" target="_blank" rel="nofollow"><img src="{$THEME_IMG}/paysystems-cards.png" alt="Оплата банковскими картами" width="85" height="85"></a>
                     </div>
                     <div class="text-center col-md-4">
-                        <img src="{$THEME_IMG}/big-icon-pay.png" alt="Способ оплаты">
+                        <a href="{$router->getUrl('menu.item_4')}" data-toggle="tooltip" title="Оплата Qiwi кошельком" target="_blank" rel="nofollow"><img src="{$THEME_IMG}/paysystems-qw.png" alt="Оплата Qiwi кошельком" width="85" height="85"></a>
                     </div>
                     <div class="text-center col-md-4">
-                        <img src="{$THEME_IMG}/big-icon-pay.png" alt="Способ оплаты">
+                        <a href="{$router->getUrl('menu.item_4')}" data-toggle="tooltip" title="Оплата Яндекс Money" target="_blank" rel="nofollow"><img src="{$THEME_IMG}/paysystems-ym.png" alt="Оплата Яндекс Money" width="85" height="85"></a>
                     </div>
                     <div class="text-center col-md-4">
-                        <img src="{$THEME_IMG}/big-icon-pay.png" alt="Способ оплаты">
+                        <a href="{$router->getUrl('menu.item_4')}" data-toggle="tooltip" title="Оплата WebMoney" target="_blank" rel="nofollow"><img src="{$THEME_IMG}/paysystems-wm.png" alt="Оплата WebMoney" width="85" height="85"></a>
                     </div>
                 </div>
                 <div class="row banner">
                     <div class="col-md-24 text-center">
-                        <img src="" alt="Banner" width="728" height="90" style="border:1px solid grey">
+                        {* <img src="" alt="Banner" width="728" height="90" style="border:1px solid grey"> *}
+                        {moduleinsert name="\Banners\Controller\Block\Slider" indexTemplate='blocks/slider/slider.tpl' zone=4}
                     </div>
                 </div>
             </div>
@@ -115,10 +117,10 @@
                         </div>
                     </div>
                     <div class="item col-md-4">
-                        {moduleinsert name="\Menu\Controller\Block\Menu" root="info" indexTemplate="blocks/menu/footer_menu.tpl"}
+                        {moduleinsert name="\Menu\Controller\Block\Menu" indexTemplate='blocks/menu/footer_menu.tpl' root='12'}
                     </div>
                     <div class="item col-md-4">
-                        {moduleinsert name="\Menu\Controller\Block\Menu" root="pokupatelyam" indexTemplate="blocks/menu/footer_menu.tpl"}
+                        {moduleinsert name="\Menu\Controller\Block\Menu" indexTemplate='blocks/menu/footer_menu.tpl' root='42'}
                     </div>
                     <div class="item col-md-4">
                         {moduleinsert name="\Menu\Controller\Block\Menu" root="muzhskie-kurtki" indexTemplate="blocks/menu/footer_menu.tpl"}
@@ -129,15 +131,15 @@
                     <div class="item footerAddress col-md-4">
                         <div class="phones">
                             <div class="label">По России бесплатно:</div>
-                            <div class="phone"><a href="tel:+78004409731">+7 (800) 440-97-31</a></div>
+                            <div class="phone"><a href="tel:+78007707978">+7 (800) 770-79-78</a></div>
                             <div class="label">В Санкт-Петербурге:</div>
-                            <div class="phone"><a href="tel:+78123229731">+7 (812) 322-97-31</a></div>
+                            <div class="phone"><a href="tel:+78123367978">+7 (812) 336-79-78</a></div>
                         </div>
                         <div class="emails">
                             <div class="label">Общие вопросы:</div>
-                            <div class="email"><a href="mailto:info@auto-jack.com">info@auto-jack.com</a></div>
-                            <div class="label">Отдел маркетинга:</div>
-                            <div class="email"><a href="mailto:marketing@auto-jack.com">marketing@auto-jack.com</a></div>
+                            <div class="email"><script type="text/javascript">eval(unescape('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%69%6e%66%6f%40%73%68%6f%70%2d%77%65%61%72%2e%63%6f%6d%22%3e%69%6e%66%6f%40%73%68%6f%70%2d%77%65%61%72%2e%63%6f%6d%3c%2f%61%3e%27%29%3b'))</script></div>
+                            <!-- <div class="label">Отдел маркетинга:</div>
+                            <div class="email"><a href="mailto:marketing@auto-jack.com">marketing@auto-jack.com</a></div> -->
                         </div>
                         <div class="social">
                             <a href="http://vk.com/autojack" target="_blank">
@@ -145,8 +147,8 @@
                                 <img class="hover" src="{$THEME_IMG}/footer-icon-vkontakte-hover.png" height="33" width="33" alt="Группа AutoJack и LimoLady в Vkontakte">
                             </a>
                             <a href="http://www.facebook.com/autojack.official" target="_blank">
-                                <img src="{$THEME_IMG}/footer-icon-facebook.png" height="33" width="33" alt="Группа AutoJack и LimoLady в FaceBook">
-                                <img class="hover" src="{$THEME_IMG}/footer-icon-facebook-hover.png" height="33" width="33" alt="Группа AutoJack и LimoLady в FaceBook">
+                                <img src="{$THEME_IMG}/footer-icon-facebook.png" height="33" width="33" alt="Группа AutoJack и LimoLady в FaceBook" title="Группа AutoJack и LimoLady в FaceBook">
+                                <img class="hover" src="{$THEME_IMG}/footer-icon-facebook-hover.png" height="33" width="33" alt="Группа AutoJack и LimoLady в FaceBook" title="Группа AutoJack и LimoLady в FaceBook">
                             </a>
                             <a href="http://www.youtube.com/user/autojackandlimolady" target="_blank">
                                 <img src="{$THEME_IMG}/footer-icon-youtube.png" height="33" width="33" alt="Канал AutoJack и LimoLady на YouTube">

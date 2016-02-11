@@ -51,8 +51,8 @@ class Sheepla extends AbstractType
                 Для работы доставки необходимо указывать Вес у товара в граммах.<br/> 
                 Укажите Вес по умолчанию в <b>"Веб-сайт" &rarr; "Настройка модулей" &rarr; "Каталог товаров" &rarr; "Вес одного товара по-умолчанию"</b><br/>
                 <b>Минимальный вес для расчётов - 100 грамм.</b><br/><br/>
-                Для работы Sheepla также необходимо в настройках источника доставок указать опцию &quote;
-Использовать правила расчета стоимости доставки&quote; и настроить правила используя автоматический(динамический) подсчёт в настройках аккаунта на Sheepla 
+                Для работы Sheepla также необходимо в настройках источника доставок указать опцию &quot;
+Использовать правила расчета стоимости доставки&quot; и настроить правила используя автоматический(динамический) подсчёт в настройках аккаунта на Sheepla 
             </div>
         </div>');
     }
@@ -95,12 +95,12 @@ class Sheepla extends AbstractType
                 'list' => array(array('\Catalog\Model\PropertyApi','staticSelectList'),true),
             )),
             'length' => new Type\Integer(array(
-                'description' => t('Свойство со значением длины изделия'),
+                'description' => t('Свойство со значением длинны изделия'),
                 'list' => array(array('\Catalog\Model\PropertyApi','staticSelectList'),true),
             )),
             'language' => new Type\Integer(array(
                 'description' => t('Язык интефейса для виджетов'),
-                'ListFromArray' => array($thstaticis->getLanguages()),
+                'ListFromArray' => array($this->getLanguages()),
             )),
             'admin_api' => new Type\String(array(
                 'description' => t('Ключ API администратора'),
@@ -120,8 +120,8 @@ class Sheepla extends AbstractType
             )),
             'timeout' => new Type\Integer(array(
                 'description' => t('Время ожидания ответа Sheepla, сек'),
-                'hint' => t('Иногда запросы к Sheepla идут очень долго,<br/> чтобы не дожидатся ответа используется это значение.<br/>Рекоммендуемое значение 2 сек.'),
-                'default' => 2,
+                'hint' => t('Иногда запросы к Sheepla идут очень долго,<br/> чтобы не дожидатся ответа используется это значение.<br/>Рекоммендуемое значение 10 сек.'),
+                'default' => 10,
             )),  
         ));
         return new \RS\Orm\FormObject($properties);
@@ -184,7 +184,7 @@ class Sheepla extends AbstractType
         $delivery  = $order->getDelivery(); 
         
         //Получим данные по стоимостям доставок
-        $cache_key = md5($order['order_num'].$delivery['id']);
+          $cache_key = md5($order['order_num'].$delivery['id']);
         if (!isset($this->cache_api_requests[$cache_key])){
            $sxml = $this->requestGetDeliveryCost($order, $address);
         }else{
@@ -320,7 +320,7 @@ class Sheepla extends AbstractType
                 'header' => "Content-Type: text/xml; charset=utf-8",
                 'content' => $xml_request,
                 'content-length' => mb_strlen($xml_request),
-                'timeout' => $this->getOption('timeout',2) ? $this->getOption('timeout',2) : 2,
+                'timeout' => $this->getOption('timeout',10) ? $this->getOption('timeout',10) : 10,
                 )));
             if (mb_strlen($xml_request) > 0)
             {

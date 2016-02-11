@@ -2,7 +2,7 @@
 {if $products}
 <section class="topProducts pl{$_block_id}">
         <div class="titleWrap col-sm-24 text-center">
-            <h3>{$dir.name}</h3>            
+            <h3>{$dir.name}</h3>
         </div>
         <div class="clearfix"></div>
         <div class="productWrap">
@@ -12,9 +12,9 @@
                 <div class="productItemWrap">
                     {static_call var=added_ids callback=['\Wishlist\Model\WishApi', 'getWishedProductIds'] params=[$current_user.id]}
                     <div class="wishWrap">
-                        {moduleinsert 
-                            name="\Wishlist\Controller\Block\WishActions" 
-                            product_id=$product.id 
+                        {moduleinsert
+                            name="\Wishlist\Controller\Block\WishActions"
+                            product_id=$product.id
                         }
                     </div>
                     <div class="toCartWrap">
@@ -46,8 +46,17 @@
                                         {$product->getCost(2)} {$product->getCurrency()}
                                     {/if}
                                 </div>
+                                <div class="brand">AutoJack</div>
                                 <h3 class="title">{$product.title}</h3>
-                                <div class="desc">{$product.short_description}</div>
+                                <!-- <div class="desc">{$product.short_description}</div> -->
+                                <div class="stars">
+                                    <i class="fa fa-star-o act"></i>
+                                    <i class="fa fa-star-o act"></i>
+                                    <i class="fa fa-star-o act"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                    (4)
+                                </div>
                             </div>
                         </div>
                     </a>
@@ -61,7 +70,7 @@
                     {/if}
                     {/foreach}
                 </span>
-                
+
                 <a href="{$product->getUrl()}" class="info">
                     <h3>{$product.title}</h3>
                     <p class="group">

@@ -5,7 +5,8 @@
     <div class="userType">
         <input type="radio" id="type-user" name="user_type" value="person" {if $order.user_type=='person'}checked{/if}><label for="type-user">Частное лицо</label>
         <input type="radio" id="type-company" name="user_type" value="company" {if $order.user_type=='company'}checked{/if}><label for="type-company">Компания</label>
-        <input type="radio" id="type-account" name="user_type" value="user" {if $order.user_type=='user'}checked{/if}><label for="type-account">Я регистрировался раннее</label>
+        <input type="radio" id="type-noregister" name="user_type" value="noregister" {if $order.user_type=='noregister'}checked{/if}><label for="type-noregister">Без регистрации</label>
+        <input type="radio" id="type-account" name="user_type" value="user" {if $order.user_type=='user'}checked{/if}><label for="type-account">Я регистрировался ранее</label>
     </div>
     {/if}    
     
@@ -56,73 +57,93 @@
             <a href="{urlmake logout=true}" class="link">Сменить пользователя</a>
         </div>
     {else}
-        <div class="organization">
-            <div class="formLine">
-                <label class="fieldName">Наименование компании</label>
-                {$order->getPropertyView('reg_company')}
-                <div class="help">Например: ООО Аудиторская фирма "Аудитор"</div>
+        <div class="userRegister">
+            <div class="organization">
+                <div class="formLine">
+                    <label class="fieldName">Наименование компании</label>
+                    {$order->getPropertyView('reg_company')}
+                    <div class="help">Например: ООО Аудиторская фирма "Аудитор"</div>
+                </div>
+                <div class="formLine">
+                    <label class="fieldName">ИНН</label>
+                    {$order->getPropertyView('reg_company_inn')}
+                    <div class="help">10 или 12 цифр</div>
+                </div>
             </div>
             <div class="formLine">
-                <label class="fieldName">ИНН</label>
-                {$order->getPropertyView('reg_company_inn')}
-                <div class="help">10 или 12 цифр</div>
+                <label class="fieldName">Имя</label>
+                {$order->getPropertyView('reg_name')}
+                <div class="help">Имя покупателя, владельца аккаунта</div>
             </div>
-        </div>
-        <div class="formLine">
-            <label class="fieldName">Имя</label>
-            {$order->getPropertyView('reg_name')}
-            <div class="help">Имя покупателя, владельца аккаунта</div>
-        </div>
-        <div class="formLine">
-            <label class="fieldName">Фамилия</label>
-            {$order->getPropertyView('reg_surname')}
-            <div class="help">Фамилия покупателя, владельца аккаунта</div>
-        </div>
-        <div class="formLine">
-            <label class="fieldName">Отчество</label>
-            {$order->getPropertyView('reg_midname')}
-        </div>        
-        <div class="formLine">
-            <label class="fieldName">Телефон</label>
-            {$order->getPropertyView('reg_phone')}
-            <div class="help">В формате: +7(123)9876543</div>
-        </div>
-        <div class="formLine">
-            <label class="fieldName">e-mail</label>
-            {$order->getPropertyView('reg_e_mail')}
+            <div class="formLine">
+                <label class="fieldName">Фамилия</label>
+                {$order->getPropertyView('reg_surname')}
+                <div class="help">Фамилия покупателя, владельца аккаунта</div>
+            </div>
+            <div class="formLine">
+                <label class="fieldName">Отчество</label>
+                {$order->getPropertyView('reg_midname')}
+            </div>        
+            <div class="formLine">
+                <label class="fieldName">Телефон</label>
+                {$order->getPropertyView('reg_phone')}
+                <div class="help">В формате: +7(123)9876543</div>
+            </div>
+            <div class="formLine">
+                <label class="fieldName">e-mail</label>
+                {$order->getPropertyView('reg_e_mail')}
+            </div>
+            
+            <div class="formLine">
+                <label class="fieldName">Пароль</label>
+                <input type="checkbox" name="reg_autologin" {if $order.reg_autologin}checked{/if} value="1" id="reg-autologin">
+                <label for="reg-autologin">Получить автоматически на e-mail</label>
+                <div class="help">Нужен для проверки статуса заказа, обращения в поддержку, входа в кабинет</div>                    
+                <div id="manual-login" {if $order.reg_autologin}style="display:none"{/if}>
+                    <div class="inline">
+                        {$order.__reg_openpass->formView(['form'])}
+                        <div class="help">Пароль</div>
+                    </div>
+                    <div class="inline">
+                        {$order.__reg_pass2->formView()}
+                        <div class="help">Повтор пароля</div>
+                    </div>
+                    
+                    <div class="formFieldError">{$order->getErrorsByForm('reg_openpass', ', ')}</div>
+                </div>                
+            </div>
+            
+            {foreach $reg_userfields->getStructure() as $fld}
+                <div class="formLine">
+                <label class="fieldName">{$fld.title}</label>
+                    {$reg_userfields->getForm($fld.alias)}
+                    {$errname=$reg_userfields->getErrorForm($fld.alias)}
+                    {$error=$order->getErrorsByForm($errname, ', ')}
+                    {if !empty($error)}
+                        <span class="formFieldError">{$error}</span>
+                    {/if}
+                </div>
+            {/foreach}
+            {/if}
         </div>
         
-        <div class="formLine">
-            <label class="fieldName">Пароль</label>
-            <input type="checkbox" name="reg_autologin" {if $order.reg_autologin}checked{/if} value="1" id="reg-autologin">
-            <label for="reg-autologin">Получить автоматически на e-mail</label>
-            <div class="help">Нужен для проверки статуса заказа, обращения в поддержку, входа в кабинет</div>                    
-            <div id="manual-login" {if $order.reg_autologin}style="display:none"{/if}>
-                <div class="inline">
-                    {$order.__reg_openpass->formView(['form'])}
-                    <div class="help">Пароль</div>
-                </div>
-                <div class="inline">
-                    {$order.__reg_pass2->formView()}
-                    <div class="help">Повтор пароля</div>
-                </div>
-                
-                <div class="formFieldError">{$order->getErrorsByForm('reg_openpass', ', ')}</div>
-            </div>                
+        <div class="userWithoutRegister">
+           <div class="formLine">
+                <label class="fieldName">Ф.И.О.</label>
+                {$order->getPropertyView('user_fio')}
+                <div class="help">Фамилия, Имя и Отчество покупателя, владельца аккаунта</div>
+           </div>
+           <div class="formLine">
+                <label class="fieldName">E-mail</label>
+                {$order->getPropertyView('user_email')}
+                <div class="help">E-mail покупателя, владельца аккаунта</div>
+           </div>
+           <div class="formLine">
+                <label class="fieldName">Телефон</label>
+                {$order->getPropertyView('user_phone')}
+                <div class="help">В формате: +7(123)9876543</div>
+           </div>  
         </div>
-        
-        {foreach $reg_userfields->getStructure() as $fld}
-            <div class="formLine">
-            <label class="fieldName">{$fld.title}</label>
-                {$reg_userfields->getForm($fld.alias)}
-                {$errname=$reg_userfields->getErrorForm($fld.alias)}
-                {$error=$order->getErrorsByForm($errname, ', ')}
-                {if !empty($error)}
-                    <span class="formFieldError">{$error}</span>
-                {/if}
-            </div>
-        {/foreach}
-        {/if}
 
         <div class="address">
             <h2>Адрес</h2>

@@ -233,16 +233,8 @@
             <div class="col-sm-12 col-sm-offset-5 newAddress{if $order.use_addr!=0} hide{/if}">
                 <div class="themeTable">
                     <div class="tableRow">
-                        <div class="key">
-                            <label class="fieldName">Страна</label>
-                        </div>
-                        {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'getSdRegions'] params=[$order]}
-                        {assign var=region_tools_url value=$router->getUrl('shop-front-regiontools', ["Act" => 'listByParent'])}
-                        <div class="value">
-                            {$order->getPropertyView('addr_country_id', ['data-region-url' => $region_tools_url])}
-                        </div>
-                    </div>
-                    <div class="tableRow">
+	                    {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'getSdRegions'] params=[$order]}
+                        <input type="hidden" name="addr_country_id" value="1">
                         <div class="key district">
                             <label class="fieldName">Регион</label>
                         </div>
@@ -254,7 +246,7 @@
                             </select>
                             <input id="sd_region_name" type="hidden" name="order_extra[region_to]" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
                         </div>
-                        <!-- <div class="key district">
+                        {*<div class="key district">
                             <label class="fieldName">Область/край</label>
                         </div>
                         <div class="value district">
@@ -266,7 +258,7 @@
                             <span {if count($regcount) > 0}style="display:none"{/if} id="region-input">
                                 {$order.__addr_region->formView()}
                             </span>
-                        </div> -->
+                        </div>*}
                         <div class="key index">
                             <label class="fieldName">Индекс</label>
                         </div>
@@ -309,20 +301,25 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-sm-offset-5 additional{if $order.use_addr != -1} hide{/if}">
+            {if !$is_auth}
+	            <div class="col-sm-12 col-sm-offset-5 additional`">
+	                <div class="themeTable">
+	                    {if $order.__code->isEnabled()}
+	                    <div class="tableRow captcha">
+	                        <div class="key">
+	                            <label class="fieldName">Защитный код</label>
+	                        </div>
+	                        <div class="value">
+	                            {$order->getPropertyView('code')}
+	                            <div class="help">Необходим для защиты от спам роботов</div>
+	                        </div>
+	                    </div>
+	                    {/if}
+	                </div>
+	            </div>
+            {/if}
+            <div class="col-sm-12 col-sm-offset-5 additional`">
                 <div class="themeTable">
-                    {if $order.__code->isEnabled()}
-                    <div class="tableRow captcha">
-                        <div class="key">
-                            <label class="fieldName">Защитный код</label>
-                        </div>
-                        <div class="value">
-                            {$order->getPropertyView('code')}
-                            <div class="help">Необходим для защиты от спам роботов</div>
-                        </div>
-                    </div>
-                    {/if}
-
                     {if $conf_userfields->notEmpty()}
                     <div class="additional">
                         <h2>Дополнительные сведения</h2>

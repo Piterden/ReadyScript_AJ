@@ -169,19 +169,21 @@ class Offer extends \RS\Csv\AbstractSchema
     {          
         //Обновляем сведения о ценах основной комплектации у товара
         if ($preset->row['product_id'] && empty($preset->row['sortn'])) {
-            $pricedata = $preset->row['pricedata_arr'];
-            if (isset($pricedata['price'])) {
-                $excost = array();                
-                foreach($pricedata['price'] as $cost_id => $data) {
-                    $excost[$cost_id] = array(
-                        'cost_original_val' => $data['original_value'],
-                        'cost_original_currency' => $data['unit']
-                    );
+            if (isset($preset->row['pricedata_arr'])) {
+                $pricedata = $preset->row['pricedata_arr'];
+                if (isset($pricedata['price'])) {
+                    $excost = array();                
+                    foreach($pricedata['price'] as $cost_id => $data) {
+                        $excost[$cost_id] = array(
+                            'cost_original_val' => $data['original_value'],
+                            'cost_original_currency' => $data['unit']
+                        );
+                    }
+                    
+                    $product = new \Catalog\Model\Orm\Product($preset->row['product_id']);
+                    $product['excost'] = $excost;
+                    $product->update();
                 }
-                
-                $product = new \Catalog\Model\Orm\Product($preset->row['product_id']);
-                $product['excost'] = $excost;
-                $product->update();
             }
         }
     }

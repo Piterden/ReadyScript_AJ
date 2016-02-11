@@ -9,51 +9,48 @@
 namespace RS\Orm;
 
 /**
- * Базовый абстрактный класс объектов ORM
- */
-abstract class AbstractObject implements \ArrayAccess, \Iterator
+* Базовый абстрактный класс объектов ORM
+*/
+abstract class AbstractObject extends \RS\Behavior\AcceptBehavior implements \ArrayAccess, \Iterator
 {
-
     const
-            INSERT_FLAG = 'insert',
-            UPDATE_FLAG = 'update',
-            REPLACE_FLAG = 'replace',
-            INDEX_PRIMARY = 'primary key',
-            INDEX_UNIQUE = 'unique',
-            INDEX_KEY = 'index',
+            INSERT_FLAG    = 'insert',
+            UPDATE_FLAG    = 'update',
+            REPLACE_FLAG   = 'replace',
+            INDEX_PRIMARY  = 'primary key',
+            INDEX_UNIQUE   = 'unique',
+            INDEX_KEY      = 'index',
             INDEX_FULLTEXT = 'fulltext';
 
     protected
             $_values = array(), //Значения свойств
-            $_self_class,
-            $_local_id;                                //внутренний ID объекта
+            $_self_class,       //имя класса ORM объекта
+            $_local_id;         //внутренний ID объекта
+    
     //Невидимые для print_r параметры
     protected static
             $db = DB_NAME, //Имя базы данных
             $table = null, //Имя таблицы
 
             $iterator = 0,
+            $init_default_method = '_initDefaults', //Имя метода, который вызывается во время создания объекта
             $local = array(),
             $default_local_parameters = array(
-                'modified' => array(), //Измененные свойства
-                'properties' => null, //Свойства объекта
-                'errorlist' => array(), //Список ошибок в формах
-                'formerror' => array(), //Список форм с ошибками
+                'modified'        => array(), //Измененные свойства
+                'properties'      => null,    //Свойства объекта
+                'errorlist'       => array(), //Список ошибок в формах
+                'formerror'       => array(), //Список форм с ошибками
                 'non_form_errors' => array(), //Список ошибок не в формах
-                'write_bit' => ACCESS_BIT_WRITE, //Номер бита, который следует проверять при вызове CheckData (вызывается перед записью)
-                'checkRights' => true, //Проверять права на запись во время проверки данных (CheckData)
-                'escape_fields' => array(), //Перевести в entity следующие поля
-                'escape_all' => false                   //Перевести в entity все значения при записи            
+                'write_bit'       => ACCESS_BIT_WRITE, //Номер бита, который следует проверять при вызове CheckData (вызывается перед записью)
+                'checkRights'     => true,    //Проверять права на запись во время проверки данных (CheckData)
+                'escape_fields'   => array(), //Перевести в entity следующие поля
+                'escape_all'      => false    //Перевести в entity все значения при записи            
                     ),
             $class = array(),
             $default_class_parameters = array(
-                'defaultValues' => array(),
-                'initDefaultsMethod' => '_initDefaults', //Имя метода, который вызывается во время создания объекта
                 'property_template' => '%system%/coreobject/prop_form.tpl',
                 'properties' => null, //Свойства объекта
                 'indexes' => array(),
-                'storage_class' => '\RS\Orm\Storage\Db', //Имя класса хранилища, обрабатывающий чтение, запись, обновление, удаление объекта
-                'storage_options' => array(), //Параметры хранилища
     );
 
     public function __construct()
@@ -61,40 +58,49 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
         $this->_self_class = get_class($this);
         $this->_local_id = self::$iterator++;
         self::$local[$this->_local_id] = self::$default_local_parameters;
-
-        if (!$this->issetClassParameter()) {
-            self::$class[$this->_self_class] = self::$default_class_parameters;
-            $newIterator = new PropertyIterator();
-            $this->setClassParameter('properties', $newIterator);
-            $this->setLocalParameter('properties', $newIterator);
-            $this->_init();
-            $this->afterInit();
-        } else {
-            self::$local[$this->_local_id]['properties'] = self::$class[$this->_self_class]['properties'];
-        }
-        $before_values = $this->_values + self::$class[$this->_self_class]['defaultValues'];
-        $this->{self::$class[$this->_self_class]['initDefaultsMethod']}();
-        $this->_values = $before_values + $this->_values; //исправляем bug/feature, когда __set вызывается перед __construct (mysql_fetch_object)
+        $this->{static::$init_default_method}();        
     }
 
     function __destruct()
     {
         unset(self::$local[$this->_local_id]);
+    }    
+    
+    /**
+    * Инициирует поля ORM Объекта
+    * @return void
+    */
+    protected function initProperties()
+    {
+        if (!$this->issetClassParameter()) {
+            self::$class[$this->_self_class] = self::$default_class_parameters;
+            $newIterator = new PropertyIterator();
+            $this->setClassParameter('properties', $newIterator);
+            if (!isset(self::$local[$this->_local_id]['properties'])) {
+                $this->setLocalParameter('properties', $newIterator);
+            }
+            $this->_init();
+            $this->afterInit();
+        } 
+        else {
+            if (!isset(self::$local[$this->_local_id]['properties'])) {
+                self::$local[$this->_local_id]['properties'] = self::$class[$this->_self_class]['properties'];
+            }
+        }
     }
 
     /**
-     * В данном методе должны быть заданы поля объекта. Вызывается один раз для одного класса объектов.
-     */
+    * В данном методе должны быть заданы поля объекта. 
+    * Вызывается один раз для одного класса объектов в момент первого обращения к свойству
+    */
     abstract protected function _init();
 
     /**
-     * Внутри данной функции нужно объявлять значения свойств по умолчанию.
-     * Вызывается после конструктора.
-     */
+    * Внутри данной функции нужно объявлять значения свойств по умолчанию.
+    * Вызывается после конструктора.
+    */
     protected function _initDefaults()
-    {
-        
-    }
+    {}
 
     /**
      * Производит внутреннюю инициализацию объекта. Вызывается один раз для одного имени класса
@@ -114,18 +120,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
             $default_values = array();
             foreach ($properties as $property => $value) {
                 $properties[$property]->setName($property);
-                
-                //Запоминаем значения по-умолчанию у свойств
-                $default_value = $value->getDefault();
-                if ($default_value !== null) {
-                    $default_values[$property] = $default_value;
-                }
             }
-            self::$class[$this->_self_class]['defaultValues'] = $default_values;
-        }
-
-        if (self::$class[$this->_self_class]['storage_class'] == '\RS\Orm\Storage\Db' && static::$table === null) {
-            throw new Exception(t('Не указано имя таблицы для ORM-объекта') . ' ' . $this->_self_class);
         }
     }
 
@@ -145,6 +140,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     }
 
     /**
+    * @deprecated
      * Возвращает параметры, заданные для всех объектов данного класса
      * 
      * @param string $key имя параметра
@@ -155,6 +151,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     }
 
     /**
+     * @deprecated
      * Устанавливает параметр, заданные для всех объектов данного класса
      * 
      * @param string | array $key имя параметра или ассоциативный массив параметров и значений
@@ -170,6 +167,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     }
 
     /**
+     * @deprecated
      * Возвращает true, если задан $key и параметр $key существует.
      * Возвращает true, если не задан $key и задан хотя бы один параметр для даннго класса
      * 
@@ -283,6 +281,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     public function offsetExists($offset)
     {
         if ($offset{0} == '_' && $offset{1} == '_') {
+            $this->initProperties();
             return isset(self::$local[$this->_local_id]['properties'][substr($offset, 2)]);
         }
         return isset($this->_values[$offset]);
@@ -355,9 +354,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      */
     protected function getStorageInstance()
     {
-        $storage_class = $this->getClassParameter('storage_class');
-        $storage_options = $this->getParameter('storage_options');
-        return new $storage_class($this, $storage_options);
+        return new \RS\Orm\Storage\Db($this);
     }
 
     /**
@@ -537,15 +534,21 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      * @param string $remove_prefix - префикс, который будет удален перед ключем
      * @return AbstractObject
      */
-    public function getFromArray(array $data, $remove_prefix = null)
+    public function getFromArray(array $data, $remove_prefix = null, $mark_modify = true)
     {
         foreach ($data as $key => $value) {
             $propname = ($remove_prefix !== null) ? str_replace($remove_prefix, '', $key) : $key;
             $this->_values[$propname] = $value;
-            self::$local[$this->_local_id]['modified'][$propname] = true;
+            if ($mark_modify) {
+                self::$local[$this->_local_id]['modified'][$propname] = true;
+            }
         }
 
         $this->afterObjectLoad();
+        \RS\Event\Manager::fire('orm.afterload.' . $this->getShortAlias(), array(
+            'orm' => $this,
+        ));
+        
         return $this;
     }
 
@@ -579,6 +582,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      */
     public function getPropertyIterator()
     {
+        $this->initProperties();
         return self::$local[$this->_local_id]['properties'];
     }
 
@@ -603,6 +607,9 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      */
     protected function _tableName($with_quotes = true)
     {
+        if (!isset(static::$table)) {
+            throw new \RS\Exception(t('Не задано имя таблицы в ORM объекте %0', $this->_self_class));
+        }
         $table = \Setup::$DB_TABLE_PREFIX . static::$table;
         return ($with_quotes) ? "`$table`" : $table;
     }
@@ -626,8 +633,13 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     }
 
     /**
-     * Возвращает имя свойства, которое помечено как первичный ключ
-     * @return string | false - false в случае отсутствия такого свойства
+     * Возвращает имя свойства, которое помечено как первичный ключ.
+     * Для совместимости с предыдущими версиями, метод ищет первичный ключ в свойствах. 
+     * 
+     * С целью увеличения производительности необходимо у наследников реализовать явное
+     * возвращение свойств, отвечающих за первичный ключ.
+     * 
+     * @return string | array | false - false в случае отсутствия такого свойства
      */
     public function getPrimaryKeyProperty()
     {
@@ -645,6 +657,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      */
     final public function getProperties()
     {
+        $this->initProperties();
         $properties = self::$local[$this->_local_id]['properties'];
         $properties->setValues($this->_values);
         return $properties;
@@ -656,6 +669,8 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      */
     function getProp($offset)
     {
+        $this->initProperties();
+        
         $properties = self::$local[$this->_local_id]['properties'];
         $value = isset($this->_values[$offset]) ? $this->_values[$offset] : null;
 
@@ -1130,10 +1145,14 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     /**
      * Добавляет описание индекса для данного объекта
      * 
-     * @param array | string $fields
-     * @param string $type
-     * @param string $name
-     * @param string $using
+     * @param array | string $fields - поля, которые должны войти в индекс
+     * @param string $type - тип индекса. Используйте константы:
+     *    self::INDEX_PRIMARY - первичный ключ
+     *    self::INDEX_UNIQUE - уникальный индекс
+     *    self::INDEX_KEY - неуникальный индекс
+     *    self::INDEX_FULLTEXT - полнотекстовый индекс
+     * @param string $name - идентификатор индекса
+     * @param string $using - тип индекса BTREE | HASH
      * @return AbstractObject
      */
     function addIndex($fields, $type = self::INDEX_KEY, $name = null, $using = null)
@@ -1313,41 +1332,18 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
     }
 
     /**
-     * Устанавливает действия, которые будут отображены в контекстном меню в режиме отладки сайта, 
-     * при клике правой кнопко мыши на данный объект.
-     * 
-     * @param array of \RS\Debug\Action\AbstractAction $actions
-     * @param bool $local - если true, то список будет применен только для текущего объекта,иначе для всех объектов этого класса
-     * @return void
-     */
+    * @deprecated
+    * Необходимо реализовывать метод getDebugActions()
+    */
     public function addDebugActions(array $actions, $local = false)
-    {
-        foreach ($actions as $action) {
-            $this->addDebugAction($action, $local);
-        }
-    }
+    {}
 
     /**
-     * Добавляет действие одно действие, которое будет отображено в контекстном меню в режиме отладки сайта, 
-     * при клике правой кнопкой мыши на данный объект.
-     * 
-     * @param \RS\Debug\Action\AbstractAction $action - объект действия
-     * @param bool $local - если true, то список будет применен только для текущего объекта,иначе для всех объектов этого класса
-     * @return void
-     */
+    * @deprecated
+    * Необходимо реализовывать метод getDebugActions()
+    */
     public function addDebugAction(\RS\Debug\Action\AbstractAction $action, $local = false)
-    {
-        if ($local) {
-            $base = &self::$local[$this->_local_id];
-        } else {
-            $base = &self::$class[$this->_self_class];
-        }
-
-        if (!isset($base['debug_actions'])) {
-            $base['debug_actions'] = array();
-        }
-        $base['debug_actions'][] = $action;
-    }
+    {}
 
     /**
      * Возвращает строку с необходимыми атрибутами блочного элемента для вставки в html
@@ -1355,13 +1351,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      */
     public function getDebugAttributes()
     {
-        if (isset(self::$local[$this->_local_id]['debug_actions'])) {
-            $actions = self::$local[$this->_local_id]['debug_actions'];
-        }
-        if (isset(self::$class[$this->_self_class]['debug_actions'])) {
-            $actions = self::$class[$this->_self_class]['debug_actions'];
-        }
-        if (isset($actions)) {
+        if ($actions = $this->getDebugActions()) {
             return \RS\Debug\Group::getContextAttributes($actions, $this);
         }
     }
@@ -1403,9 +1393,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      * @return null | false Если возвращено false, то сохранение не произойдет
      */
     public function beforeWrite($save_flag)
-    {
-        
-    }
+    {}
 
     /**
      * Вызывается после сохранения объекта в storage
@@ -1414,9 +1402,7 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      * @return void
      */
     public function afterWrite($save_flag)
-    {
-        
-    }
+    {}
 
     /**
      * Вызывается после загрузки объекта
@@ -1424,8 +1410,16 @@ abstract class AbstractObject implements \ArrayAccess, \Iterator
      * @return void
      */
     public function afterObjectLoad()
+    {}
+    
+    /**
+    * Возвращает отладочные действия, которые можно произвести с объектом
+    * 
+    * @return RS\Debug\Action[]
+    */
+    public function getDebugActions()
     {
-        
+        return array();
     }
 
     /**

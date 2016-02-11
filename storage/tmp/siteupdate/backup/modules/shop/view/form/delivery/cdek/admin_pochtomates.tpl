@@ -26,7 +26,7 @@
                 {$value=json_decode(htmlspecialchars_decode($delivery_extra.value), true)}
                 <select id="cdekSelect" name="delivery_extra[value]" class="cdekSelect">
                     {foreach $pochtomates as $pochtomat}
-                        <option {if $value && ($value.code==$pochtomat.Code)}selected="selected"{/if} value='{literal}{{/literal}"code":"{$pochtomat['Code']}","cityCode":"{$pochtomat['CityCode']}","tariffId":"{$cdek->getTariffId()}"{if isset($pochtomat['cashOnDelivery'])},"cashOnDelivery":"{$pochtomat['cashOnDelivery']}"{/if}}'>{$pochtomat['City']}, {$pochtomat['Address']}</option>
+                        <option {if $value && ($value.code==$pochtomat.Code)}selected="selected"{/if} value='{literal}{{/literal}"code":"{$pochtomat['Code']}","addressInfo":"{$pochtomat['City']}, {$pochtomat['Address']}","cityCode":"{$pochtomat['CityCode']}","tariffId":"{$cdek->getTariffId()}"{if isset($pochtomat['cashOnDelivery'])},"cashOnDelivery":"{$pochtomat['cashOnDelivery']}"{/if}}'>{$pochtomat['City']}, {$pochtomat['Address']}</option>
                     {/foreach}
                 </select>
                 <div id="deliveryInsertInputs">

@@ -7,6 +7,9 @@
 */
 namespace RS\Orm\Storage;
 
+/**
+* Исключения, связанные с хранилищем ORM объектов
+*/
 class Exception extends \RS\Exception
 {}
 

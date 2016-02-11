@@ -2,7 +2,7 @@
 namespace Imldelivery\Controller\Front;
 
 /**
-* Фронт контроллер
+* AJAX Фронт контроллер
 */
 class AjaxCtrl extends \RS\Controller\Front
 {
@@ -12,9 +12,8 @@ class AjaxCtrl extends \RS\Controller\Front
 
     function init()
     {
-        //$this->order = \Shop\Model\Orm\Order::currentOrder();
         $this->iml = new \Imldelivery\Model\DeliveryType\Iml();
-    }   
+    }
 
     function actionIndex()
     {
@@ -22,7 +21,6 @@ class AjaxCtrl extends \RS\Controller\Front
 	        $action = $this->url->request('action', TYPE_STRING, '');
 	        $params = $this->url->request('params', TYPE_ARRAY, '');
 	        $output = $this->iml->$action($params);
-	        //$this->result->addSection('params', $params);
 	        return $this->result->addSection($action, $output);
         }
     }

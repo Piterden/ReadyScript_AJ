@@ -41,6 +41,7 @@ class WareHouseCtrl extends \RS\Controller\Admin\Crud
                     new TableType\String('alias', t('URL имя склада'), array('href' => $this->router->getAdminPattern('edit', array(':id' => '@id')), 'LinkAttr' => array('class' => 'crud-edit'))),
                     new TableType\StrYesno('default_house', t('Слад по умолчанию?')),
                     new TableType\StrYesno('public', t('Публичный')),
+                    new TableType\StrYesno('checkout_public', t('Пункт самовывоза')),
                     new TableType\String('id', '№', array('TdAttr' => array('class' => 'cell-sgray'))),
                     new TableType\Actions('id', array(
                         new TableType\Action\Edit($this->router->getAdminPattern('edit', array(':id' => '~field~'))),

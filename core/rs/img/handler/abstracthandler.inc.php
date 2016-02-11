@@ -66,8 +66,13 @@ abstract class AbstractHandler implements \RS\Controller\IController
     function exec()
     {
         $this->parseParameters();
-        $img = new \RS\Img\Core(\Setup::$ROOT, \Setup::$FOLDER.$this->srcFolder, \Setup::$FOLDER.$this->dstFolder);
-        $img->toOutput($this->pic_id, $this->width, $this->height, $this->scale, $this->hash);
+        try {
+            $img = new \RS\Img\Core(\Setup::$ROOT, \Setup::$FOLDER.$this->srcFolder, \Setup::$FOLDER.$this->dstFolder);
+            $img->toOutput($this->pic_id, $this->width, $this->height, $this->scale, $this->hash);
+        } catch (\RS\Img\Exception $e) {
+            throw new \RS\Controller\ExceptionPageNotFound($e->getMessage(), get_class($this));
+        }
+        
         return true;        
     }
 }

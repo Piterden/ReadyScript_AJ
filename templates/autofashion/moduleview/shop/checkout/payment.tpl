@@ -46,7 +46,7 @@
                     </div>
                 {/if}
                 <div class="descr">{$item.description}</div>
-                <div class="additionalInfo"><div class="costBlock">300 р.</div></div>
+                <div class="additionalInfo"></div>
             </div>
             <div class="priceWrap col-sm-3">
                 <div id="scost_{$item.id}" class="price">
@@ -54,6 +54,8 @@
                         <span style="color:red;">{$something_wrong}</span>
                     {else}
                         <span class="help"></span>
+                        {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
+                        <span>300 {$order->getMyCurrency()->stitle|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
                     {/if}
                 </div>
             </div>
@@ -66,4 +68,4 @@
         </div>
     </div>
 </form>
-{$order_extra|@print_r}
+{*$order->getMyCurrency()->get('stitle')|@print_r*}

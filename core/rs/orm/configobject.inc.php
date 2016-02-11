@@ -19,6 +19,9 @@ abstract class ConfigObject extends AbstractObject implements \RS\Module\ConfigI
     
     public static
         $table = 'module_config';
+        
+    protected static 
+        $init_default_method = '_configInitDefaults';
             
     public
         //Описывает за что отвечает каждый из 8-ми бит числа, обозначающего уровень доступа
@@ -34,8 +37,6 @@ abstract class ConfigObject extends AbstractObject implements \RS\Module\ConfigI
     */
     function _init()
     {
-        $this->setClassParameter('storage_class', '\RS\Orm\Storage\Serialized');
-        $this->setClassParameter('initDefaultsMethod', '_configInitDefaults');        
         $properties = $this->getPropertyIterator()->append(array(
             t('Основные'),
             'name' => new Type\String(array(
@@ -117,32 +118,40 @@ abstract class ConfigObject extends AbstractObject implements \RS\Module\ConfigI
         return $properties;
     }
     
-    function _configInitDefaults()
+    function getPrimaryKeyProperty()
     {
-        $this_module = \RS\Module\Item::nameByObject($this, false);
-        $this->setClassParameter('storage_options', array(
+        return array('site_id', 'module');
+    }
+
+    function getStorageInstance()
+    {
+        return new \RS\Orm\Storage\Serialized($this, array(
             'primary' => array(
-                'site_id' => \RS\Site\Manager::getSiteId(),
-                'module' => $this_module
+                'module' => \RS\Module\Item::nameByObject($this, false)
             )
         ));
-        
+    }    
+    
+    function _configInitDefaults()
+    {
         $this['enabled'] = true; //Включаем по-умолчанию модуль
         $this['installed'] = false;
+        $this['site_id'] = \RS\Site\Manager::getSiteId();
         $this->getFromArray( $this->getDefaultValues() );
         $this->_initDefaults(); //Вызов стандартного метода установки параметров 
     }
     
-    function _initDefaults()
-    {}
-    
-    function load($primaryKeyValue = null)
-    {
-        $options = $this->getParameter('storage_options');
-        if ($options['primary']['site_id']) {
-            $result = parent::load($primaryKeyValue);
+    function load($site_id = null)
+    {        
+        if ($site_id !== null) {
+            $this['site_id'] = $site_id;
+        }
+        
+        if ($this['site_id']) {
+            $result = parent::load();
             if ($result === false) {
-                //Проверяем установлен ли модуль. Модуль считается установленным, если сохранена конфигурация хотя бы для одного сайта
+                //Проверяем установлен ли модуль. 
+                //Модуль считается установленным, если сохранена конфигурация хотя бы для одного сайта
                 $this_module = \RS\Module\Item::nameByObject($this, false);
                 $this['installed'] = \RS\Orm\Request::make()
                     ->from($this)->where(array('module' => $this_module))->count()>0;

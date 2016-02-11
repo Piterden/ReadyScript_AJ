@@ -32,12 +32,7 @@ class Loader
                 return false;
             }
 			$config = new $classname();
-            if ($site_id) {
-                $storage_options = $config->getClassParameter('storage_options');
-                $storage_options['primary']['site_id'] = $site_id;
-                $config->setLocalParameter('storage_options', $storage_options);
-            }
-			$config->load();
+			$config->load($site_id);
             self::$instance_list[$classname.$site_id] = $config;
 		}
 		return self::$instance_list[$classname.$site_id];

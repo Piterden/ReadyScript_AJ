@@ -105,7 +105,7 @@ class Core
     function toOutput($origFileName, $width, $height, $type, $hash)
     {
         if (!$this->checkOpenKey($origFileName, $width, $height, $type, $hash)) {
-            throw new Exception(t('Неверная подпись ссылки'));
+            throw new Exception(t('Неверная подпись ссылки'), Exception::IMG_BAD_LINK_SIGN);
         }
         
         $url = $this->buildImage($origFileName, $width, $height, $type);        

@@ -16,10 +16,10 @@ class Offer extends \RS\Csv\AbstractSchema
     function __construct()
     {
         $product_search_field = \RS\Config\Loader::byModule($this)->csv_offer_product_search_field;
-        $offer_search_field = \RS\Config\Loader::byModule($this)->csv_offer_search_field;
-        $request = \RS\Orm\Request::make()->from(new \Catalog\Model\Orm\Offer())->where('product_id > 0');
+        $offer_search_field   = \RS\Config\Loader::byModule($this)->csv_offer_search_field;
+        $request              = \RS\Orm\Request::make()->from(new \Catalog\Model\Orm\Offer())->where('product_id > 0');
         
-        parent::__construct(new Preset\Base(array(
+        parent::__construct(new \Catalog\Model\CsvPreset\Offer(array(
                 'ormObject' => new \Catalog\Model\Orm\Offer(),
                 'excludeFields' => array(
                     'product_id', 'pricedata', 'propsdata', 'site_id', 'id', 'num', 'photos', 'processed'
@@ -28,6 +28,7 @@ class Offer extends \RS\Csv\AbstractSchema
                     'xml_id'
                 ),
                 'multisite' => true,
+                'ormUnsetFields' => array('pricedata'),
                 'selectOrder' => 'product_id ASC, sortn ASC',
                 'selectRequest' => $request,
                 'searchFields' => array('product_id', $offer_search_field),
@@ -55,10 +56,13 @@ class Offer extends \RS\Csv\AbstractSchema
                     'linkForeignField' => 'offer_id'
                 )),
                 new \Catalog\Model\CsvPreset\OfferPrice(array(
+                    'ormObject' => new \Catalog\Model\Orm\Offer(),
                     'linkPresetId' => 0,
-                    'linkForeignField' => 'pricedata_arr'
+                    'linkIdField' => 'id',
+                    'sortnField' => 'sortn',
+                    'arrayField' => 'pricedata_arr', //Поле для обновления цены комплектации в товаре
                 )),
-                new Preset\SerializedArray(array(
+                new Preset\SerializedArray(array(   
                     'linkPresetId' => 0,
                     'linkForeignField' => 'propsdata',
                     'title' => 'Характеристики комплектации'
@@ -95,6 +99,7 @@ class Offer extends \RS\Csv\AbstractSchema
             $q->select  = "OFFERS.*";
             $q->limit(null)
               ->orderby('OFFERS.product_id ASC, OFFERS.sortn ASC')
+              ->where('OFFERS.product_id>0')
               ->leftjoin(new \Catalog\Model\Orm\Offer(), 'OFFERS.product_id = A.id', 'OFFERS')
               ->setReturnClass(new \Catalog\Model\Orm\Offer());
             
@@ -136,6 +141,8 @@ class Offer extends \RS\Csv\AbstractSchema
         return $fields;
     }
     
+     
+    
     /**
     * Обработчик, выполняющийся после импорта набора (которые уложились по 
     * времени в 1 шаг) данных
@@ -159,7 +166,7 @@ class Offer extends \RS\Csv\AbstractSchema
     * @param mixed $_this
     */
     function afterBaseRowImport($preset)
-    {
+    {          
         //Обновляем сведения о ценах основной комплектации у товара
         if ($preset->row['product_id'] && empty($preset->row['sortn'])) {
             $pricedata = $preset->row['pricedata_arr'];

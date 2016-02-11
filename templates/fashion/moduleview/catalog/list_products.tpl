@@ -1,6 +1,7 @@
 {addjs file="jquery.changeoffer.js"}
 {$shop_config=ConfigLoader::byModule('shop')}
 {$check_quantity=$shop_config.check_quantity}
+{$list = $this_controller->api->addProductsDirs($list)}
 
 {if $no_query_error}
 <div class="noQuery">
@@ -32,7 +33,7 @@
         <span class="sort">
             Сортировать по 
             <span class="ddList">
-                <span class="value">{if $cur_sort=='dateof'}по дате{elseif $cur_sort=='rating'}популярности{else}цене{/if} {$cur_n_sort}</span>
+                <span class="value">{if $cur_sort=='dateof'}по дате{elseif $cur_sort=='rating'}популярности{else}цене{/if}</span>
                 <ul>
                     <li><a href="{urlmake sort="cost" nsort=$sort.cost}" class="item{if $cur_sort=='cost'} {$cur_n}{/if}" rel="nofollow">цене</a></li>                
                     <li><a href="{urlmake sort="rating" nsort=$sort.rating}" class="item{if $cur_sort=='rating'} {$cur_n}{/if}" rel="nofollow">популярности</a></li>                    
@@ -66,7 +67,7 @@
                     <a href="{$product->getUrl()}" class="image">{if $product->inDir('new')}<i class="new"></i>{/if}<img src="{$main_image->getUrl(188,258)}" alt="{$main_image.title|default:"{$product.title}"}"/></a>
                     <a href="{$product->getUrl()}" class="title">{$product.title}</a>
                     <p class="price">{$product->getCost()} {$product->getCurrency()} 
-                        {$last_price=$product->getCost('Зачеркнутая цена')}
+                        {$last_price=$product->getOldCost()}
                         {if $last_price>0}<span class="last">{$last_price} {$product->getCurrency()}</span>{/if}</p>
                     <div class="hoverBlock">
                         <div class="back"></div>

@@ -34,6 +34,11 @@ class Api extends \RS\Orm\AbstractObject
         ));
     }
     
+    function getPrimaryKeyProperty()
+    {
+        return 'hash';
+    }
+    
     /**
     * Сохраняет значение $value для ключа $key
     * 

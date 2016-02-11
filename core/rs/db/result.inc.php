@@ -17,8 +17,11 @@ class Result
         $auto_free = true; //Автоматически освобождать память после получения результатов запроса.
     
     protected 
+        /**
+        * @var mysqli_result 
+        */
         $resource,
-        $res_type = MYSQL_ASSOC;        
+        $res_type = MYSQLI_ASSOC;        
     
     function __construct($resource)
     {
@@ -34,12 +37,12 @@ class Result
     */
     function fetchObject($class_name = null, array $params = null)
     {
-        if ($this->resource === false) return false;
+        if (is_bool($this->resource)) return false;
         if ($class_name === null) $class_name = 'stdClass';
         if ($params === null) {
-            $row = mysql_fetch_object($this->resource, $class_name);
+            $row = mysqli_fetch_object($this->resource, $class_name);
         } else {
-            $row = mysql_fetch_object($this->resource, $class_name, $params);
+            $row = mysqli_fetch_object($this->resource, $class_name, $params);
         }
         if ($this->auto_free && $row === false) $this->free();
         return $row;
@@ -66,10 +69,11 @@ class Result
     */
     function fetchRow()
     {
-        if ($this->resource === false) return false;
-        $row = mysql_fetch_array($this -> resource, $this -> res_type);
+        if (is_bool($this->resource)) return false;
+        $row = mysqli_fetch_array($this -> resource, $this -> res_type);
+        
         if ($this->auto_free && $row === false) $this->free();
-        return $row;
+        return $row ?: false;
     }
     
     /**
@@ -79,8 +83,8 @@ class Result
     */
     function rowCount()
     {
-        if ($this->resource === false) return 0;
-        return mysql_num_rows($this -> resource);
+        if (is_bool($this->resource)) return 0;
+        return mysqli_num_rows($this -> resource);
     }
     
     /**
@@ -101,7 +105,7 @@ class Result
     */
     function free()
     {
-        return mysql_free_result($this -> resource);
+        return mysqli_free_result($this -> resource);
     }
     
     /**

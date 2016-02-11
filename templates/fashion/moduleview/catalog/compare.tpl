@@ -43,7 +43,7 @@
                             </div>
                             {if $product->isOffersUse()}
                                 {foreach from=$product.offers.items key=key item=offer name=offers}
-                                    <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}'/>
+                                    <input value="{$key}" type="hidden" name="hidden_offers" class="hidden_offers" {if $smarty.foreach.offers.first}checked{/if} id="offer_{$key}" data-info='{$offer->getPropertiesJson()}' {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".offerBarcode": "{$offer.barcode|default:$product.barcode}", ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}'/>
                                 {/foreach}                        
                                 <input type="hidden" name="offer" value="0"/>                                            
                             {/if}                    
@@ -52,7 +52,7 @@
                             <div class="offer">
                                 <select name="offer">
                                     {foreach from=$product.offers.items key=key item=offer name=offers}
-                                    <option value="{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getCost('Зачеркнутая цена', $key)}"}'>{$offer.title}</option>
+                                    <option value="{$key}" {if $check_quantity}data-num="{$offer.num}"{/if} data-change-cost='{ ".myCost": "{$product->getCost(null, $key)}", ".lastPrice": "{$product->getOldCost($key)}"}'>{$offer.title}</option>
                                     {/foreach}
                                 </select>
                             </div>
