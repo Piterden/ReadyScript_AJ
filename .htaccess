@@ -4,7 +4,7 @@ AddDefaultCharset Off
     php_flag magic_quotes_gpc off
     php_flag magic_quotes_runtime off
     php_flag register_globals off
-    php_flag display_errors off
+    php_flag display_errors on
     php_value max_input_vars 5000
 </IfModule>
 
@@ -18,13 +18,13 @@ AddDefaultCharset Off
 
     #RewriteRule modules\/.*?\/(config|controller|model)\/ - [F,L]
     #RewriteRule core\/.* - [F,L]
-    
+
     RewriteRule ^(robots.txt)$ $1 [L]
 
     RewriteCond %{HTTP:Authorization} ^Basic.*
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ index.php?http_authorization=%{HTTP:Authorization} [QSA,L]    
-    
+    RewriteRule ^(.*)$ index.php?http_authorization=%{HTTP:Authorization} [QSA,L]
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ index.php [QSA,L]
 </IfModule>

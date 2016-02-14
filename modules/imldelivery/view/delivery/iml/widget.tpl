@@ -42,7 +42,7 @@ var defaultData = {
         "delivery_cost_json"  :{$delivery_cost_json},
         "service_id"         :{$service_ids},
         "region_id_from"      :"{$region_id_from}",
-        "region_id_to"        :"{$region_id_to}",
+        "region_id_to"        :"{$region_id_to|default:'САНКТ-ПЕТЕРБУРГ'}",
         "currency"           :{$currency},
         "select_id"          :"#selectRegionCombo_{$delivery.id}",
         "list_id"            :"#sdlist_{$delivery.id}",
@@ -87,16 +87,11 @@ function showMapModal (data) {
  * @return
  */
 function initIML_Map (region_id_to) {
-    IML.imlData.region_id_to = (region_id_to) ?
-    	region_id_to :
-    	IML.imlData.region_id_to;
+	var params = {
+        region_id : region_id_to || IML.imlData.region_id_to
+    };
 
-    var imlData = IML.imlData,
-    	params = {
-	        region : imlData.region_id_to
-	    };
-
-    $('#map_'+imlData.delivery_id).empty();
+    $('#map_'+IML.imlData.delivery_id).empty();
     IML.ajaxRequest('getSdByRegion', params, IML.getSdByRegionRender);
 };
 
@@ -111,8 +106,14 @@ function loadRegions () {
         $.each(data.data, function(id, val) {
             $selectRegionList.append('<option value="'+id+'">'+val+'</option>');
         });
-        $selectRegionList.val(IML.imlData.region_id_to || IML.imlData.region_id_from);
+        $selectRegionList.val(IML.imlData.region_id_to);
     })
+}
+
+function getIndexSd(code, data) {
+	for (var i = data.length - 1; i >= 0; i--) {
+		if (data[i].request_code == code) return i;
+	}
 }
 
 /**
@@ -122,15 +123,20 @@ function loadRegions () {
  * @return
  */
 function getSdByRegionRender (data) {
-    IML.imlData.sd_data = [];
     data = data.data;
+    if (typeof IML.imlData.sd_object == 'undefined' || IML.imlData.region_id_to != data[0].RegionCode) {
+    	var r_c = 0;
+    } else {
+    	var r_c = getIndexSd(IML.imlData.sd_object.request_code, data);
+    }
+	IML.imlData.sd_data = [];
     var imlData = IML.imlData;
 
     //console.log(data);
     $(imlData.list_id).empty();
 
     myMap = new ymaps.Map('map_'+imlData.delivery_id, {
-        center: [Number(data[0].Latitude), Number(data[0].Longitude)],
+        center: [Number(data[r_c].Latitude), Number(data[r_c].Longitude)],
         zoom: 10
     });
     var objectManager = new ymaps.ObjectManager({
@@ -139,8 +145,8 @@ function getSdByRegionRender (data) {
         // ObjectManager принимает те же опции, что и кластеризатор.
         gridSize: 32
     });
-    IML.imlData.request_code = data[0].RequestCode;
-    IML.imlData.sd_object = data[0];
+    IML.imlData.request_code = data[r_c].RequestCode;
+    IML.imlData.sd_object = data[r_c];
     IML.imlData.sd_list = {
 	    "type": "FeatureCollection",
 	    "features": []
@@ -163,8 +169,8 @@ function getSdByRegionRender (data) {
 	                'Оплата картой: ' + el.PaymentCard + '<br />' +
 	                'Примерочная: ' + fitting + '<br />' +
 	                'Время работы: ' + el.WorkMode +
-	                '<br /><button class="balloonSelectSd" data-code="' + el.RequestCode +
-	                '" id="bal_sd_' + imlData.delivery_id + '_' + el.RequestCode + '">Выбрать</button>',
+	                '<br /><button class="balloonSelectSd" onclick="toggleActive(event, ' + el.RequestCode +
+	                ');" id="bal_sd_' + imlData.delivery_id + '_' + el.RequestCode + '">Выбрать</button>',
 		        clusterCaption: 'Пункты самовывоза',
 		        hintContent: 'Пункт самовывоза' + (el.Name) ? el.Name : '№' + el.RequestCode
 		    }
@@ -181,7 +187,7 @@ function getSdByRegionRender (data) {
         //myMap.geoObjects.add(myPlacemark);
 
         // создание списка пунктов самовывоза рядом с картой
-        var active = (i==0) ? ' active' : '',
+        var active = (i==r_c) ? ' active' : '',
         	li_html = '<li class="selectSd'+active+'" data-code="'+el.RequestCode+'" id="sd_'+imlData.delivery_id+'_'+el.RequestCode+'"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
                     el.Address + '<br />' +
                     'Телефон: ' + el.Phone + '<br />' +
@@ -197,7 +203,7 @@ function getSdByRegionRender (data) {
     objectManager.add(IML.imlData.sd_list);
 
     $('.modal-body > .loading').remove();
-    IML.updatePrices()
+    IML.updatePrices();
     IML.bindHandlers();
 }
 
@@ -313,6 +319,18 @@ function ajaxRequest (action, params, callback) {
     });
 }
 
+function toggleActive(e, code) {
+	e.preventDefault();
+	$this = $('#sd_'+IML.imlData.delivery_id+'_'+code);
+	$this.addClass('active').siblings('.selectSd').removeClass('active');
+
+    IML.imlData.request_code = code;
+    IML.imlData.sd_object = IML.imlData.sd_data[code];
+
+    moveMap(IML.imlData.sd_object.Latitude, IML.imlData.sd_object.Longitude);
+    IML.updatePrices();
+}
+
 /**
  * Навешивает обработчики на элементы
  * @return
@@ -334,17 +352,8 @@ function bindHandlers () {
         initIML_Map(region_id_to);
     });
 
-    $(IML.imlData.list_id+' .selectSd').unbind('click').on('click', function() {
-        var $this = $(this),
-            code = $this.attr('data-code');
-
-        $this.addClass('active').siblings('.selectSd').removeClass('active');
-
-        IML.imlData.request_code = code;
-        IML.imlData.sd_object = IML.imlData.sd_data[code];
-
-        moveMap(IML.imlData.sd_object.Latitude, IML.imlData.sd_object.Longitude);
-        IML.updatePrices();
+    $(IML.imlData.list_id+' .selectSd').unbind('click').on('click', function(e) {
+        toggleActive(e, $(this).attr('data-code'));
     });
 
     $('#mapModal').unbind('hide.bs.modal').on('hide.bs.modal', function(e) {

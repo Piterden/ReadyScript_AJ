@@ -233,7 +233,7 @@
             <div class="col-sm-12 col-sm-offset-5 newAddress{if $order.use_addr!=0} hide{/if}">
                 <div class="themeTable">
                     <div class="tableRow">
-	                    {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'getSdRegions'] params=[$order]}
+	                    {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'staticGetRegions']}
                         <input type="hidden" name="addr_country_id" value="1">
                         <div class="key district">
                             <label class="fieldName">Регион</label>
@@ -241,10 +241,17 @@
                         <div class="value district">
                             <select id="sd_region" name="order_extra[region_id_to]">
                                 {foreach $regions_sd_list as $id => $name}
-                                <option value="{$id}"{if ($order_extra.address['region_id_to'] && $id == $order_extra.address['region_id_to']) || (!$order_extra.address['region_id_to'] && $id == 'САНКТ-ПЕТЕРБУРГ')} selected{/if}>{$name}</option>
+                                <option value="{$id}"
+                                	{if ($order.use_addr > 0)}
+                                		{if $order->getAddress()->region == $id} selected{/if}
+                                	{else}
+                                		{if ($order_extra.address['region_id_to'] && $id == $order_extra.address['region_id_to'])
+                                		|| (!$order_extra.address['region_id_to'] && $id == 'САНКТ-ПЕТЕРБУРГ')} selected{/if}
+                                	{/if}>{$name}</option>
                                 {/foreach}
                             </select>
                             <input id="sd_region_name" type="hidden" name="order_extra[region_to]" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
+                            <input id="addr_region" type="hidden" name="addr_region" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
                         </div>
                         {*<div class="key district">
                             <label class="fieldName">Область/край</label>
@@ -302,7 +309,7 @@
                 </div>
             </div>
             {if !$is_auth}
-	            <div class="col-sm-12 col-sm-offset-5 additional`">
+	            <div class="col-sm-12 col-sm-offset-5 additional">
 	                <div class="themeTable">
 	                    {if $order.__code->isEnabled()}
 	                    <div class="tableRow captcha">
@@ -318,7 +325,7 @@
 	                </div>
 	            </div>
             {/if}
-            <div class="col-sm-12 col-sm-offset-5 additional`">
+            <div class="col-sm-12 col-sm-offset-5 additional">
                 <div class="themeTable">
                     {if $conf_userfields->notEmpty()}
                     <div class="additional">

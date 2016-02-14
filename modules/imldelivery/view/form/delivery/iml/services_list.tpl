@@ -1,33 +1,33 @@
 <style type="text/css">
     .imlTable td{
-       vertical-align:top; 
+       vertical-align:top;
     }
-    
+
     .imlTable .left{
         width:300px;
     }
-    
+
     .imlTable .left select{
-       font-size:11px; 
+       font-size:11px;
     }
-    
+
     .imlTable .servicesList{
         width:300px;
         height:220px !important;
     }
-    
+
     .imlTable .center{
         vertical-align:middle;
         width:20px;
     }
-    
-    
+
+
     .imlTable .right select{
         height: auto !important;
         width:350px;
         font-size:11px;
     }
-    
+
     .imlTable a{
         width:16px;
         height:16px;
@@ -37,19 +37,19 @@
         background-position:top left;
         background-repeat:no-repeat;
     }
-    
+
     .imlTable .up{
         background-image:url(../../resource/img/adminstyle/arrows/arrow-up.png);
     }
-    
+
     .imlTable .addService{
         background-image:url(../../resource/img/adminstyle/arrows/arrow-left.png);
     }
-    
+
     .imlTable .down{
         background-image:url(../../resource/img/adminstyle/arrows/arrow-down.png);
     }
-    
+
     .imlTable .del{
         background-image:url(../../resource/img/adminstyle/arrows/remove.png);
     }
@@ -62,14 +62,14 @@
         <td class="left">
             <div>
                 {static_call var=list callback=['\Imldelivery\Model\DeliveryType\Iml','staticGetServices']}
-                <select class="servicesList selectAllBeforeSubmit" name="data[service_id][]" multiple="multiple"> 
-					{$selected = $elem.service_id} 
+                <select class="servicesList selectAllBeforeSubmit" name="data[service_id][]" multiple="multiple">
+					{$selected = $elem.service_id}
 					{if !empty($list)}
 						{foreach $list as $code => $title}
 							{if in_array($code, $selected)}
-								<option value="{$code}">{$title}</option>
+								<option value="{$code}">{$title} ({$code})</option>
 							{/if}
-						{/foreach} 
+						{/foreach}
 					{/if}
                 </select>
             </div>
@@ -88,17 +88,17 @@
 <script type="text/javascript">
     $(document).ready(function(){
         var imlTable = $(".imlTable");
-        
-        
+
+
         function checkImlServiceVisibility(){
             //Проверим есть ли назначенный хоть один тариф
             if ($(".servicesList option",$(".imlTable")).length==0){
-               $(".inlineError",$(".imlTable")).css('visibility','visible'); 
+               $(".inlineError",$(".imlTable")).css('visibility','visible');
             }else{
-               $(".inlineError",$(".imlTable")).css('visibility','hidden');  
-            } 
+               $(".inlineError",$(".imlTable")).css('visibility','hidden');
+            }
         }
-        
+
         /**
         * Удяляет варианты уже выбранные из общего списка
         *
@@ -107,40 +107,40 @@
             var selected = [];
             {if !empty($selected)}
                 {foreach $selected as $k=>$code}
-                   selected[{$k}] = "{$code}"; 
+                   selected[{$k}] = "{$code}";
                 {/foreach}
             {/if}
-            
+
             if (selected.length>0){
                 for(var i=0;i<selected.length;i++){
                     $(".right select option[value='"+selected[i]+"']",imlTable).remove();
                 }
             }
         }
-        
-        
+
+
         /**
         * Добавление в список тарифов с приоритетами
         *
         */
         $(".addService",imlTable).on('click',function(){
-            
+
             var option = $(".right select option:selected", imlTable);
             //Удалим из общего списка
             //if (typeof(option.data('group'))=='undefined'){
-            //   option.data('group',option.closest('optgroup').attr('label')); 
+            //   option.data('group',option.closest('optgroup').attr('label'));
             //}
             option.appendTo($(".servicesList", imlTable));
             //Посмотрим нужно ли показывать кнопки
             if ($(".servicesList option", imlTable).length>0){ //Есть такого пункта нет, то добавим его
-               $(".btn",imlTable).css('visibility','visible'); 
+               $(".btn",imlTable).css('visibility','visible');
             }else{
-               $(".btn",imlTable).css('visibility','hidden');  
+               $(".btn",imlTable).css('visibility','hidden');
             }
             checkImlServiceVisibility();
             return false;
         });
-        
+
         /**
         * Удаление из списоков тарифов с приоритетами
         *
@@ -154,17 +154,17 @@
                     $(this).prependTo($('.right select'),imlTable);
                 }
             });
-            
+
             //Посмотрим нужно ли показывать кнопки
             if ($(".servicesList option", imlTable).length>0){ //Есть такого пункта нет, то добавим его
-               $(".btn",imlTable).css('visibility','visible'); 
+               $(".btn",imlTable).css('visibility','visible');
             }else{
-               $(".btn",imlTable).css('visibility','hidden');  
+               $(".btn",imlTable).css('visibility','hidden');
             }
             checkImlServiceVisibility();
             return false;
         });
-        
+
         /**
         * Перемещение в списке вверх
         *
@@ -172,13 +172,13 @@
         $(".up",imlTable).on('click',function(){
             var selected = $(".servicesList option:selected:eq(0)", imlTable);
             var index    = selected.index();
-            
+
             if (index>0){
-               selected.insertBefore($(".servicesList option:eq("+(index-1)+")", imlTable)); 
+               selected.insertBefore($(".servicesList option:eq("+(index-1)+")", imlTable));
             }
             return false;
         });
-        
+
         /**
         * Перемещение в списке вниз
         *
@@ -186,23 +186,23 @@
         $(".down",imlTable).on('click',function(){
             var selected = $(".servicesList option:selected:eq(0)", imlTable);
             var index    = selected.index()+1;
-            
+
             if (index < ($(".servicesList option", imlTable).length)){
-               selected.insertAfter($(".servicesList option:eq("+index+")", imlTable));  
+               selected.insertAfter($(".servicesList option:eq("+index+")", imlTable));
             }
             return false;
         });
-        
+
         shiftServiceSelectRowPresent();
         checkImlServiceVisibility();
-        
+
         //Посмотрим нужно ли показывать кнопки
         if ($(".servicesList option", imlTable).length>0){ //Есть такого пункта нет, то добавим его
-           $(".btn",imlTable).css('visibility','visible'); 
+           $(".btn",imlTable).css('visibility','visible');
         }else{
-           $(".btn",imlTable).css('visibility','hidden');  
+           $(".btn",imlTable).css('visibility','hidden');
         }
-        
-        
+
+
 });
 </script>

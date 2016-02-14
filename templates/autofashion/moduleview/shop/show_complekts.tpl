@@ -58,7 +58,11 @@
 				                            <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
 				                            <div class="multiofferBlock multiofferBlock{$level.prop_id}">
 												{foreach $level.values as $value key=i}
-													<div class="moItem{if $i == 1} active{/if}"><div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">{$value.val_str}</div></div>
+													<div class="moItem{if $i == 1} active{/if}">
+														<div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">
+															{$value.val_str}
+														</div>
+													</div>
 												{/foreach}
 											</div>
 				                        </div>

@@ -1,3 +1,4 @@
+{* {debug} *}
 <form method="POST" class="formStyle checkoutBox" id="order-form">
     {if $order->hasError()}
         <div class="row">
@@ -25,7 +26,7 @@
                     </label>
                 {/if}
                 <input type="radio" name="delivery" value="{$item.id}" id="dlv_{$item.id}"
-	                {if $order.delivery==$item.id || ($order.use_addr==-1 && $item.id==7)} checked="checked"{/if}
+	                {if ($order.use_addr<=0 && $item.id==7) || ($order.use_addr>0 && $item.id==3)} checked="checked"{/if}
 	                {if $something_wrong} disabled="disabled"{/if}>
                 <span class="back"></span>
             </div>
@@ -41,7 +42,7 @@
                 {else}
                     <div class="addressBlock hide">
                         <div class="addressText">
-                            {$order->getAddress()->getLineView()|@print_r}
+                            {$order->getAddress()->getLineView()}
                         </div>
                         <div class="addressLink">
                             <a class="spacing" href="{$router->getUrl('shop-front-checkout', ['Act' => 'address'])}">Изменить адрес</a>
@@ -59,7 +60,7 @@
                         <span class="help">{$order->getDeliveryExtraText($item)}</span>
                         {*$order->getDeliveryCostText($item)*}
                         {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
-                        <span>300 {$currencyLiter|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
+                        <span>{$item->getDeliveryCost($order)} {$currencyLiter|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
                     {/if}
                 </div>
             </div>

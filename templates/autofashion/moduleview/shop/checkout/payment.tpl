@@ -68,4 +68,4 @@
         </div>
     </div>
 </form>
-{*$order->getMyCurrency()->get('stitle')|@print_r*}
+

@@ -5,7 +5,7 @@
     </div>
 	<div class="col-sm-20 col-sm-offset-2 cartList">
 		{foreach $cart_items as $item}
-			{if $url->request('Act', TYPE_STRING)=='finish'}
+			{if $url->request('Act', $smarty.const.TYPE_STRING)=='finish'}
 				{$item=$item.cartitem}
 			{/if}
 			{$product=$cart_products[$item.entity_id]}
@@ -57,7 +57,7 @@
 			<div class="col-sm-16 infoBlock">
 				<div class="headerBlock">
 					<span class="title h3">{$delivery.title}</span>
-					{if $url->request('Act', TYPE_STRING)!='finish'}
+					{if $url->request('Act',$smarty.const.TYPE_STRING)!='finish'}
 						<span class="change"><a href="{$router->getUrl('shop-front-checkout', ['Act' => 'delivery'])}">Изменить способ доставки</a></span>
 					{/if}
 				</div>
@@ -86,7 +86,7 @@
 			<div class="col-sm-16 infoBlock">
 				<div class="headerBlock">
 					<span class="title h3">{$payment.title}</span>
-					{if $url->request('Act', TYPE_STRING)!='finish'}
+					{if $url->request('Act',$smarty.const.TYPE_STRING)!='finish'}
 						<span class="change"><a href="{$router->getUrl('shop-front-checkout', ['Act' => 'payment'])}">Изменить способ оплаты</a></span>
 					{/if}
 				</div>
@@ -122,13 +122,16 @@
 		</div>
 	</div>
 </div>
+<pre>
+	{$order->address->getValues()|@print_r}
+</pre>
 <script>
 	jQuery(document).ready(function($) {
 		$('.checkout .cartList .row').each(function() {
 			var maxHeight = 65,
 				$childrens = $(this).children('div');
 			$childrens.each(function() {
-				console.log($(this).height())
+				//console.log($(this).height())
 				maxHeight = (maxHeight > $(this).height()) ? maxHeight : $(this).height();
 			})
 			$childrens.height(maxHeight);
