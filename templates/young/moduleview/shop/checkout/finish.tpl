@@ -1,10 +1,10 @@
 <div class="formStyle checkoutForm">
     <div class="workArea noTopPadd">
-<h3 class="confirm">Спасибо! Ваш заказ успешно оформлен</h3>        
+        <h3 class="confirm">Спасибо! Ваш заказ успешно оформлен</h3>        
         {if $user.id}        
             <p class="thanks">Следить за изменениями статуса заказа можно в разделе <a href="{$router->getUrl('shop-front-myorders')}" target="_blank">история заказов</a>. 
-        {/if}
-        Все уведомления об изменениях в данном заказе также будут отправлены на электронную почту покупателя.</p>
+            {/if}
+            Все уведомления об изменениях в данном заказе также будут отправлены на электронную почту покупателя.</p>
         <div class="coInfo">
             {$user=$order->getUser()}
             <h2>Сведения о заказе</h2>
@@ -54,20 +54,20 @@
             </div>
 
             {if $order->getPayment()->hasDocs()}
-            <div class="docs">
-                <h2>Документы на оплату</h2>
-                <div class="border">
-                    <p>Воспользуйтесь следующими документами для оплаты заказа. Эти документы всегда доступны в разделе история заказов.</p>
-                    {$type_object=$order->getPayment()->getTypeObject()}
-                    {foreach $type_object->getDocsName() as $key => $doc}
-                    <div class="download"><a href="{$type_object->getDocUrl($key)}" target="_blank" class="button">{$doc.title}</a></div>
-                    {/foreach}
-                </div>
-            </div>            
+                <div class="docs">
+                    <h2>Документы на оплату</h2>
+                    <div class="border">
+                        <p>Воспользуйтесь следующими документами для оплаты заказа. Эти документы всегда доступны в разделе история заказов.</p>
+                        {$type_object=$order->getPayment()->getTypeObject()}
+                        {foreach $type_object->getDocsName() as $key => $doc}
+                            <div class="download"><a href="{$type_object->getDocUrl($key)}" target="_blank" class="button">{$doc.title}</a></div>
+                            {/foreach}
+                    </div>
+                </div>            
             {/if}
-            
+
         </div>            
-        
+
         {assign var=orderdata value=$cart->getOrderData()}
         <div class="coItems">
             <h1>Заказ N {$order.order_num}</h1>
@@ -82,38 +82,38 @@
                 </thead>
                 <tbody>
                     {foreach $orderdata.items as $n=>$item}
-                    {assign var=orderitem value=$item.cartitem}
-                    {$barcode=$orderitem.barcode}
-                    {$offer_title=$orderitem.model}
-                    {$multioffer_titles=$item.cartitem->getMultiOfferTitles()}
-                    <tr>
-                        <td>{$orderitem.title}
-                            <div class="codeLine">
-                                {if $barcode != ''}Артикул:<span class="value">{$barcode}</span><br>{/if}
-                                {if $multioffer_titles || $offer_title}
-                                    <div class="multioffersWrap">
-                                        {foreach $multioffer_titles as $multioffer}
-                                            <p class="value">{$multioffer.title} - {$multioffer.value}</p>
-                                        {/foreach}
-                                        {if !$multioffer_titles}
-                                            <p class="value">{$item.product.offer_caption|default:"Комплектация"}: {$offer_title}</p>
-                                        {/if}
-                                    </div>
-                                {/if}
-                            </div>
-                        </td>
-                        <td>
-                            {$orderitem.amount} {$orderitem.data.unit}
-                        </td>
-                        <td class="price">
-                            {$item.total}
-                            <div class="discount">
-                                {if $item.discount>0}
-                                скидка {$item.discount}
-                                {/if}
-                            </div>
-                        </td>
-                    </tr>
+                        {assign var=orderitem value=$item.cartitem}
+                        {$barcode=$orderitem.barcode}
+                        {$offer_title=$orderitem.model}
+                        {$multioffer_titles=$item.cartitem->getMultiOfferTitles()}
+                        <tr>
+                            <td>{$orderitem.title}
+                                <div class="codeLine">
+                                    {if $barcode != ''}Артикул:<span class="value">{$barcode}</span><br>{/if}
+                                    {if $multioffer_titles || $offer_title}
+                                        <div class="multioffersWrap">
+                                            {foreach $multioffer_titles as $multioffer}
+                                                <p class="value">{$multioffer.title} - {$multioffer.value}</p>
+                                            {/foreach}
+                                            {if !$multioffer_titles}
+                                                <p class="value">{$item.product.offer_caption|default:"Комплектация"}: {$offer_title}</p>
+                                            {/if}
+                                        </div>
+                                    {/if}
+                                </div>
+                            </td>
+                            <td>
+                                {$orderitem.amount} {$orderitem.data.unit}
+                            </td>
+                            <td class="price">
+                                {$item.total}
+                                <div class="discount">
+                                    {if $item.discount>0}
+                                        скидка {$item.discount}
+                                    {/if}
+                                </div>
+                            </td>
+                        </tr>
                     {/foreach}
                 </tbody>
             </table>
@@ -121,10 +121,10 @@
             <table class="themeTable noMobile">
                 <tbody>
                     {foreach $orderdata.other as $item}
-                    <tr>
-                        <td>{$item.cartitem.title}</td>
-                        <td>{if $item.total != 0}{$item.total}{/if}</td>
-                    </tr>
+                        <tr>
+                            <td>{$item.cartitem.title}</td>
+                            <td>{if $item.total != 0}{$item.total}{/if}</td>
+                        </tr>
                     {/foreach}
                 </tbody>
             </table>
@@ -134,7 +134,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="buttonLine alignRight">
         {if $order->canOnlinePay()}
             <a href="{$order->getOnlinePayUrl()}" class="colorButton">Перейти к оплате</a>

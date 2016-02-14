@@ -5,17 +5,17 @@
         <input type="radio" id="ut_user" name="is_company" value="0" {if !$user.is_company}checked{/if}><label for="ut_user" class="userLabel f14">Частное лицо</label>
         <input type="radio" id="ut_company" name="is_company" value="1" {if $user.is_company}checked{/if}><label for="ut_company" class="f14">Компания</label>
     </div>        
-    
+
     <div class="tabs gray topMarg"> 
         <ul class="tabList">
             <li class="act"><a href="#">Персональные данные</a></li>
         </ul>
-        
+
         <div class="tab act">
             {if count($user->getNonFormErrors())>0}
                 <div class="pageError">
                     {foreach $user->getNonFormErrors() as $item}
-                    <p>{$item}</p>
+                        <p>{$item}</p>
                     {/foreach}
                 </div>
             {/if}    
@@ -25,7 +25,7 @@
             {/if}           
             <div class="oh">
                 <div class="half fleft{if $user.is_company} thiscompany{/if}" id="fieldsBlock">
-                   <div class="companyFields">
+                    <div class="companyFields">
                         <div class="formLine">
                             <label class="fieldName">Название организации</label>
                             {$user->getPropertyView('company')}
@@ -57,15 +57,15 @@
                     </div>
                     {if $conf_userfields->notEmpty()}
                         {foreach $conf_userfields->getStructure() as $fld}
-                        <div class="formLine">
-                        <label class="fieldName">{$fld.title}</label>
-                            {$conf_userfields->getForm($fld.alias)}
-                            {$errname=$conf_userfields->getErrorForm($fld.alias)}
-                            {$error=$user->getErrorsByForm($errname, ', ')}
-                            {if !empty($error)}
-                                <span class="formFieldError">{$error}</span>
-                            {/if}
-                        </div>
+                            <div class="formLine">
+                                <label class="fieldName">{$fld.title}</label>
+                                {$conf_userfields->getForm($fld.alias)}
+                                {$errname=$conf_userfields->getErrorForm($fld.alias)}
+                                {$error=$user->getErrorsByForm($errname, ', ')}
+                                {if !empty($error)}
+                                    <span class="formFieldError">{$error}</span>
+                                {/if}
+                            </div>
                         {/foreach}
                     {/if}                 
                 </div>
@@ -103,10 +103,10 @@
     $(function() {
         $('#changePass').change(function() {
             $('.changePass').toggleClass('hidden', !this.checked);
-        });            
-        
+        });
+
         $('.profile .userType input').click(function() {
             $('#fieldsBlock').toggleClass('thiscompany', $(this).val() == 1);
         });
-    });        
+    });
 </script>    

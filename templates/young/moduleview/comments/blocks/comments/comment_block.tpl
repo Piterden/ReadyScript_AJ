@@ -3,7 +3,8 @@
     <a name="comments"></a>    
     <div class="commentHead">
         <h3>Отзывы {if $total}({$total}){/if}</h3>
-        <a href="#" class="addComment" onclick="$(this).closest('.comments').toggleClass('on');return false;">Написать отзыв</a>
+        <a href="#" class="addComment" onclick="$(this).closest('.comments').toggleClass('on');
+                return false;">Написать отзыв</a>
     </div>  
     <div class="writeComment">
         {if $mod_config.need_authorize == 'Y' && !$is_auth}
@@ -12,11 +13,11 @@
             {if !empty($error)}
                 <div class="errors">
                     {foreach $error as $one}
-                    <p>{$one}</p>
+                        <p>{$one}</p>
                     {/foreach}
                 </div>
             {/if}                    
-        
+
             <form method="POST" class="formStyle">               
                 {$this_controller->myBlockIdInput()}
                 <div class="message">
@@ -45,12 +46,12 @@
                             <input type="text" name="user_name" value="{$comment.user_name}">
                         </div>
                         {if !$is_auth && ModuleManager::staticModuleEnabled('kaptcha')}
-                        <div class="captcha">
-                            <label class="fielName">&nbsp;</label><br>
-                            <img src="{$router->getUrl('kaptcha')}">
-                            <input type="text" name="captcha" class="inpCap"><br>
-                            <span class="fielName">Введите код, указанный на картинке</span>
-                        </div>
+                            <div class="captcha">
+                                <label class="fielName">&nbsp;</label><br>
+                                <img src="{$router->getUrl('kaptcha')}">
+                                <input type="text" name="captcha" class="inpCap"><br>
+                                <span class="fielName">Введите код, указанный на картинке</span>
+                            </div>
                         {/if}                    
                     </div>
                 </div>
@@ -61,9 +62,9 @@
         {/if}
     </div>
     {if $total}
-    <ul class="commentList">
-        {$list_html}
-    </ul>
+        <ul class="commentList">
+            {$list_html}
+        </ul>
     {else}
         <div class="noComments">нет отзывов</div>
     {/if}

@@ -22,7 +22,7 @@
         {if count($supp->getErrors())>0}
             <div class="pageError">
                 {foreach $supp->getErrors() as $err}
-                <p>{$err}</p>
+                    <p>{$err}</p>
                 {/foreach}
             </div>
         {/if}     

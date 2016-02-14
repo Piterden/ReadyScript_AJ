@@ -11,7 +11,7 @@
         {if count($user->getNonFormErrors())>0}
             <div class="pageError">
                 {foreach $user->getNonFormErrors() as $item}
-                <p>{$item}</p>
+                    <p>{$item}</p>
                 {/foreach}
             </div>
         {/if}
@@ -53,15 +53,15 @@
                 </div>
                 {if $conf_userfields->notEmpty()}
                     {foreach $conf_userfields->getStructure() as $fld}
-                    <div class="formLine">
-                    <label class="fieldName">{$fld.title}</label>
-                        {$conf_userfields->getForm($fld.alias)}
-                        {$errname=$conf_userfields->getErrorForm($fld.alias)}
-                        {$error=$user->getErrorsByForm($errname, ', ')}
-                        {if !empty($error)}
-                            <span class="formFieldError">{$error}</span>
-                        {/if}
-                    </div>
+                        <div class="formLine">
+                            <label class="fieldName">{$fld.title}</label>
+                            {$conf_userfields->getForm($fld.alias)}
+                            {$errname=$conf_userfields->getErrorForm($fld.alias)}
+                            {$error=$user->getErrorsByForm($errname, ', ')}
+                            {if !empty($error)}
+                                <span class="formFieldError">{$error}</span>
+                            {/if}
+                        </div>
                     {/foreach}
                 {/if}
             </div>

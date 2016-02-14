@@ -11,16 +11,18 @@ $.extend({
             callback: null,
             colorboxOptions: {},
             bindSubmit: true
-        }, options);
+        },
+            options);
 
-        var colorBoxParams = $.extend({ //Отображаем диалог в режиме ожидания данных
+        var colorBoxParams = $.extend({//Отображаем диалог в режиме ожидания данных
             open: true,
             width: (options.width) ? options.width : false,
             opacity: 0.3,
             onClosed: function() {
                 xhr.abort();
             }
-        }, options.colorboxOptions);
+        },
+            options.colorboxOptions);
 
         var onComplete = function(response) {
             if (options.bindSubmit) {
@@ -29,7 +31,7 @@ $.extend({
                     $(content).trigger('new-content');
                     $('form', this).each(function() {
                         var new_action = $(this).attr('data-ajax-action');
-                        if (typeof(new_action) != 'undefined') {
+                        if (typeof (new_action) != 'undefined') {
                             $(this).attr('action', new_action);
                         }
                         $(this).ajaxForm({
@@ -54,7 +56,8 @@ $.extend({
                                     var html = $('<div>').hide().appendTo('body').append(response.html);
                                     $.colorbox($.extend({
                                         html: html.show()
-                                    }, colorBoxParams));
+                                    },
+                                        colorBoxParams));
                                     onComplete();
                                 }
                             }
@@ -66,7 +69,8 @@ $.extend({
             if (options.callback) options.callback(response);
         };
 
-        var param = options.url.indexOf('?') == -1 ? '?dialogWrap=1' : '&dialogWrap=1';
+        var param = options.url.indexOf('?') == -1 ? '?dialogWrap=1'
+            : '&dialogWrap=1';
         var xhr = $.get(options.url + param, options.data, function(response) {
             var html = $('<div>').hide().appendTo('body').append(response.html);
 
@@ -79,68 +83,68 @@ $.extend({
                 onComplete: function() {
                     onComplete(response);
                 }
-            }, colorBoxParams));
+            },
+                colorBoxParams));
         }, 'json');
 
         $.colorbox(colorBoxParams);
 
         return false;
     },
-
     /**
      * Инициализирует функцию добавления товаров в корзину, отображение общего числа товаров в корзине
      * Инициализируется, если на экране присутствует блок "Корзина". (элемент #cart)
      */
     cart: function(method) {
         var defaults = {
-                cartActiveClass: 'active',
-                fixedLine: '.fixedCart',
-                fixedLineActiveClass: 'cartIsOpen',
-                amountTextField: '.num',
-                closeDlg: '.closeDlg',
-                popupCartId: 'popupCart',
-                checkoutButton: '#checkout',
-                checkoutButtonActiveClass: 'active',
-                cartTotalPrice: '.costValue',
-                cartTotalItems: '.productsValue',
-                cartPriceBlock: false,
-                productWrapper: '.productItem',
-                update: '.recalc',
-                inLoadingClass: 'inloading',
-                couponField: '.couponCode',
-                couponError: '.couponError',
-                saveScroll: '.viewport',
-                addToCart: '.addToCart',
-                noShowCart: false,
-                applyCoupon: '.applyCoupon',
-                cartBlock: '#cartItems',
-                cartForm: '#cartForm',
-                cartItem: '.cartitem',
-                amountWraper: '.amount', //Оборачивающий контейнер
-                amountField: '.fieldAmount',
-                showCart: '.showCart',
-                checkout: '.submit',
-                clearCart: '.clearCart',
-                offerField: '.offer',
-                cartItemInc: '.inc',
-                cartItemDec: '.dec',
-                cartItemRemove: '.remove',
-                removeCoupon: '.linesContainer .remove',
-                context: '[data-id]',
-                offerFormName: 'offer',
-                multiOffersName: 'multioffers[items]', //атрибут name для многомерных компл.
-                multiofferFormName: '[multioffers][', //атрибут name многомерной комплектации
-                multiofferHidden: '[name^="hidden_offers"]', //атрибут name у спрятанных полей со сведения о компл.
-                amountFormName: 'amount',
-                alreadyInCartClass: 'added',
-                alreadyInCartClassTimeout: 5,
-                alreadyInCartBlock: false,
-                alreadyInCartBlockTimeout: 5,
-                concomitantField: '.fieldConcomitant',
-                concomitantAmountClass: 'concomitant', //Класс на вводе количества сопутствующих товаров
-                continueButton: '.continue'
-            },
-            $this = $('#cart'),
+            cartActiveClass: 'active',
+            fixedLine: '.fixedCart',
+            fixedLineActiveClass: 'cartIsOpen',
+            amountTextField: '.num',
+            closeDlg: '.closeDlg',
+            popupCartId: 'popupCart',
+            checkoutButton: '#checkout',
+            checkoutButtonActiveClass: 'active',
+            cartTotalPrice: '.costValue',
+            cartTotalItems: '.productsValue',
+            cartPriceBlock: false,
+            productWrapper: '.productItem',
+            update: '.recalc',
+            inLoadingClass: 'inloading',
+            couponField: '.couponCode',
+            couponError: '.couponError',
+            saveScroll: '.viewport',
+            addToCart: '.addToCart',
+            noShowCart: false,
+            applyCoupon: '.applyCoupon',
+            cartBlock: '#cartItems',
+            cartForm: '#cartForm',
+            cartItem: '.cartitem',
+            amountWraper: '.amount', //Оборачивающий контейнер
+            amountField: '.fieldAmount',
+            showCart: '.showCart',
+            checkout: '.submit',
+            clearCart: '.clearCart',
+            offerField: '.offer',
+            cartItemInc: '.inc',
+            cartItemDec: '.dec',
+            cartItemRemove: '.remove',
+            removeCoupon: '.linesContainer .remove',
+            context: '[data-id]',
+            offerFormName: 'offer',
+            multiOffersName: 'multioffers[items]', //атрибут name для многомерных компл.
+            multiofferFormName: '[multioffers][', //атрибут name многомерной комплектации
+            multiofferHidden: '[name^="hidden_offers"]', //атрибут name у спрятанных полей со сведения о компл.
+            amountFormName: 'amount',
+            alreadyInCartClass: 'added',
+            alreadyInCartClassTimeout: 5,
+            alreadyInCartBlock: false,
+            alreadyInCartBlockTimeout: 5,
+            concomitantField: '.fieldConcomitant',
+            concomitantAmountClass: 'concomitant', //Класс на вводе количества сопутствующих товаров
+            continueButton: '.continue'
+        },
+        $this = $('#cart'),
             hasCart = true,
             $cartBlock;
 
@@ -168,11 +172,11 @@ $.extend({
                     return methods.add($(this).attr('href'));
                 });
                 $(data.options.checkoutButton).click(function() {
-                    if (!$(this).hasClass(data.options.checkoutButtonActiveClass)) return false;
+                    if (!$(this).hasClass(data.options.checkoutButtonActiveClass))
+                        return false;
                 });
                 initCart(); //Вызываем на случай, если находимся на странице с корзиной
             },
-
             /**
              * Добавляет товар в корзину
              *
@@ -184,7 +188,8 @@ $.extend({
             add: function(url, offer, multioffers, amount, noShowCartDialog) {
 
 
-                if ($.detectMedia && ($.detectMedia('mobile') || $.detectMedia('portrait'))) return true; //Не открываем окна в мобильной версии
+                if ($.detectMedia && ($.detectMedia('mobile') || $.detectMedia('portrait')))
+                    return true; //Не открываем окна в мобильной версии
 
                 var params = {};
                 if (offer) params.offer = offer;
@@ -214,21 +219,19 @@ $.extend({
 
                 return false;
             },
-
             updateCartBlock: function(serverData) {
                 if (serverData) {
-                	if (serverData.cart.items_count > 0) {
-	                    $(data.options.cartTotalItems, $this).text(serverData.cart.items_count).show();
-                	} else {
-	                    $(data.options.cartTotalItems, $this).text(serverData.cart.items_count).hide();
-                	}
+                    if (serverData.cart.items_count > 0) {
+                        $(data.options.cartTotalItems, $this).text(serverData.cart.items_count).show();
+                    } else {
+                        $(data.options.cartTotalItems, $this).text(serverData.cart.items_count).hide();
+                    }
                     $(data.options.cartTotalPrice, $this).text(serverData.cart.total_price);
                     $(data.options.cartPriceBlock).toggle(parseInt(serverData.cart.total_price) > 0);
                     $(data.options.checkoutButton).toggleClass(data.options.checkoutButtonActiveClass, serverData.cart.can_checkout && parseInt(serverData.cart.items_count) > 0);
                     $this.toggleClass(data.options.cartActiveClass, parseInt(serverData.cart.items_count) > 0);
                 }
             },
-
             /**
              * Обновляет корзину
              */
@@ -259,7 +262,6 @@ $.extend({
                     }
                 });
             },
-
             showCart: function(url, params) {
                 params.floatCart = 1;
                 $.ajax({
@@ -278,82 +280,83 @@ $.extend({
 
         //private
         var addToCart = function() {
-                var _this = this;
-                $(this).addClass(data.options.alreadyInCartClass);
-                if (!$(this).data('storedText') && $(this).data('addText')) {
-                    $(this).data('storedText', $(this).html());
-                    $(this).html($(this).data('addText'));
+            var _this = this;
+            $(this).addClass(data.options.alreadyInCartClass);
+            if (!$(this).data('storedText') && $(this).data('addText')) {
+                $(this).data('storedText', $(this).html());
+                $(this).html($(this).data('addText'));
+            }
+
+            var reset = function() {
+                $(_this).removeClass(data.options.alreadyInCartClass);
+                if ($(_this).data('storedText')) {
+                    $(_this).html($(_this).data('storedText'));
+                    $(_this).data('storedText', null);
+                }
+            };
+
+            if (data.options.alreadyInCartClassTimeout) {
+                setTimeout(reset, data.options.alreadyInCartClassTimeout * 1000);
+            }
+            //Отображает всплывающий блок возле корзины
+            if (data.options.alreadyInCartBlock) {
+                var $block = $(data.options.alreadyInCartBlock);
+                clearTimeout($block.data('timer'));
+                var closeBlock = function(e) {
+                    if (e && $(e.target).is(data.options.addToCart)) return;
+                    $block.fadeOut();
                 }
 
-                var reset = function() {
-                    $(_this).removeClass(data.options.alreadyInCartClass);
-                    if ($(_this).data('storedText')) {
-                        $(_this).html($(_this).data('storedText'));
-                        $(_this).data('storedText', null);
-                    }
+                $block.fadeIn().click(function(e) {
+                    e.stopPropagation();
+                });
+                $('body').one('click', closeBlock);
+
+                $block.data('timer', setTimeout(closeBlock, data.options.alreadyInCartClassTimeout * 1000));
+            }
+
+            var context = $(this).closest(data.options.context);
+            if ($('[name="' + data.options.offerFormName + '"]:checked', context).length) {
+                var offer = $('[name="' + data.options.offerFormName + '"]:checked', context).val();
+            } else {
+                var offer = $('[name="' + data.options.offerFormName + '"]', context).val();
+            }
+            var amount = $('[name="' + data.options.amountFormName + '"]', context).val();
+
+            //Многомерные комплектациями
+            if ($('[name^="multioffers["]', context).length) {
+                var multioffers = {};
+                $('[name^="multioffers["]', context).each(function(i) {
+                    pid = $(this).attr('name');
+                    multioffers[pid] = $(this).val();
+                });
+            }
+
+            var noShowCart = $(this).hasClass('noShowCart') || data.options.noShowCart;
+            var url = $(this).data('href') ? $(this).data('href')
+                : $(this).attr('href');
+            var amountValue = amount ? amount : 1;
+            var offerValue = (offer) ? offer : 0;
+            var multioffersValues = (multioffers) ? multioffers : false;
+
+            //Не открываем окна в мобильной версии
+            if ($.detectMedia && ($.detectMedia('mobile') || $.detectMedia('portrait'))) {
+                var params = {
+                    amount: amountValue,
+                    offer: offerValue,
                 };
 
-                if (data.options.alreadyInCartClassTimeout) {
-                    setTimeout(reset, data.options.alreadyInCartClassTimeout * 1000);
-                }
-                //Отображает всплывающий блок возле корзины
-                if (data.options.alreadyInCartBlock) {
-                    var $block = $(data.options.alreadyInCartBlock);
-                    clearTimeout($block.data('timer'));
-                    var closeBlock = function(e) {
-                        if (e && $(e.target).is(data.options.addToCart)) return;
-                        $block.fadeOut();
-                    }
-
-                    $block.fadeIn().click(function(e) {
-                        e.stopPropagation();
-                    });
-                    $('body').one('click', closeBlock);
-
-                    $block.data('timer', setTimeout(closeBlock, data.options.alreadyInCartClassTimeout * 1000));
+                if (multioffersValues) {
+                    $.extend(params, multioffersValues);
                 }
 
-                var context = $(this).closest(data.options.context);
-                if ($('[name="' + data.options.offerFormName + '"]:checked', context).length) {
-                    var offer = $('[name="' + data.options.offerFormName + '"]:checked', context).val();
-                } else {
-                    var offer = $('[name="' + data.options.offerFormName + '"]', context).val();
-                }
-                var amount = $('[name="' + data.options.amountFormName + '"]', context).val();
+                location.href = url + (url.indexOf('?') == -1 ? '?'
+                    : '&') + $.param(params);
+                return false;
+            }
 
-                //Многомерные комплектациями
-                if ($('[name^="multioffers["]', context).length) {
-                    var multioffers = {};
-                    $('[name^="multioffers["]', context).each(function(i) {
-                        pid = $(this).attr('name');
-                        multioffers[pid] = $(this).val();
-                    });
-                }
-
-                var noShowCart = $(this).hasClass('noShowCart') || data.options.noShowCart;
-                var url = $(this).data('href') ? $(this).data('href') : $(this).attr('href');
-                var amountValue = amount ? amount : 1;
-                var offerValue = (offer) ? offer : 0;
-                var multioffersValues = (multioffers) ? multioffers : false;
-
-                //Не открываем окна в мобильной версии
-                if ($.detectMedia && ($.detectMedia('mobile') || $.detectMedia('portrait'))) {
-                    var params = {
-                        amount: amountValue,
-                        offer: offerValue,
-                    };
-
-                    if (multioffersValues) {
-                        $.extend(params, multioffersValues);
-                    }
-
-                    location.href = url + (url.indexOf('?') == -1 ? '?' : '&') + $.param(params);
-                    return false;
-                }
-
-                return methods['add'].call(this, url, offerValue, multioffersValues, amount, noShowCart);
-            },
-
+            return methods['add'].call(this, url, offerValue, multioffersValues, amount, noShowCart);
+        },
             initCart = function(serverData) {
                 $cartBlock = $(data.options.cartBlock);
                 if ($cartBlock.length) {
@@ -376,7 +379,8 @@ $.extend({
                         })
                         .on('change', '[name*="' + data.options.multiofferFormName + '"]', changeMultiOffers)
                         .on('click', data.options.continueButton, function() {
-                            $(this).closest('#colorbox').length ? $.colorbox.close() : history.back();
+                            $(this).closest('#colorbox').length
+                                ? $.colorbox.close() : history.back();
                             return false;
                         })
                         .on('click', data.options.cartItemRemove, removeProduct)
@@ -462,7 +466,6 @@ $.extend({
 
                 methods.refresh();
             },
-
             incProduct = function() {
                 if (!$cartBlock.hasClass(data.options.inLoadingClass)) {
                     var amountField = $(this).closest(data.options.amountWraper).find(data.options.amountField);
@@ -473,12 +476,10 @@ $.extend({
 
                 return false;
             },
-
             closeDlg = function() {
                 $('#' + data.options.popupCartId).fadeOut();
                 $(data.options.fixedLine).removeClass(data.options.fixedLineActiveClass);
             },
-
             decProduct = function() {
                 if (!$cartBlock.hasClass(data.options.inLoadingClass)) {
                     var amountField = $(this).closest(data.options.amountWraper).find(data.options.amountField);
@@ -491,7 +492,6 @@ $.extend({
                 }
                 return false;
             },
-
             removeProduct = function() {
                 if (!$cartBlock.hasClass(data.options.inLoadingClass)) {
                     var cartItem = $(this).closest(data.options.cartItem);
@@ -507,15 +507,12 @@ $.extend({
                 }
                 return false;
             },
-
             showLoading = function() {
                 $cartBlock.addClass(data.options.inLoadingClass);
             },
-
             hideLoading = function() {
                 $cartBlock.removeClass(data.options.inLoadingClass);
             },
-
             updateAmount = function(e) {
                 if (e.keyCode != 13) {
                     var _this = $(this);
@@ -536,22 +533,18 @@ $.extend({
                     }, 500));
                 }
             },
-
             clearCart = function() {
                 var context = $(data.options.productWrapper + '[data-id]')
                 $(data.options.addToCart, context).removeClass(data.options.alreadyInCartClass);
                 return refreshByHref.call(this);
             },
-
             refreshByHref = function() {
                 methods.refresh($(this).attr('href'));
                 return false;
             },
-
             applyCoupon = function() {
                 methods.refresh();
             },
-
             checkout = function(e) {
                 var url = $(data.options.cartForm).attr('action');
                 var param = (url.indexOf('?') > -1 ? '&' : '?') + 'checkout=1';
@@ -571,7 +564,6 @@ $.extend({
 
 
 $.fn.extend({
-
     /**
      * Инициализирует открытие контента по ссылке во всплывающем окне
      */
@@ -595,10 +587,12 @@ $.fn.extend({
 
             //private
             var onClick = function() {
-                if ($.detectMedia && $.detectMedia('mobile')) return true; //Не открываем окна в мобильной версии
+                if ($.detectMedia && $.detectMedia('mobile'))
+                    return true; //Не открываем окна в мобильной версии
 
                 $.openDialog({
-                    url: $(this).data('href') ? $(this).data('href') : $(this).attr('href')
+                    url: $(this).data('href') ? $(this).data('href')
+                        : $(this).attr('href')
                 });
 
                 return false;

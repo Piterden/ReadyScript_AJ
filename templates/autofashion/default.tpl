@@ -1,4 +1,4 @@
 {extends file="%THEME%/wrapper.tpl"}
 {block name="content"}
-{$app->blocks->getMainContent()}
+    {$app->blocks->getMainContent()}
 {/block}

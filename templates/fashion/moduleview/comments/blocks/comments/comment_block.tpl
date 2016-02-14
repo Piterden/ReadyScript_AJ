@@ -6,7 +6,8 @@
         {if $mod_config.need_authorize == 'Y' && !$is_auth}
             <span class="needAuth">Чтобы оставить отзыв необходимо <a href="{$router->getUrl('users-front-auth', ['referer' => $referer])}" class="inDialog">авторизоваться</a></span>
         {else}
-            <a href="#" class="button handler" onclick="$(this).closest('.commentFormBlock').toggleClass('open');return false;">Написать отзыв и оценить товар</a>
+            <a href="#" class="button handler" onclick="$(this).closest('.commentFormBlock').toggleClass('open');
+                    return false;">Написать отзыв и оценить товар</a>
             <div class="caption">
                 Оставить отзыв о товаре
                 <a onclick="$(this).closest('.commentFormBlock').toggleClass('open')" class="close iconX" title="закрыть"></a>
@@ -15,7 +16,7 @@
                 {if !empty($error)}
                     <div class="errors">
                         {foreach $error as $one}
-                        <p>{$one}</p>
+                            <p>{$one}</p>
                         {/foreach}
                     </div>
                 {/if}                            
@@ -39,11 +40,11 @@
                     <input type="text" name="user_name" value="{$comment.user_name}">
                 </p>
                 {if !$is_auth && ModuleManager::staticModuleEnabled('kaptcha')}
-                <div class="formLine captcha">
-                    <div class="fieldName">Введите код, указанный на картинке</div>
-                    <img src="{$router->getUrl('kaptcha')}">
-                    <input type="text" name="captcha" class="inpCap"> 
-                </div>
+                    <div class="formLine captcha">
+                        <div class="fieldName">Введите код, указанный на картинке</div>
+                        <img src="{$router->getUrl('kaptcha')}">
+                        <input type="text" name="captcha" class="inpCap"> 
+                    </div>
                 {/if}                 
                 <input type="submit" value="Оставить отзыв">
             </form>
@@ -64,7 +65,7 @@
 <script type="text/javascript">
     $(function() {
         $('.commentBlock').comments({
-            rate:'.rating',
+            rate: '.rating',
             stars: '.starsBlock i',
             rateDescr: '.rating .desc'
         });

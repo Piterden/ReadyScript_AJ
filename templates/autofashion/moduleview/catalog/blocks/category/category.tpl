@@ -2,21 +2,21 @@
 {if $dirlist}
     <ul class="category">
         {foreach from=$dirlist item=dir}
-        <li class="{$dir.fields.alias}{if in_array($dir.fields.id, $pathids)} act{/if}" {$dir.fields->getDebugAttributes()}><a href="{$dir.fields->getUrl()}">{$dir.fields.name}</a>
-            {if !empty($dir.child)}
-            {assign var=cnt value=count($dir.child)}
-            {if $cnt>9 && $cnt<21}
-                {assign var=columns value="twoColumn"}
-            {elseif $cnt>20}
-                {assign var=columns value="threeColumn"}
-            {/if}
-            <ul {if $columns}class="{$columns}"{/if}>
-                {foreach from=$dir.child item=item}
-                <li {if in_array($item.fields.id, $pathids)}class="act"{/if} {$item.fields->getDebugAttributes()}><a href="{$item.fields->getUrl()}">{$item.fields.name}</a>
-                {/foreach}
-            </ul>
-            {/if}
-        </li>
+            <li class="{$dir.fields.alias}{if in_array($dir.fields.id, $pathids)} act{/if}" {$dir.fields->getDebugAttributes()}><a href="{$dir.fields->getUrl()}">{$dir.fields.name}</a>
+                {if !empty($dir.child)}
+                    {assign var=cnt value=count($dir.child)}
+                    {if $cnt>9 && $cnt<21}
+                        {assign var=columns value="twoColumn"}
+                    {elseif $cnt>20}
+                        {assign var=columns value="threeColumn"}
+                    {/if}
+                    <ul {if $columns}class="{$columns}"{/if}>
+                        {foreach from=$dir.child item=item}
+                            <li {if in_array($item.fields.id, $pathids)}class="act"{/if} {$item.fields->getDebugAttributes()}><a href="{$item.fields->getUrl()}">{$item.fields.name}</a>
+                            {/foreach}
+                    </ul>
+                {/if}
+            </li>
         {/foreach}
     </ul>
 {else}

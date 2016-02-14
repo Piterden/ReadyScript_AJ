@@ -26,7 +26,8 @@
             var rating = $(this).data('rating');
             for (var i = 0; i < rating; i++) {
                 $(this).find('i').eq(i).addClass('act');
-            };
+            }
+            ;
         });
     });
 </script>

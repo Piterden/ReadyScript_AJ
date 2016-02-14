@@ -2,18 +2,18 @@
     <input type="hidden" name="referer" value="{$referer}">
     {$this_controller->myBlockIdInput()}
     <h1 data-dialog-options='{ "width": "755" }'>Регистрация пользователя</h1>
-        {if count($user->getNonFormErrors())>0}
-            <div class="pageError">
-                {foreach $user->getNonFormErrors() as $item}
+    {if count($user->getNonFormErrors())>0}
+        <div class="pageError">
+            {foreach $user->getNonFormErrors() as $item}
                 <p>{$item}</p>
-                {/foreach}
-            </div>
-        {/if}
-        <div class="userType">
-            <input type="radio" id="ut_user" name="is_company" value="0" {if !$user.is_company}checked{/if}><label for="ut_user">Частное лицо</label>
-            <input type="radio" id="ut_company" name="is_company" value="1" {if $user.is_company}checked{/if}><label for="ut_company">Компания</label>
-        </div>        
-        <div class="forms">                        
+            {/foreach}
+        </div>
+    {/if}
+    <div class="userType">
+        <input type="radio" id="ut_user" name="is_company" value="0" {if !$user.is_company}checked{/if}><label for="ut_user">Частное лицо</label>
+        <input type="radio" id="ut_company" name="is_company" value="1" {if $user.is_company}checked{/if}><label for="ut_company">Компания</label>
+    </div>        
+    <div class="forms">                        
         <div class="oh {if $user.is_company} thiscompany{/if}" id="fieldsBlock">
             <div class="half fleft">
                 <div class="companyFields">
@@ -39,13 +39,13 @@
                     {$user->getPropertyView('phone')}
                 </div>                        
                 {if $user.__captcha->isEnabled()}
-                <div class="formLine captcha">
-                    <label class="fieldName">&nbsp;</label>
-                    <div class="alignLeft">
-                        {$user->getPropertyView('captcha')}
-                        <br><span class="fieldName">Защитный код</span>
-                    </div>
-                </div>               
+                    <div class="formLine captcha">
+                        <label class="fieldName">&nbsp;</label>
+                        <div class="alignLeft">
+                            {$user->getPropertyView('captcha')}
+                            <br><span class="fieldName">Защитный код</span>
+                        </div>
+                    </div>               
                 {/if}
             </div>
             <div class="half fright">
@@ -70,15 +70,15 @@
                 </div>
                 {if $conf_userfields->notEmpty()}
                     {foreach $conf_userfields->getStructure() as $fld}
-                    <div class="formLine">
-                    <label class="fieldName">{$fld.title}</label>
-                        {$conf_userfields->getForm($fld.alias)}
-                        {$errname=$conf_userfields->getErrorForm($fld.alias)}
-                        {$error=$user->getErrorsByForm($errname, ', ')}
-                        {if !empty($error)}
-                            <span class="formFieldError">{$error}</span>
-                        {/if}
-                    </div>
+                        <div class="formLine">
+                            <label class="fieldName">{$fld.title}</label>
+                            {$conf_userfields->getForm($fld.alias)}
+                            {$errname=$conf_userfields->getErrorForm($fld.alias)}
+                            {$error=$user->getErrorsByForm($errname, ', ')}
+                            {if !empty($error)}
+                                <span class="formFieldError">{$error}</span>
+                            {/if}
+                        </div>
                     {/foreach}
                 {/if}              
             </div>
@@ -87,13 +87,13 @@
             <input type="submit" value="Зарегистрироваться">
         </div> 
     </div>   
-    
+
     <script type="text/javascript">
         $(function() {
             $('.userType input').click(function() {
                 $('#fieldsBlock').toggleClass('thiscompany', $(this).val() == 1);
                 if ($(this).closest('#colorbox')) $.colorbox.resize();
             });
-        });        
+        });
     </script>    
 </form>

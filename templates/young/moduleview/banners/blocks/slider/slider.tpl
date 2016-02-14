@@ -4,13 +4,13 @@
     <div class="bannerSlider">
         <ul class="banners">
             {foreach $banners as $banner}
-            <li {$banner->getDebugAttributes()} class="item{if $banner@first} act{/if}">
-                <div class="centerContainer">
-                    <div class="centerBlock">
-                        {if $banner.link}<a href="{$banner.link}" {if $banner.targetblank}target="_blank"{/if}>{/if}<img src="{$banner->getBannerUrl($zone.width, $zone.height, 'axy')}" alt="{$banner.title}">{if $banner.link}</a>{/if}
+                <li {$banner->getDebugAttributes()} class="item{if $banner@first} act{/if}">
+                    <div class="centerContainer">
+                        <div class="centerBlock">
+                            {if $banner.link}<a href="{$banner.link}" {if $banner.targetblank}target="_blank"{/if}>{/if}<img src="{$banner->getBannerUrl($zone.width, $zone.height, 'axy')}" alt="{$banner.title}">{if $banner.link}</a>{/if}
+                        </div>
                     </div>
-                </div>
-            </li>
+                </li>
             {/foreach}            
         </ul>
         <div class="pages">
@@ -20,7 +20,7 @@
     <script type="text/javascript">
         $(window).load(function() {
             var resize = function() {
-                $('.bannerSlider').height( $('.bannerSlider > ul > li:first').height() );
+                $('.bannerSlider').height($('.bannerSlider > ul > li:first').height());
             }
             resize();
             $(window).resize(resize);

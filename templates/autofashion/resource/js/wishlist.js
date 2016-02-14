@@ -7,12 +7,12 @@ jQuery(document).ready(function($) {
             type: 'POST',
             data: data,
         })
-        .done(function(data) {
-            console.log("success", data);
-        })
-        .fail(function(data) {
-            console.log("error", data);
-        });
+            .done(function(data) {
+                console.log("success", data);
+            })
+            .fail(function(data) {
+                console.log("error", data);
+            });
         return false;
     });
 });

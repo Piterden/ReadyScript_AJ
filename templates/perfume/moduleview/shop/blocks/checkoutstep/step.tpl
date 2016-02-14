@@ -10,13 +10,13 @@
 
 <ul>
     {foreach $steps as $n=>$item}
-    <li class="{if $n>$cnt-2}last{/if}{if $step>=$n+1} already{/if}">
-        {if $n+1>$step || $step>$cnt}<span class="item">{else}
-        <a class="item" href="{$router->getUrl('shop-front-checkout', ['Act' => $item.key])}">
-        {/if}
-        <img src="{$THEME_IMG}/{if $step>=$n+1}{$SHADE}{/if}checkout_step{$n+1}{if $step>=$n+1}_act{/if}.png" alt="{$item.text}"/><br>
-        <span>{$item.text}</span>
-        {if $n+1>$step || $step>$cnt}</span>{else}</a>{/if}
-    </li>
+        <li class="{if $n>$cnt-2}last{/if}{if $step>=$n+1} already{/if}">
+            {if $n+1>$step || $step>$cnt}<span class="item">{else}
+                    <a class="item" href="{$router->getUrl('shop-front-checkout', ['Act' => $item.key])}">
+                    {/if}
+                    <img src="{$THEME_IMG}/{if $step>=$n+1}{$SHADE}{/if}checkout_step{$n+1}{if $step>=$n+1}_act{/if}.png" alt="{$item.text}"/><br>
+                    <span>{$item.text}</span>
+                {if $n+1>$step || $step>$cnt}</span>{else}</a>{/if}
+        </li>
     {/foreach}               
 </ul>

@@ -3,10 +3,10 @@
         <p class="caption">Новости</p>
         <ul>
             {foreach $news as $item}
-            <li {$item->getDebugAttributes()}>
-                <p class="date">{$item.dateof|dateformat:"%d %v %Y, %H:%M"}</p>
-                <a href="{$item->getUrl()}" class="title">{$item.title}</a>
-            </li>
+                <li {$item->getDebugAttributes()}>
+                    <p class="date">{$item.dateof|dateformat:"%d %v %Y, %H:%M"}</p>
+                    <a href="{$item->getUrl()}" class="title">{$item.title}</a>
+                </li>
             {/foreach}
         </ul>
         <a href="{$router->getUrl('article-front-previewlist', [category => $category->getUrlId()])}" class="colorButton">Все новости</a>

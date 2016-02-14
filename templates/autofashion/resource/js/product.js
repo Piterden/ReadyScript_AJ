@@ -15,7 +15,7 @@ $(window).load(function() {
         var $gal = $('.gallery');
         var $galWrap = $gal.children('.wrap');
         $galWrap.jcarousel('scroll', 0);
-	    $galWrap.height($gal.prev().height() - 30);
+        $galWrap.height($gal.prev().height() - 30);
     });
     $(window).trigger('resize');
 
@@ -42,19 +42,19 @@ $(window).load(function() {
     $('.control.prev').on('click', function() {
         var $act = $('.gallery li.active');
         if ($act.prev('li').length > 0) {
-	        $act.prev('li').children('a').trigger('click');
+            $act.prev('li').children('a').trigger('click');
         } else {
-        	$act.siblings('li').eq(-1).children('a').trigger('click');
-	        $('.gallery .wrap').jcarousel('scroll', -1);
+            $act.siblings('li').eq(-1).children('a').trigger('click');
+            $('.gallery .wrap').jcarousel('scroll', -1);
         }
     });
     $('.control.next').on('click', function() {
         var $act = $('.gallery li.active');
         if ($act.next('li').length > 0) {
-	        $act.next('li').children('a').trigger('click');
+            $act.next('li').children('a').trigger('click');
         } else {
-        	$act.siblings('li').eq(0).children('a').trigger('click');
-	        $('.gallery .wrap').jcarousel('scroll', 0);
+            $act.siblings('li').eq(0).children('a').trigger('click');
+            $('.gallery .wrap').jcarousel('scroll', 0);
         }
     });
 
@@ -120,7 +120,7 @@ $(function() {
     });
 
     $('[data-toggle="tooltip"]').tooltip({
-        placement : 'top'
+        placement: 'top'
     });
 
 });

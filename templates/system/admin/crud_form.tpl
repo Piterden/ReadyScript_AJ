@@ -1,16 +1,16 @@
 {$app->autoloadScripsAjaxBefore()}
 <div class="crud-ajax-group">
     {if !$url->isAjax()}
-    <div id="content-layout">
-        <div class="viewport">
-    {/if}        
+        <div id="content-layout">
+            <div class="viewport">
+            {/if}        
             {if $elements.topToolbar}
-                    <div class="c-head">
-                        <div class="buttons pad10">
-                            {$elements.topToolbar->getView()}
-                        </div>
-                        <div class="titlebox">{$elements.formTitle}</div>
+                <div class="c-head">
+                    <div class="buttons pad10">
+                        {$elements.topToolbar->getView()}
                     </div>
+                    <div class="titlebox">{$elements.formTitle}</div>
+                </div>
             {else}
                 <div class="titlebox">{$elements.formTitle}</div>
             {/if}
@@ -25,7 +25,7 @@
                                     <div class="{$data.class|default:"field"}">{$data.fieldname}<i class="cor"></i></div>
                                     <div class="text">
                                         {foreach from=$data.errors item=error}
-                                        {$error}
+                                            {$error}
                                         {/foreach}
                                     </div>
                                 </li>
@@ -36,10 +36,10 @@
                 <div class="crud-form-success text-success"></div>
                 {$elements.form}
             </div>
-        {if !$url->isAjax()}
-            <div class="footerspace"></div>
-        </div> <!-- .viewport -->
-    </div> <!-- .content -->
+            {if !$url->isAjax()}
+                <div class="footerspace"></div>
+            </div> <!-- .viewport -->
+        </div> <!-- .content -->
     {/if}
     <div class="bottomToolbar zindex-dlg">
         <div class="viewport">

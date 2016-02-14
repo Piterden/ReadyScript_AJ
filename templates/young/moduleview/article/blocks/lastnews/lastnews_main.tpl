@@ -1,17 +1,17 @@
 {if $category && $news}
-        <ul class="news">
-            {foreach $news as $item}
+    <ul class="news">
+        {foreach $news as $item}
             <li {$item->getDebugAttributes()}>
                 <p class="date">{$item.dateof|dateformat:"%d %v %Y, %H:%M"}</p>
                 <a href="{$item->getUrl()}" class="title">{$item.title}</a>
                 <p>{$item->getPreview()}</p>
             </li>
-            {/foreach}
-        </ul>
-        <div class="textCenter">
-            <a href="{$router->getUrl('article-front-previewlist', [category => $category->getUrlId()])}" class="colorButton">Все новости</a>
-        </div>
-    
+        {/foreach}
+    </ul>
+    <div class="textCenter">
+        <a href="{$router->getUrl('article-front-previewlist', [category => $category->getUrlId()])}" class="colorButton">Все новости</a>
+    </div>
+
 {else}
     {include file="%THEME%/block_stub.tpl"  class="blockLastNews" do=[
         [

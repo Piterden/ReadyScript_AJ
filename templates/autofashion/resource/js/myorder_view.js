@@ -1,6 +1,6 @@
 $(window).load(function() {
     var carousel = $('.orderViewProducts .scrollWrapper').jcarousel();
-     
+
     $('.control').on({
         'inactive.jcarouselcontrol': function() {
             $(this).addClass('disabled');

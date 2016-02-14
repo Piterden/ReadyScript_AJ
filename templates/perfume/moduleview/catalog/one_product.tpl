@@ -8,8 +8,8 @@
             <div class="scrollBox">
                 <ul class="items">
                     {foreach $imagelist as $n=>$image}
-                    <li data-change-preview="{$image->getUrl(226,236)}" {if $image@first}class="act"{/if}><a href="{$product->getUrl()}#photo-{$n}" class="imgWrap"><img src="{$image->getUrl(56, 56)}" alt="{$image.title}"/></a></li>
-                    {/foreach}
+                        <li data-change-preview="{$image->getUrl(226,236)}" {if $image@first}class="act"{/if}><a href="{$product->getUrl()}#photo-{$n}" class="imgWrap"><img src="{$image->getUrl(56, 56)}" alt="{$image.title}"/></a></li>
+                            {/foreach}
                 </ul>
             </div>
         </div>
@@ -27,7 +27,7 @@
                             <a data-href="{$router->getUrl('shop-front-cartpage', ["add" => $product.id])}" class="cartButton addToCart noShowCart" data-add-text="Добавлено">В корзину</a>
                         {/if}                        
                     {/if}
-                    
+
                 {/if}
             {/if}
             <a class="compare{if $product->inCompareList()} inCompare{/if}"><span>Сравнить</span><span class="already">Добавлено</span></a>
@@ -36,7 +36,7 @@
     <div class="mainLayer">
         {$main_image=$product->getMainImage()}
         <a href="{$product->getUrl()}" class="image"><span class="markers">{if $product->inDir('new')}<img src="{$THEME_IMG}/newest.png" alt=""/>{/if}</span>
-        <img src="{$main_image->getUrl(226, 236)}" class="middlePreview" alt="{$main_image.title|default:"{$product.title}"}"/></a>
+            <img src="{$main_image->getUrl(226, 236)}" class="middlePreview" alt="{$main_image.title|default:"{$product.title}"}"/></a>
         <a href="{$product->getUrl()}" class="title">{$product.title}</a>
         <p class="price">{$product->getCost()} {$product->getCurrency()}</p>
         <div class="starsLine">

@@ -3,7 +3,7 @@
     <div class="module-border module-border-right"></div>
     <div class="module-border module-border-top"></div>
     <div class="module-border module-border-bottom"></div>
-    
+
     <div class="module-tools">    
         <div class="dragblock">&nbsp;</div>
         {foreach from=$group->getTools() item=tool}

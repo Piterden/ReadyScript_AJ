@@ -1,13 +1,13 @@
 {if $products}
-{$shop_config=ConfigLoader::byModule('shop')}
-{$products = $this_controller->api->addProductsMultiOffersInfo($products)}
+    {$shop_config=ConfigLoader::byModule('shop')}
+    {$products = $this_controller->api->addProductsMultiOffersInfo($products)}
 
-<ul class="products">
-    {foreach $products as $product}
-        {include file="%catalog%/one_product.tpl" shop_config=$shop_config product=$product}
-    {/foreach}    
-</ul>
-<div class="clearLeft"></div>
+    <ul class="products">
+        {foreach $products as $product}
+            {include file="%catalog%/one_product.tpl" shop_config=$shop_config product=$product}
+        {/foreach}    
+    </ul>
+    <div class="clearLeft"></div>
 {else}
     {include file="%THEME%/block_stub.tpl"  class="blockTopProducts" do=[
         [

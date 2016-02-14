@@ -3,10 +3,10 @@
         <div class="viewport">
             {* Логотип *}
             {moduleinsert name="\Main\Controller\Block\Logo" width="200" height="75"}
-            
+
             {* Корзина *}
             {moduleinsert name="\Shop\Controller\Block\Cart" indexTemplate="blocks/cart/co_cart.tpl"}
-            
+
             {* Шаги оформления заказа *}
             {moduleinsert name="\Shop\Controller\Block\CheckoutStep"}               
         </div>

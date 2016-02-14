@@ -26,7 +26,7 @@
         <a href="{$product->getUrl()}" class="image"><img src="{$main_image->getUrl(220,220)}" alt="{$main_image.title|default:"{$product.title}"}"/></a>
         <a href="{$product->getUrl()}" class="title">{$product.title}</a>
         <div class="price">{$product->getCost()} {$product->getCurrency()} 
-        {$last_price=$product->getOldCost()}
-        {if $last_price>0}<span class="last">{$last_price} {$product->getCurrency()}</span>{/if}</div>
+            {$last_price=$product->getOldCost()}
+            {if $last_price>0}<span class="last">{$last_price} {$product->getCurrency()}</span>{/if}</div>
     </div>                
 </li>

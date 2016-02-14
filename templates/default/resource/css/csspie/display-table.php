@@ -11,6 +11,6 @@
  * the text/x-component content-type, and cannot easily be configured to do so (as is the
  * case with some shared hosting providers).
  */
-header ( 'Content-type: text/x-component' );
+header('Content-type: text/x-component');
 include ('display-table.min.htc');
 ?>

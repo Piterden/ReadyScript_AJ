@@ -15,7 +15,7 @@
                     {if !empty($error)}
                         <div class="errors col-xs-24">
                             {foreach $error as $one}
-                            {$one}<br>
+                                {$one}<br>
                             {/foreach}
                         </div>
                     {/if}
@@ -38,17 +38,17 @@
                         <span class="desc">{$comment->getRateText()}</span>
                     </div>
                     <div class="message col-xs-24">
-                    	<textarea name="message" placeholder="Напишите отзыв">{$comment.message}</textarea>
+                        <textarea name="message" placeholder="Напишите отзыв">{$comment.message}</textarea>
                     </div>
                     {if !$is_auth && ModuleManager::staticModuleEnabled('kaptcha')}
-                    <div class="formLine captcha col-xs-16">
-                        <label>Введите код с картинки:</label>
-                        <img src="{$router->getUrl('kaptcha')}">
-                        <input type="text" name="captcha" class="inpCap">
-                    </div>
+                        <div class="formLine captcha col-xs-16">
+                            <label>Введите код с картинки:</label>
+                            <img src="{$router->getUrl('kaptcha')}">
+                            <input type="text" name="captcha" class="inpCap">
+                        </div>
                     {/if}
                     <div class="buttons col-xs-8 text-right">
-	                    <button type="submit">Оставить отзыв</button>
+                        <button type="submit">Оставить отзыв</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -68,7 +68,7 @@
 <script type="text/javascript">
     $(function() {
         $('.commentBlock').comments({
-            rate:'.rating',
+            rate: '.rating',
             stars: '.starsBlock i',
             rateDescr: '.rating .desc'
         });

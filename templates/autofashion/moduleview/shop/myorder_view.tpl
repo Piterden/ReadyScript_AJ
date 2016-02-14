@@ -32,10 +32,10 @@
             <td class="value">{$order->getAddress()->getLineView()}</td>
         </tr>                
         {if $order->contact_person}
-        <tr>
-            <td class="key">Контактное лицо</td>
-            <td class="value">{$order->contact_person}</td>
-        </tr>                
+            <tr>
+                <td class="key">Контактное лицо</td>
+                <td class="value">{$order->contact_person}</td>
+            </tr>                
         {/if}
         <tr>
             <td class="key"></td>
@@ -49,20 +49,20 @@
             </tr>
         {/foreach}    
         {foreach $order_data.other as $item}
-        {if $item.cartitem.type != 'coupon'}
-        <tr>
-            <td class="key">{$item.cartitem.title}</td>
-            <td class="value">
-                <div class="price">{$item.total}</div>
-            </td>
-        </tr>
-        {/if}
+            {if $item.cartitem.type != 'coupon'}
+                <tr>
+                    <td class="key">{$item.cartitem.title}</td>
+                    <td class="value">
+                        <div class="price">{$item.total}</div>
+                    </td>
+                </tr>
+            {/if}
         {/foreach}
         {if $order->comments}
-        <tr>
-            <td class="key">Комментарий</td>
-            <td class="value">{$order->comments}</td>
-        </tr>
+            <tr>
+                <td class="key">Комментарий</td>
+                <td class="value">{$order->comments}</td>
+            </tr>
         {/if}
         <tr class="summary">
             <td class="key">Итого</td>
@@ -93,7 +93,7 @@
                 <div class="col-md-6 imageWrap text-center">
                     {if $product.id>0}
                         <a href="{$product->getUrl()}" class="image"><img src="{$main_image->getUrl(226, 236, 'xy')}" alt="{$main_image.title|default:"{$product.title}"}"/></a>
-                    {else}
+                        {else}
                         <span class="image"><img src="{$main_image->getUrl(226, 236, 'xy')}" alt="{$main_image.title|default:"{$product.title}"}"/></span>
                         <span class="title">{$item.cartitem.title}</span>
                     {/if}
@@ -116,14 +116,14 @@
                         {if !empty($multioffer_titles)}
                             {foreach $multioffer_titles as $multioffer}
                                 <div class="offer">{$multioffer.title} - <span class="value">{$multioffer.value}</span></div>
-                            {/foreach}
-                        {/if}                
+                                {/foreach}
+                            {/if}                
                     </div>
                 </div>
                 <div class="col-md-3 price">
                     <p>Цена - <span class="price">{$item.cost} {$order.currency_stitle}</span></p>
                     {if $item.discount >0}
-                    <p>Скидка - <span class="price">{$item.discount} {$order.currency_stitle}</span></p>
+                        <p>Скидка - <span class="price">{$item.discount} {$order.currency_stitle}</span></p>
                     {/if}
                 </div>
             </div>
@@ -131,7 +131,7 @@
     {/foreach}
 </ul>
 {if !empty($order.user_text)}
-<div class="userText">
-    {$order.user_text}
-</div>
+    <div class="userText">
+        {$order.user_text}
+    </div>
 {/if}

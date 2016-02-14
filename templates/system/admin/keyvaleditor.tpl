@@ -12,16 +12,16 @@
         </thead>
         <tbody>
             {if is_array($arr)}
-            {foreach from=$arr key=prop_key item=prop_val}
-            <tr>
-                <td class="kv-sort">
-                    <div class="ksort"></div>
-                </td>
-                <td class="kv-key"><input type="text" name="{$field_name}[key][]" value="{$prop_key}"></td>
-                <td class="kv-val"><input type="text" name="{$field_name}[val][]" value="{$prop_val}"></td>
-                <td class="kv-del"><a class="remove"></a></td>
-            </tr>
-            {/foreach}
+                {foreach from=$arr key=prop_key item=prop_val}
+                    <tr>
+                        <td class="kv-sort">
+                            <div class="ksort"></div>
+                        </td>
+                        <td class="kv-key"><input type="text" name="{$field_name}[key][]" value="{$prop_key}"></td>
+                        <td class="kv-val"><input type="text" name="{$field_name}[val][]" value="{$prop_val}"></td>
+                        <td class="kv-del"><a class="remove"></a></td>
+                    </tr>
+                {/foreach}
             {/if}
         </tbody>
     </table>

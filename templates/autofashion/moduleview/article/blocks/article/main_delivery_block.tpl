@@ -1,11 +1,11 @@
 {if $article.id}
-<div class="deliveryBlock">
-    <div class="image"></div>
-    <div class="text">
-        <p class="caption">Доставка</p>
-        <div class="descr">{$article.content}</div>
+    <div class="deliveryBlock">
+        <div class="image"></div>
+        <div class="text">
+            <p class="caption">Доставка</p>
+            <div class="descr">{$article.content}</div>
+        </div>
     </div>
-</div>
 {else}
     {include file="%THEME%/block_stub.tpl"  class="blockArticleDelivery" do=[
         [

@@ -22,7 +22,7 @@
 {addcss file="admin/debugstyle.css?v=7" basepath="common"}
 {addcss file="admin/framework.css" basepath="common"}
 <div id="debug-top-block" class="admin-style">
-<div class="menuline">
+    <div class="menuline">
         <div class="viewport relative">
             <a href="{adminUrl mod_controller=false do=false}" class="brand"></a>
             <div class="debug-mode-switcher">
@@ -34,7 +34,7 @@
                 </div>
                 <p class="debugmode-text">{t}режим отладки{/t}</p>                 
             </div>                            
-            
+
             <div class="action-zone">
                 {modulegetvars name="\Site\Controller\Admin\BlockSelectSite" var="sites"}
                 <div class="panel-menu">
@@ -42,9 +42,9 @@
                     <ul class="drop-down">
                         {foreach $sites.sites as $site}
                             {if $site.id != $sites.current.id}
-                            <li><a href="{$router->getUrl('main.admin', ['Act' => 'changeSite', 'site' => $site.id])}">{$site.title}</a></li>
-                            {/if}
-                        {/foreach}
+                                <li><a href="{$router->getUrl('main.admin', ['Act' => 'changeSite', 'site' => $site.id])}">{$site.title}</a></li>
+                                {/if}
+                            {/foreach}
                         <li class="user-section">
                             <a href="{adminUrl mod_controller="users-ctrl" do="edit" id=$current_user.id}">{$current_user->getFio()}</a>
                             <a href="{$router->getUrl('main.admin', [Act => 'logout'])}">{t}Выход{/t}</a>

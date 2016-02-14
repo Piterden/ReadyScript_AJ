@@ -12,7 +12,7 @@
                 <input type="password" size="30" name="new_pass_confirm" class="inp">
             </div>
             <div class="buttons">
-	            <button type="submit">Сменить пароль</button>
+                <button type="submit">Сменить пароль</button>
 
             </div>
         </div>

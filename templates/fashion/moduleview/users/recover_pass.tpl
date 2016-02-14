@@ -8,7 +8,7 @@
                 <label class="fieldName">E-mail</label>
                 <input type="text" name="login" value="{$data.login}" data-deftext="e-mail" class="inp" value="{$data.login}" {if $send_success}readonly{/if}>
             </div>
-            
+
             {if $send_success}
                 <div class="recoverText success">
                     <i></i>

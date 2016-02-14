@@ -16,50 +16,50 @@
     </div>
     <ul class="vertItems ">
         {foreach $pay_list as $item}
-        <li class="paymentItem row{if $item@first} first{/if}">
-            <div class="radio col-sm-8">
-                {if !empty($item.picture)}
-                    <label for="pay_{$item.id}" class="logoService">
-                        <img class="" src="{$item.__picture->getUrl(100, 100, 'xy')}" alt="{$item.title}"/>
-                    </label>
-                {/if}
-                <input type="radio" name="payment" value="{$item.id}" id="pay_{$item.id}" {if $order.payment==$item.id}checked{/if}>
-                <span class="back"></span>
-            </div>
-            <div class="info col-sm-10">
-                <div class="line">
-                    <label for="pay_{$item.id}" class="title h3">{$item.title}</label>
-                </div>
-                <div class="clearfix"></div>
-                {if $item.id == 7}
-                    <div class="addressBlock">
-                        <div class="h4">Выберите пункт выдачи заказа</div>
-                    </div>
-                {else}
-                    <div class="addressBlock hide">
-                        <div class="addressText">
-                            {$order->getAddress()->getLineView()|@print_r}
-                        </div>
-                        <div class="addressLink">
-                            <a class="spacing" href="{$router->getUrl('shop-front-checkout', ['Act' => 'address'])}">Изменить адрес</a>
-                        </div>
-                    </div>
-                {/if}
-                <div class="descr">{$item.description}</div>
-                <div class="additionalInfo"></div>
-            </div>
-            <div class="priceWrap col-sm-3">
-                <div id="scost_{$item.id}" class="price">
-                    {if $something_wrong}
-                        <span style="color:red;">{$something_wrong}</span>
-                    {else}
-                        <span class="help"></span>
-                        {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
-                        <span>300 {$order->getMyCurrency()->stitle|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
+            <li class="paymentItem row{if $item@first} first{/if}">
+                <div class="radio col-sm-8">
+                    {if !empty($item.picture)}
+                        <label for="pay_{$item.id}" class="logoService">
+                            <img class="" src="{$item.__picture->getUrl(100, 100, 'xy')}" alt="{$item.title}"/>
+                        </label>
                     {/if}
+                    <input type="radio" name="payment" value="{$item.id}" id="pay_{$item.id}" {if $order.payment==$item.id}checked{/if}>
+                    <span class="back"></span>
                 </div>
-            </div>
-        </li>
+                <div class="info col-sm-10">
+                    <div class="line">
+                        <label for="pay_{$item.id}" class="title h3">{$item.title}</label>
+                    </div>
+                    <div class="clearfix"></div>
+                    {if $item.id == 7}
+                        <div class="addressBlock">
+                            <div class="h4">Выберите пункт выдачи заказа</div>
+                        </div>
+                    {else}
+                        <div class="addressBlock hide">
+                            <div class="addressText">
+                                {$order->getAddress()->getLineView()|@print_r}
+                            </div>
+                            <div class="addressLink">
+                                <a class="spacing" href="{$router->getUrl('shop-front-checkout', ['Act' => 'address'])}">Изменить адрес</a>
+                            </div>
+                        </div>
+                    {/if}
+                    <div class="descr">{$item.description}</div>
+                    <div class="additionalInfo"></div>
+                </div>
+                <div class="priceWrap col-sm-3">
+                    <div id="scost_{$item.id}" class="price">
+                        {if $something_wrong}
+                            <span style="color:red;">{$something_wrong}</span>
+                        {else}
+                            <span class="help"></span>
+                            {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
+                            <span>300 {$order->getMyCurrency()->stitle|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
+                        {/if}
+                    </div>
+                </div>
+            </li>
         {/foreach}
     </ul>
     <div class="row">

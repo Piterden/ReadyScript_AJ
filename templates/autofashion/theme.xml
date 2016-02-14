@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <theme scriptType="shop" scriptMajorVersion="2" themeType="pc">
-	<general>
-		<author></author>
-		<name>Autojack fashion</name>
-		<description></description>
-		<version>1.0.0.43</version>
-	</general>
-	<shades>
-		<shade>
-			<id>orange</id>
-			<title>Оранжевый</title>
-			<color>#FEC447</color>
-		</shade>
-		<shade>
-			<id>green</id>
-			<title>Зеленый</title>
-			<color>#C9D823</color>
-		</shade>
-		<shade>
-			<id>violet</id>
-			<title>Фиолетовый</title>
-			<color>#5C5799</color>
-		</shade>
-		<shade>
-			<id>purple</id>
-			<title>Бардовый</title>
-			<color>#A63813</color>
-		</shade>
-	</shades>
+    <general>
+        <author></author>
+        <name>Autojack fashion</name>
+        <description></description>
+        <version>1.0.0.43</version>
+    </general>
+    <shades>
+        <shade>
+            <id>orange</id>
+            <title>Оранжевый</title>
+            <color>#FEC447</color>
+        </shade>
+        <shade>
+            <id>green</id>
+            <title>Зеленый</title>
+            <color>#C9D823</color>
+        </shade>
+        <shade>
+            <id>violet</id>
+            <title>Фиолетовый</title>
+            <color>#5C5799</color>
+        </shade>
+        <shade>
+            <id>purple</id>
+            <title>Бардовый</title>
+            <color>#A63813</color>
+        </shade>
+    </shades>
 </theme>
