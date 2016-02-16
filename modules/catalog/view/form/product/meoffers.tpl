@@ -9,6 +9,17 @@
     <table class="otable">                                              
         <tr class="editrow">
             <td class="ochk" width="20">
+                <input title="{t}Отметьте, чтобы применить изменения по этому полю{/t}" type="checkbox" class="doedit" name="doedit[]" value="{$elem.__offer_caption->getName()}" {if in_array($elem.__offer_caption->getName(), $param.doedit)}checked{/if}></td>
+            <td class="otitle">{$elem.__offer_caption->getTitle()}</td>
+            <td>
+                <div class="multi_edit_rightcol coveron">
+                    <div class="cover"></div>
+                    {include file=$elem.__offer_caption->getRenderTemplate(true) field=$elem.__offer_caption}
+                </div>        
+            </td>
+        </tr>    
+        <tr class="editrow">
+            <td class="ochk" width="20">
                 <input title="{t}Отметьте, чтобы применить изменения по этому полю{/t}" type="checkbox" class="doedit" name="doedit[]" value="{$elem.___offers_->getName()}" {if in_array($elem.___offers_->getName(), $param.doedit)}checked{/if}></td>
             <td class="otitle"></td>
             <td>

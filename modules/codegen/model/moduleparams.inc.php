@@ -4,8 +4,8 @@ namespace CodeGen\Model;
 
 class ModuleParams
 {
-	public $name;
-	public $title;
-	public $description;
-	public $author;
+    public $name;
+    public $title;
+    public $description;
+    public $author;
 }

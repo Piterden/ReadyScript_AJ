@@ -233,9 +233,8 @@
             <div class="col-sm-12 col-sm-offset-5 newAddress{if $order.use_addr!=0} hide{/if}">
                 <div class="themeTable">
                     <div class="tableRow">
-                        {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'staticGetRegions']}
                         <input type="hidden" name="addr_country_id" value="1">
-                        <div class="key district">
+                        {*<div class="key district">
                             <label class="fieldName">Регион</label>
                         </div>
                         <div class="value district">
@@ -252,20 +251,20 @@
                             </select>
                             <input id="sd_region_name" type="hidden" name="order_extra[region_to]" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
                             <input id="addr_region" type="hidden" name="addr_region" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
-                        </div>
-                        {*<div class="key district">
-                        <label class="fieldName">Область/край</label>
+                        </div>*}
+                        <div class="key district">
+	                        <label class="fieldName">Область/край</label>
                         </div>
                         <div class="value district">
-                        {assign var=regcount value=$order->regionList()}
-                        <span {if count($regcount) == 0}style="display:none"{/if} id="region-select">
-                        {$order.__addr_region_id->formView()}
-                        </span>
+	                        {assign var=regcount value=$order->regionList()}
+	                        <span {if count($regcount) == 0}style="display:none"{/if} id="region-select">
+		                        {$order.__addr_region_id->formView()}
+	                        </span>
 
-                        <span {if count($regcount) > 0}style="display:none"{/if} id="region-input">
-                        {$order.__addr_region->formView()}
-                        </span>
-                        </div>*}
+	                        <span {if count($regcount) > 0}style="display:none"{/if} id="region-input">
+		                        {$order.__addr_region->formView()}
+	                        </span>
+                        </div>
                         <div class="key index">
                             <label class="fieldName">Индекс</label>
                         </div>
@@ -292,6 +291,7 @@
                 </div>
             </div>
             <div class="col-sm-12 col-sm-offset-5 sdAddress{if $order.use_addr != -1} hide{/if}">
+	            {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'staticGetRegions']}
                 <div class="themeTable">
                     <div class="tableRow">
                         <div class="key">

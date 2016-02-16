@@ -19,5 +19,10 @@
             {t}Печатная форма квитанции к заказу{/t}
         </a>
     </li>
+    <li style="margin-top: 30px;">
+        <a href="{$router->getAdminUrl('orderQuery',['order_id'=>$order.order_num,'type'=>'delivery','method'=>'deleteOrder'])}" class="crud-edit">
+            {t}Удалить заказ из СДЕК{/t}
+        </a>
+    </li>
     
 </ul>

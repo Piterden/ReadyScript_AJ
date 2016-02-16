@@ -4,5 +4,4 @@
         <label><input name="{$field->getFormName()}" type="checkbox" value="{$key}" {if in_array($key, (array)$field->get())}checked="checked"{/if}> {$item}</label>
     </div>
 {/foreach}
-{include file="%system%/coreobject/type/form/block_hint.tpl"}
 {include file="%system%/coreobject/type/form/block_error.tpl"}

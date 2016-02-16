@@ -14,35 +14,35 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
     const
     // Used API Urls
-            URL_API_GETPRICE = 'http://api.iml.ru/json/GetPrice',
-            URL_HELP_SD_LIST = 'http://api.iml.ru/list/sd',
-            URL_HELP_SD_REGIONS = 'http://list.iml.ru/SelfDeliveryRegions',
-            URL_HELP_SERVICES = 'http://list.iml.ru/service',
-            // Учетные данные
-            // API_LOGIN = '07308',
-            // API_PASS = 'TAaB4myF',
-            // Основное API
-            URL_API_STATUS = 'http://api.iml.ru/json/GetStatuses',
-            URL_API_ORDERSLIST = 'http://api.iml.ru/json/GetOrders',
-            URL_API_CREATEORDER = 'http://api.iml.ru/json/CreateOrder',
-            // Справочные таблицы для API
-            URL_HELP_DELIVERYSTATUS = 'http://api.iml.ru/list/deliverystatus?type=json',
-            URL_HELP_ORDERSTATUS = 'http://api.iml.ru/list/orderstatus?type=json',
-            URL_HELP_REGION = 'http://api.iml.ru/list/region?type=json',
-            // URL_HELP_SERVICES           =   'http://api.iml.ru/list/service?type=json',
-            // Остальные справочники
-            URL_LOCATION = 'http://list.iml.ru/Location?type=json',
-            URL_ZONE = 'http://list.iml.ru/zone?type=json',
-            URL_EXCEPTIONSERVICEREGION = 'http://list.iml.ru/ExceptionServiceRegion',
-            URL_POSTDELIVERYLIMIT = 'http://list.iml.ru/PostDeliveryLimit?type=json',
-            URL_REGION = 'http://list.iml.ru/region?type=json',
-            URL_SELFDELIVERY = 'http://list.iml.ru/sd?type=json',
-            URL_STATUS = 'http://list.iml.ru/status?type=json',
-            URL_POSTRATEZONE = 'http://list.iml.ru/PostRateZone?type=json',
-            URL_POSTCODE = 'http://list.iml.ru/PostCode?type=json',
-            URL_CALENDAR = 'http://list.iml.ru/calendar?type=json',
-            URL_SERVICE = 'http://list.iml.ru/service?type=json',
-            SD_SERVICE = 'С24,С24КО';
+        URL_API_GETPRICE = 'http://api.iml.ru/json/GetPrice',
+        URL_HELP_SD_LIST = 'http://api.iml.ru/list/sd',
+        URL_HELP_SD_REGIONS = 'http://list.iml.ru/SelfDeliveryRegions',
+        URL_HELP_SERVICES = 'http://list.iml.ru/service',
+        // Учетные данные
+        // API_LOGIN = '07308',
+        // API_PASS = 'TAaB4myF',
+        // Основное API
+        URL_API_STATUS = 'http://api.iml.ru/json/GetStatuses',
+        URL_API_ORDERSLIST = 'http://api.iml.ru/json/GetOrders',
+        URL_API_CREATEORDER = 'http://api.iml.ru/json/CreateOrder',
+        // Справочные таблицы для API
+        URL_HELP_DELIVERYSTATUS = 'http://api.iml.ru/list/deliverystatus?type=json',
+        URL_HELP_ORDERSTATUS = 'http://api.iml.ru/list/orderstatus?type=json',
+        URL_HELP_REGION = 'http://api.iml.ru/list/region?type=json',
+        // URL_HELP_SERVICES           =   'http://api.iml.ru/list/service?type=json',
+        // Остальные справочники
+        URL_LOCATION = 'http://list.iml.ru/Location?type=json',
+        URL_ZONE = 'http://list.iml.ru/zone?type=json',
+        URL_EXCEPTIONSERVICEREGION = 'http://list.iml.ru/ExceptionServiceRegion',
+        URL_POSTDELIVERYLIMIT = 'http://list.iml.ru/PostDeliveryLimit?type=json',
+        URL_REGION = 'http://list.iml.ru/region?type=json',
+        URL_SELFDELIVERY = 'http://list.iml.ru/sd?type=json',
+        URL_STATUS = 'http://list.iml.ru/status?type=json',
+        URL_POSTRATEZONE = 'http://list.iml.ru/PostRateZone?type=json',
+        URL_POSTCODE = 'http://list.iml.ru/PostCode?type=json',
+        URL_CALENDAR = 'http://list.iml.ru/calendar?type=json',
+        URL_SERVICE = 'http://list.iml.ru/service?type=json',
+        SD_SERVICE = 'С24,С24КО';
 
     //protected
     //$service_id            = null, // Текущая услуга
@@ -56,7 +56,6 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      *
      * @return string
      */
-
     public function getTitle()
     {
         return t('IML');
@@ -256,16 +255,22 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     public function getDeliveryCost(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null,
             $use_currency = true)
     {
-        $extra = $order['order_extra'];
-        if (!isset($extra['delivery'])) {
-            $params = $extra['address'];
+        if ($order['use_addr'] < 0) {
+	        $extra = $order['order_extra'];
+	    	$params = $extra['delivery'];
+	        if (empty($params)) {
+	            $params = $extra['address'];
+	            $params['request_code'] = 1;
+	        }
+        } else {
+        	$address = $order->getAddress();
+        	$params = array(
+	        	'region_id_to' => mb_strtoupper($address->city),
+        	);
         }
-        $code = $this->getOption('service_id')[0];
-        if (!in_array($code, explode(',', self::SD_SERVICE))) {
-            $params['request_code'] = '';
-        }
+
         $content = array(
-            'Job'         => $code, // услуга
+            'Job'         => $this->getOption('service_id')[0], // услуга
             'RegionFrom'  => $this->getOption('region_id_from'), // регион отправки
             'RegionTo'    => $params['region_id_to'], // регион получения
             'Volume'      => '1', // кол-во мест
@@ -310,6 +315,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             curl_setopt($curl, CURLOPT_SSLVERSION, 3);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($curl);
+            curl_close($curl);
 
             $this->cache_api_requests[$cache_key] = json_decode($response, true);
         }
@@ -340,6 +346,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             curl_setopt($curl, CURLOPT_SSLVERSION, 3);
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             $response = curl_exec($curl);
+            curl_close($curl);
 
             $this->cache_api_requests[$cache_key] = json_decode($response, true);
         }

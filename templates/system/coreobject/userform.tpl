@@ -3,10 +3,10 @@
 {elseif $fld.type == 'list'}
     <select name="{$fld.fieldname}">
         {if $fld.necessary}
-            <option value="">Не выбрано</option>
+        <option value="">Не выбрано</option>
         {/if}
         {foreach from=$options item=option}
-            <option{if $option==$values[$fld.alias]} selected{/if}>{$option}</option>
+        <option{if $option==$values[$fld.alias]} selected{/if}>{$option}</option>
         {/foreach}
     </select>
 {elseif $fld.type == 'bool'}

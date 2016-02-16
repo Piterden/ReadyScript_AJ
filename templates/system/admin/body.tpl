@@ -27,9 +27,9 @@
                     <ul class="drop-down">
                         {foreach $sites.sites as $site}
                             {if $site.id != $sites.current.id}
-                                <li><a href="{$router->getUrl('main.admin', ['Act' => 'changeSite', 'site' => $site.id])}">{$site.title}</a></li>
-                                {/if}
-                            {/foreach}
+                            <li><a href="{$router->getUrl('main.admin', ['Act' => 'changeSite', 'site' => $site.id])}">{$site.title}</a></li>
+                            {/if}
+                        {/foreach}
                         <li class="user-section">
                             <a href="{adminUrl mod_controller="users-ctrl" do="edit" id=$current_user.id}">{$current_user->getFio()}</a>
                             <a href="{$router->getUrl('main.admin', [Act => 'logout'])}">{t}Выход{/t}</a>
@@ -42,7 +42,7 @@
                 <a href="{$router->getUrl('main.admin', ["Act" => "cleanCache"])}" class="action clean-cache crud-get" title="{t}Очистить кэш{/t}"></a>
                 <a href="{$SITE->getRootUrl(true)}" class="action to-site wide-element" title="{t}Перейти на сайт{/t}"><span class="wide-text">{t}перейти на сайт{/t}</span></a>
                 {if ModuleManager::staticModuleExists('marketplace')}
-                    <a href="{$router->getAdminUrl(false, [], 'marketplace-ctrl')}" class="action to-marketplace wide-element" title="{t}Маркетплейс{/t}"><span class="wide-text">{t}Маркетплейс{/t}</span></a>
+                <a href="{$router->getAdminUrl(false, [], 'marketplace-ctrl')}" class="action to-marketplace wide-element" title="{t}Маркетплейс{/t}"><span class="wide-text">{t}Маркетплейс{/t}</span></a>
                 {/if}
             </div>
         </div>

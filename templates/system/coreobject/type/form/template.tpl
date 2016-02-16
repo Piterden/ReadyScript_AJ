@@ -1,8 +1,8 @@
 {addjs file="%templates%/tplmanager.js" basepath="root"}
 {addjs file="%templates%/selecttemplate.js" basepath="root"}
-<input name="{$field->getFormName()}" value="{$field->get()}" {if $field->getMaxLength()>0}maxlength="{$field->getMaxLength()}"{/if} {$field->getAttr()} />
-<a class="selectTemplate" title="{t}Выберите шаблон из списка{/t}"></a>
-{include file="%system%/coreobject/type/form/block_hint.tpl"}
+<span style="white-space:nowrap;">
+<input name="{$field->getFormName()}" value="{$field->get()}" {if $field->getMaxLength()>0}maxlength="{$field->getMaxLength()}"{/if} {$field->getAttr()} />&nbsp;<a class="selectTemplate" title="{t}Выберите шаблон из списка{/t}"></a>
+</span>
 {include file="%system%/coreobject/type/form/block_error.tpl"}
 <script>
     $.allReady(function() {

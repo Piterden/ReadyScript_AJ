@@ -38,6 +38,12 @@
                                 <li><a class="crud-get" href="{adminUrl do="testMail"}" style="text-decoration:underline">Проверить отправку писем</a>
                                     <div class="tool-descr">Будет отправлено тестовое сообщение администратору сайта</div>
                                 </li>
+                                <li><a href="{adminUrl do=false mod_controller="main-blockedip"}" style="text-decoration:underline">Блокировка IP-адресов</a>
+                                    <div class="tool-descr">Переход в раздел управления списком заблокированных IP или диапазонов IP</div>
+                                </li>
+                                <li><a class="crud-get" href="{adminUrl do="unlockCron"}" style="text-decoration:underline">Разблокировать Cron</a>
+                                    <div class="tool-descr">Удалить файл блокировки планировщика заданий Cron<br>(/storage/locks/cron)</div>
+                                </li>
                             </ul>
                         </div>    
                     

@@ -1,7 +1,7 @@
 {if count($user->getNonFormErrors())>0}
     <div class="pageError">
         {foreach $user->getNonFormErrors() as $item}
-            <p>{$item}</p>
+        <p>{$item}</p>
         {/foreach}
     </div>
 {/if}    
@@ -51,18 +51,18 @@
             </div>
             {if $conf_userfields->notEmpty()}
                 {foreach $conf_userfields->getStructure() as $fld}
-                    <div class="formLine">
-                        <label class="fielName">{$fld.title}</label><br>
-                        {$conf_userfields->getForm($fld.alias)}
-                        {$errname=$conf_userfields->getErrorForm($fld.alias)}
-                        {$error=$user->getErrorsByForm($errname, ', ')}
-                        {if !empty($error)}
-                            <span class="formFieldError">{$error}</span>
-                        {/if}
-                    </div>
+                <div class="formLine">
+                <label class="fielName">{$fld.title}</label><br>
+                    {$conf_userfields->getForm($fld.alias)}
+                    {$errname=$conf_userfields->getErrorForm($fld.alias)}
+                    {$error=$user->getErrorsByForm($errname, ', ')}
+                    {if !empty($error)}
+                        <span class="formFieldError">{$error}</span>
+                    {/if}
+                </div>
                 {/foreach}
             {/if}                 
-
+            
         </div>
         <div class="half fright">
             <div class="formLine alignRight">
@@ -94,14 +94,14 @@
     </div>    
 </form>
 
-<script type="text/javascript">
-    $(function() {
-        $('#changepass').change(function() {
-            $('.changePass').toggleClass('hidden', !this.checked);
-        });
-
-        $('.profile .userType input').click(function() {
-            $('#fieldsBlock').toggleClass('thiscompany', $(this).val() == 1);
-        });
-    });
-</script>
+    <script type="text/javascript">
+        $(function() {
+            $('#changepass').change(function() {
+                $('.changePass').toggleClass('hidden', !this.checked);
+            });            
+            
+            $('.profile .userType input').click(function() {
+                $('#fieldsBlock').toggleClass('thiscompany', $(this).val() == 1);
+            });
+        });        
+    </script>

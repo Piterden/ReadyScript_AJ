@@ -4,7 +4,7 @@
     {if $api->hasError()}
         <div class="pageError">
             {foreach $api->getErrors() as $item}
-                <p>{$item}</p>
+            <p>{$item}</p>
             {/foreach}
         </div>
     {/if}
@@ -25,8 +25,8 @@
     </table>
 
     {if !$api->hasError()}
-        <form method="POST" class="formStyle buttonLine">
-            <input type="submit" value="Оплатить">
-        </form>
+    <form method="POST" class="formStyle buttonLine">
+        <input type="submit" value="Оплатить">
+    </form>
     {/if}
 </div>

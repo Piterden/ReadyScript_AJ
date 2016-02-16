@@ -1,3 +1,5 @@
 <?php
-return array("Управление^adminmenu" => "Settings" 
-);
+return 
+    array(
+        "Управление^adminmenu" => "Settings",
+    );

@@ -20,22 +20,22 @@ $(function(){
             }else{
                 var option = $("[name^='addr_region_id'] option:contains(\""+global.dadata_ip_region_text+"\")");
                 if (option.length){
-                   option.prop('selected', true);
+                   option.prop('selected', true); 
                 }
             }
         }
-
-
+        
+        
         /**
         * Инициализируем общие функции по подсветке подсказок
-        *
+        * 
         * @type Object
         */
         var init_params = {
             serviceUrl     : "https://dadata.ru/api/v2",
             count          : global.dadata_config.count ? global.dadata_config.count : 5, //кол
             token          : global.dadata_config.api_key,
-            hint           : false,
+            hint           : false, 
             addon          : 'none', //Не показывать в правом углу ничего лишнего
             deferRequestBy : 100, //Задержка между запросами
             minChars       : 2, //Минимальное количество символов
@@ -44,10 +44,10 @@ $(function(){
                 $(this).val($.trim($(this).val()));
             }
         };
-
+        
         if (global.dadata_config.fio_show_hint){
             /**
-            * Включает подсказки в Наименовании компании
+            * Включает подсказки в Наименовании компании 
             */
             $("[name^='user_fio']").suggestions($.extend(init_params, {
                 type           : "NAME",
@@ -59,18 +59,18 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.value;
                 }
-            }));
+            }));  
         }
-
+        
         if (global.dadata_config.surname_show_hint){
             /**
-            * Включает подсказки в Наименовании компании
+            * Включает подсказки в Наименовании компании 
             */
             $("[name^='reg_surname']").suggestions($.extend(init_params, {
                 type           : "NAME",
                 gender         : "UNKNOWN",
                 params: {
-                    parts: ["SURNAME"], //Поле Фамилия
+                    parts: ["SURNAME"], //Поле Фамилия 
                 },
                 /*
                 * Возвращает строку для вставки в поле ввода при выборе подсказки
@@ -79,18 +79,18 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.value;
                 }
-            }));
+            }));  
         }
-
+        
         if (global.dadata_config.name_show_hint){
             /**
-            * Включает подсказки в Наименовании компании
+            * Включает подсказки в Наименовании компании 
             */
             $("[name^='reg_name']").suggestions($.extend(init_params, {
                 type           : "NAME",
                 gender         : "UNKNOWN",
                 params: {
-                    parts: ["NAME"], //Поле Фамилия
+                    parts: ["NAME"], //Поле Фамилия 
                 },
                 /*
                 * Возвращает строку для вставки в поле ввода при выборе подсказки
@@ -99,18 +99,18 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.value;
                 }
-            }));
+            }));  
         }
-
+        
         if (global.dadata_config.midname_show_hint){
             /**
-            * Включает подсказки в Наименовании компании
+            * Включает подсказки в Наименовании компании 
             */
             $("[name^='reg_midname']").suggestions($.extend(init_params, {
                 type           : "NAME",
                 gender         : "UNKNOWN",
                 params: {
-                    parts: ["PATRONYMIC"], //Поле Фамилия
+                    parts: ["PATRONYMIC"], //Поле Фамилия 
                 },
                 /*
                 * Возвращает строку для вставки в поле ввода при выборе подсказки
@@ -119,26 +119,26 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.value;
                 }
-            }));
+            }));  
         }
-
-
-
-
+        
+        
+        
+        
         if (global.dadata_config.company_show_hint){
             /**
-            * Включает подсказки в Наименовании компании
+            * Включает подсказки в Наименовании компании 
             */
             $("[name^='reg_company']").suggestions($.extend(init_params, {
                 serviceUrl     : "https://dadata.ru/api/v2",
                 count          : global.dadata_config.count ? global.dadata_config.count : 5,
                 token          : global.dadata_config.api_key,
-                hint           : false,
+                hint           : false, 
                 addon          : 'none', //Не показывать в правом углу ничего лишнего
                 deferRequestBy : 100, //Задержка между запросами
                 minChars       : 2, //Минимальное количество символов
                 type           : "PARTY",
-
+                
                 /*
                 * Возвращает строку для вставки в поле ввода при выборе подсказки
                 */
@@ -150,15 +150,15 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.value;
                 }
-            }));
+            }));  
         }
-
-
+        
+        
         if (global.dadata_config.email_show_hint){
             /**
             * Включает подсказки в E-mail
             */
-            $("[name^='reg_e_mail'], [name^='user_email'], [name='login']").suggestions($.extend(init_params, {
+            $("[name^='reg_e_mail'], [name^='user_email']").suggestions($.extend(init_params, {
                 suggest_local  : global.dadata_config.email_show_all ? false : true,
                 type           : "EMAIL",
                 /*
@@ -168,10 +168,10 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.value;
                 }
-            }));
+            }));  
         }
-
-
+          
+        
         if (global.dadata_config.city_show_hint){
             /**
             * Включает подсказки в городе
@@ -185,9 +185,9 @@ $(function(){
                     //Вернём правильный результат
                     return suggestion.data.city;
                 }
-            }));
-        }
-
+            }));  
+        }    
+        
         if (global.dadata_config.address_show_hint){
             /**
             * Включает подсказки в адресе, вставляет улицу, дом и квартиру
@@ -219,14 +219,14 @@ $(function(){
                 }
             }));
         }
-    }
-
+    } 
+    
     //Привяжем всё
     dadataBindHints();
-
+    
     //Если обновился контент, то заново привяжем
-    $(window).on('new-content', function(){
+    /*$(window).on('new-content', function(){
         dadataBindHints();
-    });
-
+    });*/
+    
 });

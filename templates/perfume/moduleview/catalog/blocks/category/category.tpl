@@ -1,37 +1,37 @@
 {* Список категорий из 3-х уровней*}
 {if $dirlist}
-    <div class="mobile">
-        <a class="caption ht">Категории</a>
-        <a href="#" class="ht toggle"></a>
-    </div>
-    <ul class="catalog">
-        {foreach $dirlist as $dir}
-            <li class="{if !empty($dir.child)} node{/if}" {$dir.fields->getDebugAttributes()}>
-                <a href="{$dir.fields->getUrl()}">{$dir.fields.name}</a><i></i>
-                    {if !empty($dir.child)}
-                        {$cnt=count($dir.child)}
-                        {$columns=1}
-                    {if $cnt>3}{$columns=2}{/if}
-                {if $cnt>6}{$columns=3}{/if}
+<div class="mobile">
+    <a class="caption ht">Категории</a>
+    <a href="#" class="ht toggle"></a>
+</div>
+<ul class="catalog">
+    {foreach $dirlist as $dir}
+    <li class="{if !empty($dir.child)} node{/if}" {$dir.fields->getDebugAttributes()}>
+        <a href="{$dir.fields->getUrl()}">{$dir.fields.name}</a><i></i>
+        {if !empty($dir.child)}
+            {$cnt=count($dir.child)}
+            {$columns=1}
+            {if $cnt>3}{$columns=2}{/if}
+            {if $cnt>6}{$columns=3}{/if}
             {if $cnt>12}{$columns=4}{/if}
             {* Второй уровень *}
-        <ul class="columns{$columns}">
-            {foreach $dir.child as $subdir}
+            <ul class="columns{$columns}">
+                {foreach $dir.child as $subdir}
                 <li {if !empty($subdir.child)}class="node"{/if}><a href="{$subdir.fields->getUrl()}">{$subdir.fields.name}</a>
                     {if !empty($subdir.child)}
-                        {* Третий уровень *}
-                        <ul>
-                            {foreach $subdir.child as $subdir2}
-                                <li><a href="{$subdir2.fields->getUrl()}">{$subdir2.fields.name}</a></li>
-                                {/foreach}
-                        </ul>
+                    {* Третий уровень *}
+                    <ul>
+                        {foreach $subdir.child as $subdir2}
+                        <li><a href="{$subdir2.fields->getUrl()}">{$subdir2.fields.name}</a></li>
+                        {/foreach}
+                    </ul>
                     {/if}
                 </li>
-            {/foreach}
-        </ul>
-    {/if}
-</li>
-{/foreach}
+                {/foreach}
+            </ul>
+        {/if}
+    </li>
+    {/foreach}
 </ul>
 <script type="text/javascript">
     $(function() {
@@ -44,7 +44,7 @@
         $('.topCategory .ht').click(function() {
             $('.topCategory').toggleClass('open');
             return false;
-        });
+        });        
 
     });
 </script>

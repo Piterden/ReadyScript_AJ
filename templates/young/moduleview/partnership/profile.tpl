@@ -1,7 +1,7 @@
 {if count($partner->getNonFormErrors())>0}
     <div class="pageError">
         {foreach $partner->getNonFormErrors() as $item}
-            <p>{$item}</p>
+        <p>{$item}</p>
         {/foreach}
     </div>
 {/if}    

@@ -1,6 +1,5 @@
 {$el=$elem.__update_price_round_value}
 <input type="text" maxlength="{$el->getMaxLength()}" disabled="disabled" value="{$el->get()}" name="{$el->getName()}"/>
-<a class="help-icon" title="{$el->getHint()}">?</a>
 
 <script type="text/javascript">
     $(function(){

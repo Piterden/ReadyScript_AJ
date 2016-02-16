@@ -131,6 +131,11 @@
                                     <span class="priceBlock">
                                         <span class="priceValue">{$sub_product_data.cost}</span>
                                     </span>
+                                    <div class="discount">
+                                        {if $sub_product_data.discount>0}
+                                        скидка {$sub_product_data.discount}
+                                        {/if}
+                                    </div>
                                 </td>
                                 <td></td>
                             </tr>

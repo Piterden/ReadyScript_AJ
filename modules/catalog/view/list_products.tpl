@@ -28,12 +28,18 @@
         <a href="{urlmake viewAs=blocks}" class="viewAs blocks{if $view_as == 'blocks'} act{/if}" rel="nofollow"></a>                
         Сортировать по:&nbsp;&nbsp;                  
         <span class="lineListBlock sortBlock">
-            <a class="lineTrigger rs-parent-switcher">{if $cur_sort=='dateof'}по дате{elseif $cur_sort=='rating'}рейтингу{else}цене{/if}</a>
+            <a class="lineTrigger rs-parent-switcher">{if $cur_sort=='dateof'}по дате
+                                                      {elseif $cur_sort=='rating'}популярности
+                                                      {elseif $cur_sort=='title'}названию
+                                                      {elseif $cur_sort=='num'}наличию
+                                                      {elseif $cur_sort=='rank'}релевантности
+                                                      {else}цене{/if}</a>
             <ul class="lineList">
                 <li><a href="{urlmake sort="cost" nsort=$sort.cost}" class="item{if $cur_sort=='cost'} {$cur_n}{/if}" rel="nofollow"><i>цене</i></a></li>
-                <li><a href="{urlmake sort="rating" nsort=$sort.rating}" class="item{if $cur_sort=='rating'} {$cur_n}{/if}" rel="nofollow"><i>рейтингу</i></a></li>
+                <li><a href="{urlmake sort="rating" nsort=$sort.rating}" class="item{if $cur_sort=='rating'} {$cur_n}{/if}" rel="nofollow"><i>популярности</i></a></li>
                 <li><a href="{urlmake sort="dateof" nsort=$sort.dateof}" class="item{if $cur_sort=='dateof'} {$cur_n}{/if}" rel="nofollow"><i>дате</i></a></li>
                 <li><a href="{urlmake sort="num" nsort=$sort.num}" class="item{if $cur_sort=='num'} {$cur_n}{/if}" rel="nofollow"><i>наличию</i></a></li>
+                <li><a href="{urlmake sort="title" nsort=$sort.title}" class="item{if $cur_sort=='title'} {$cur_n}{/if}" rel="nofollow"><i>названию</i></a></li>
                 {if $can_rank_sort}
                 <li><a href="{urlmake sort="rank" nsort=$sort.rank}" class="item{if $cur_sort=='rank'} {$cur_n}{/if}" rel="nofollow"><i>релевантности</i></a></li>
                 {/if}

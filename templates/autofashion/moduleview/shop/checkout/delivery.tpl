@@ -58,9 +58,7 @@
                             <span style="color:red;">{$something_wrong}</span>
                         {else}
                             <span class="help">{$order->getDeliveryExtraText($item)}</span>
-                            {*$order->getDeliveryCostText($item)*}
-                            {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
-                            <span>{$item->getDeliveryCost($order)} {$currencyLiter|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
+                            <span>{$item->getDeliveryCostText($order)}fpr</span>
                         {/if}
                     </div>
                 </div>

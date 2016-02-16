@@ -5,7 +5,7 @@
     <div class="property-tools">
         <div class="property-actions">
             <a class="add-property underline"><span>Добавить характеристику</span></a>
-            <span class="success-text">Характеритика успешно добавлена</span>
+            <span class="success-text">Характеристика успешно добавлена</span>
         </div>
         {include file="property_form.tpl"}
     </div>

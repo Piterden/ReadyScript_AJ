@@ -1,3 +1,6 @@
+<div class="wrap">use_addr: <pre>{$order.use_addr}</pre></div>
+<div>extra: <pre>{$order.order_extra|@print_r}</pre></div>
+<div>address: <pre>{$order->getAddress()|@print_r}</pre></div>
 {assign var=catalog_config value=ConfigLoader::byModule('catalog')}
 <div class="row">
     <div class="titleWrap col-md-24 text-center">

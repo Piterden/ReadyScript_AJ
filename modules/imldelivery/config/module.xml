@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<defaultValues>
-		<name multilanguage="true">Доставка IML</name>
-		<description multilanguage="true">Модуль доставки компании IML</description>
-		<version>1.0.0.0</version>
-		<author>YellowmarkerWS</author>
-	</defaultValues>
+    <defaultValues>
+        <name multilanguage="true">Доставка IML</name>
+        <description multilanguage="true">Модуль доставки компании IML</description>
+        <version>1.0.0.0</version>
+        <author>YellowmarkerWS</author>
+    </defaultValues>
 </config>

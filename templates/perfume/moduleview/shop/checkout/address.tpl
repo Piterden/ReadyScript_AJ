@@ -11,16 +11,16 @@
 {/if}
 <form method="POST" class="checkoutForm formStyle {$order.user_type|default:"authorized"}" id="order-form">
     {if !$is_auth}
-        <div class="userType">
-            <div class="centerWrapper">
-                <ul class="centerBlock">
-                    <li class="user first"><input type="radio" id="type-user" name="user_type" value="person" {if $order.user_type=='person'}checked{/if}><label for="type-user">Частное лицо</label></li>
-                    <li class="company"><input type="radio" id="type-company" name="user_type" value="company" {if $order.user_type=='company'}checked{/if}><label for="type-company">Компания</label></li>
-                    <li class="noregister"><input type="radio" id="type-noregister" name="user_type" value="noregister" {if $order.user_type=='noregister'}checked{/if}><label for="type-noregister">Без регистрации</label></li>
-                    <li class="account"><input type="radio" id="type-account" name="user_type" value="user" {if $order.user_type=='user'}checked{/if}><label for="type-account">Я регистрировался ранее</label></li>
-                </ul>
-            </div>
+    <div class="userType">
+        <div class="centerWrapper">
+            <ul class="centerBlock">
+                <li class="user first"><input type="radio" id="type-user" name="user_type" value="person" {if $order.user_type=='person'}checked{/if}><label for="type-user">Частное лицо</label></li>
+                <li class="company"><input type="radio" id="type-company" name="user_type" value="company" {if $order.user_type=='company'}checked{/if}><label for="type-company">Компания</label></li>
+                <li class="noregister"><input type="radio" id="type-noregister" name="user_type" value="noregister" {if $order.user_type=='noregister'}checked{/if}><label for="type-noregister">Без регистрации</label></li>
+                <li class="account"><input type="radio" id="type-account" name="user_type" value="user" {if $order.user_type=='user'}checked{/if}><label for="type-account">Я регистрировался ранее</label></li>
+            </ul>
         </div>
+    </div>
     {/if}    
     <div class="newAccount">
         <div class="workArea">
@@ -28,14 +28,14 @@
                 <h2>Контактные данные</h2>
                 {if $is_auth}
                     {if $user.is_company}
-                        <div class="formLine underlined">
-                            <label class="fielName">Наименование компании</label><br>
-                            <span class="textValue">{$user.company}</span>
-                        </div>
-                        <div class="formLine underlined">
-                            <label class="fielName">ИНН</label><br>
-                            <span class="textValue">{$user.company_inn}</span>
-                        </div>
+                    <div class="formLine underlined">
+                        <label class="fielName">Наименование компании</label><br>
+                        <span class="textValue">{$user.company}</span>
+                    </div>
+                    <div class="formLine underlined">
+                        <label class="fielName">ИНН</label><br>
+                        <span class="textValue">{$user.company_inn}</span>
+                    </div>
                     {/if}
                     <div class="formLine underlined">
                         <label class="fielName">Имя</label><br>
@@ -97,7 +97,7 @@
                             <label class="fielName">e-mail</label><br>
                             {$order->getPropertyView('reg_e_mail')}
                         </div>
-
+                        
                         <div class="formLine">
                             <label class="fielName">Пароль</label><br>
                             <input type="checkbox" name="reg_autologin" {if $order.reg_autologin}checked{/if} value="1" id="reg-autologin">
@@ -112,14 +112,14 @@
                                     {$order.__reg_pass2->formView()}
                                     <div class="help">Повтор пароля</div>
                                 </div>
-
+                                
                                 <div class="formFieldError">{$order->getErrorsByForm('reg_openpass', ', ')}</div>
                             </div>                
                         </div>
-
+                        
                         {foreach $reg_userfields->getStructure() as $fld}
                             <div class="formLine">
-                                <label class="fielName">{$fld.title}</label><br>
+                            <label class="fielName">{$fld.title}</label><br>
                                 {$reg_userfields->getForm($fld.alias)}
                                 {$errname=$reg_userfields->getErrorForm($fld.alias)}
                                 {$error=$order->getErrorsByForm($errname, ', ')}
@@ -150,7 +150,7 @@
             </div>
             <div class="half fright">
                 <h2>Адрес</h2>
-                {if count($address_list)>0}
+               {if count($address_list)>0}
                     <div class="formLine address">
                         {foreach $address_list as $address}
                             <span class="row">
@@ -164,7 +164,7 @@
                 {else}
                     <input type="hidden" name="use_addr" value="0">
                 {/if}             
-
+                
                 <div class="newAddress{if $order.use_addr>0 && $address_list} hidden{/if}">
                     <div class="formLine">
                         <label class="fielName">Страна</label><br>
@@ -178,7 +178,7 @@
                             <span {if count($regcount) == 0}style="display:none"{/if} id="region-select">
                                 {$order.__addr_region_id->formView()}
                             </span>
-
+                            
                             <span {if count($regcount) > 0}style="display:none"{/if} id="region-input">
                                 {$order.__addr_region->formView()}
                             </span>
@@ -211,23 +211,23 @@
                         <div class="help">Необходим для защиты от спам роботов</div>
                     </div>
                 {/if}            
-
+                
                 {if $conf_userfields->notEmpty()}
-                    <h2>Дополнительные сведения</h2>
+                <h2>Дополнительные сведения</h2>
                     {foreach $conf_userfields->getStructure() as $fld}
-                        <div class="formLine">
-                            <label class="fielName">{$fld.title}</label><br>
-                            {$conf_userfields->getForm($fld.alias)}
-                            {assign var=errname value=$conf_userfields->getErrorForm($fld.alias)}
-                            {assign var=error value=$order->getErrorsByForm($errname, ', ')}
-                            {if !empty($error)}
-                                <span class="formFieldError">{$error}</span>
-                            {/if}                        
-                        </div>
+                    <div class="formLine">
+                        <label class="fielName">{$fld.title}</label><br>
+                        {$conf_userfields->getForm($fld.alias)}
+                        {assign var=errname value=$conf_userfields->getErrorForm($fld.alias)}
+                        {assign var=error value=$order->getErrorsByForm($errname, ', ')}
+                        {if !empty($error)}
+                            <span class="formFieldError">{$error}</span>
+                        {/if}                        
+                    </div>
                     {/foreach}
                 {/if}
-
-
+                
+                
             </div>
         </div>
         <div class="buttonLine">

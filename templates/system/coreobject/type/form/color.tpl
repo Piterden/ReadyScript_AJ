@@ -2,4 +2,3 @@
 {addjs file="minipicker/jquery.minicolors.min.js" basepath="common"}
 
 <input name="{$field->getFormName()}" value="{$field->get()}" {if $field->getMaxLength()>0}maxlength="{$field->getMaxLength()}"{/if} {$field->getAttr()} />
-{include file="%system%/coreobject/type/form/block_hint.tpl"}

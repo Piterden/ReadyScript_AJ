@@ -1,17 +1,19 @@
 <?php
-
 /**
- * ReadyScript (http://readyscript.ru)
- * 
- * @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
- * @license http://readyscript.ru/licenseAgreement/
- */
+* ReadyScript (http://readyscript.ru)
+*
+* @copyright Copyright (c) ReadyScript lab. (http://readyscript.ru)
+* @license http://readyscript.ru/licenseAgreement/
+*/
+
 namespace RS\Html\Toolbar\Button;
 
 /**
- * Разделитель между кнопками
- */
+* Разделитель между кнопками
+*/
 class Space extends AbstractButton
 {
-	protected $template = 'system/admin/html_elements/toolbar/button/space.tpl';
+    protected
+        $template = 'system/admin/html_elements/toolbar/button/space.tpl';
+        
 }

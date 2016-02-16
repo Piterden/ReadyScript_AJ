@@ -3,9 +3,8 @@
     <general>
         <author>ReadyScript lab.</author>
         <name>Детская</name>
-        <description>Адаптивная тема, созданная по сетке gs960 в четырех
-            цветовых вариациях</description>
-        <version>1.0.0.54</version>
+        <description>Адаптивная тема, созданная по сетке gs960 в четырех цветовых вариациях</description>
+        <version>1.0.0.58</version>
     </general>
     <shades>
         <shade>
@@ -27,6 +26,6 @@
             <id>green</id>
             <title>Зеленый</title>
             <color>#48aa5a</color>
-        </shade>
+        </shade>        
     </shades>
 </theme>

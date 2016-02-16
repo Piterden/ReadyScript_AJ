@@ -7,5 +7,5 @@
 <input type="text" class="perpage" name="{$paginator->pagesize_key}" value="{$paginator->page_size}" onfocus="$(this).select()">
 <button type="submit" class="ok">OK</button>
 {if empty($local_options.short)}
-    <span class="total">всего записей: <span class="total_value">{$paginator->total}</span></span>
+<span class="total">всего записей: <span class="total_value">{$paginator->total}</span></span>
 {/if}

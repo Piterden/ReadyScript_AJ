@@ -4,8 +4,7 @@
         <div>
             <strong>{$exception->getMessage()}</strong><br>
             Ошибка в контроллере: {$controllerName}<br>
-            <a href="JavaScript:;" onclick="document.getElementById('{$uniq}').style.display = 'block';
-                    this.style.display = 'none'">подробнее</a>
+            <a href="JavaScript:;" onclick="document.getElementById('{$uniq}').style.display='block'; this.style.display = 'none'">подробнее</a>
             <div class="more" id="{$uniq}">
                 Код ошибки:{$exception->getCode()}<br>
                 Тип ошибки:{$type}<br>
@@ -13,7 +12,7 @@
                 Строка:{$exception->getLine()}<br>
                 Стек вызова: <pre>{$exception->getTraceAsString()}</pre><br>          
             </div>
-
+                    
         </div>
     </div>
 {else}

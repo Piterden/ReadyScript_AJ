@@ -1,7 +1,7 @@
 {addjs file="jquery.treeview.js" basepath="common"}
 <div class="category-filter">
-    <div class="category-selector">
-        {assign var=path value=$tree->getPathToFirst()}
+<div class="category-selector">
+    {assign var=path value=$tree->getPathToFirst()}
         <span class="current">
             {foreach from=$path item=item name=breadcrumb}
                 {if !$smarty.foreach.breadcrumb.first}>{/if}

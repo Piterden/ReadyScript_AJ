@@ -1,6 +1,5 @@
-{addcss file="{$mod_css}selectproduct.css" basepath="root"}
-{addjs file="{$mod_js}selectproduct.js" basepath="root"}
-
+{addcss file="%catalog%/selectproduct.css" basepath="root"}
+{addjs file="%catalog%/selectproduct.js" basepath="root"}
 
 <div class="concomitant-product-group-container{if $hide_group_checkbox} hide-group-cb{/if}{if $hide_product_checkbox} hide-product-cb{/if}" data-urls='{ "getChild": "{adminUrl mod_controller="catalog-dialog" do="getChildCategory"}", "getProducts": "{adminUrl mod_controller="catalog-dialog" do="getProducts"}", "getDialog": "{adminUrl mod_controller="catalog-dialog" do=false}" }'>
     <a href="JavaScript:;" class="select-button"><span>Выбрать сопутствующие товары</span></a><br>

@@ -3,11 +3,11 @@
         <h3>Новости</h3>
         <ul class="news">
             {foreach $news as $item}
-                <li class="item {if $item@iteration % 2==0}fr{else}fl{/if}" {$item->getDebugAttributes()}>
-                    <p class="date">{$item.dateof|dateformat:"%d %v %Y, %H:%M"}</p>
-                    <a href="{$item->getUrl()}" class="title">{$item.title}</a>
-                    <p class="descr">{$item->getPreview()}</p>
-                </li>
+            <li class="item {if $item@iteration % 2==0}fr{else}fl{/if}" {$item->getDebugAttributes()}>
+                <p class="date">{$item.dateof|dateformat:"%d %v %Y, %H:%M"}</p>
+                <a href="{$item->getUrl()}" class="title">{$item.title}</a>
+                <p class="descr">{$item->getPreview()}</p>
+            </li>
             {/foreach}
         </ul>
         <a href="{$router->getUrl('article-front-previewlist', [category => $category->getUrlId()])}" class="more">Все новости</a>

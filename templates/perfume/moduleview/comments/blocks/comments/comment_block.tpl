@@ -6,8 +6,7 @@
         {if $mod_config.need_authorize == 'Y' && !$is_auth}
             <span class="needAuth">Чтобы оставить отзыв необходимо <a href="{$router->getUrl('users-front-auth', ['referer' => $referer])}" class="inDialog">авторизоваться</a></span>
         {else}
-            <a href="#" class="colorButton handler" onclick="$(this).closest('.commentBlock').toggleClass('open');
-                    return false;">Написать отзыв и оценить товар</a>
+            <a href="#" class="colorButton handler" onclick="$(this).closest('.commentBlock').toggleClass('open');return false;">Написать отзыв и оценить товар</a>
             <div class="caption">
                 Оставить отзыв о товаре
                 <a class="close"></a>
@@ -16,7 +15,7 @@
                 {if !empty($error)}
                     <div class="errors">
                         {foreach $error as $one}
-                            <p>{$one}</p>
+                        <p>{$one}</p>
                         {/foreach}
                     </div>
                 {/if}                            
@@ -45,12 +44,12 @@
                     <input type="text" name="user_name" value="{$comment.user_name}">
                 </p>
                 {if !$is_auth && ModuleManager::staticModuleEnabled('kaptcha')}
-                    <div class="captcha">
-                        <label class="fielName">&nbsp;</label><br>
-                        <img src="{$router->getUrl('kaptcha')}">
-                        <input type="text" name="captcha" class="inpCap"> 
-                        <span class="fielName">Введите код, указанный на картинке</span>
-                    </div>
+                <div class="captcha">
+                    <label class="fielName">&nbsp;</label><br>
+                    <img src="{$router->getUrl('kaptcha')}">
+                    <input type="text" name="captcha" class="inpCap"> 
+                    <span class="fielName">Введите код, указанный на картинке</span>
+                </div>
                 {/if}                 
                 <div class="buttons">
                     <input type="submit" value="Оставить отзыв">

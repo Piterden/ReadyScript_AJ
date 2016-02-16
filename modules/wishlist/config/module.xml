@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<defaultValues>
-		<name multilanguage="true">Список желаний</name>
-		<description multilanguage="true">Список желаний</description>
-		<version>1.0.0.0</version>
-		<author>YellowmarkerWS</author>
-		<dependfrom>catalog,users</dependfrom>
-	</defaultValues>
+    <defaultValues>
+        <name multilanguage="true">Список желаний</name>
+        <description multilanguage="true">Список желаний</description>
+        <version>1.0.0.0</version>
+        <author>YellowmarkerWS</author>
+        <dependfrom>catalog,users</dependfrom>
+    </defaultValues>
 </config>
