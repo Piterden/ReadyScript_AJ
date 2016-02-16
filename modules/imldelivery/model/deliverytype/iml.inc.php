@@ -133,6 +133,17 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'default'      => 0,
                 'CheckboxView' => array(1, 0),
                     )),
+            'address_type'       => new Type\Integer(array(
+                'description'  => t('Тип адреса'),
+                'maxLength'    => 10,
+                'attr'          => array(array(
+                        'multiple' => true,
+                    )),
+                'listFromArray' => array(array(
+                			'-1' => 'Пункты самовывоза IML',
+                			'1' => 'Внутренний справочник регионов'
+                		)),
+                    )),
                 // 'timeout' => new Type\Integer(array(
                 //     'description' => t('Время ожидания ответа IML, сек'),
                 //     'hint' => t('Иногда запросы к IML идут очень долго,<br/> чтобы не дожидатся ответа используется это значение.<br/>Рекоммендуемое значение 2 сек.'),
@@ -167,6 +178,16 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         }
         $list = $iml->getApiRequest(self::URL_HELP_SD_REGIONS);
         return $iml->prepareArray($list);
+    }
+
+    /**
+    * Возвращает true, если тип доставки предполагает самовывоз
+    *
+    * @return bool
+    */
+    function isMyselfDelivery()
+    {
+        return false;
     }
 
     /**
@@ -209,8 +230,9 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      */
     public function getDeliveryCostAjax(\Shop\Model\Orm\Order $order, $delivery_id, $params)
     {
-        if (!$iml = $order->getDelivery()->getTypeObject()) {
-            $iml = new self();
+		$iml = $order->getDelivery()->getTypeObject();
+        if (!($iml instanceof Iml)) {
+            $iml = new Iml;
         }
         $active_services = $params['service_id'];
 
@@ -224,7 +246,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 'Weigth'      => $order->getWeight() ? $order->getWeight() : '1', // вес(кг)
                 'SpecialCode' => $params['request_code'], // код пункта самовывоза
             );
-            $out[$code] = self::postApiRequest(self::URL_API_GETPRICE, $content);
+            $out[$code] = $iml->postApiRequest(self::URL_API_GETPRICE, $content);
         }
         return $out;
     }
@@ -256,12 +278,12 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             $use_currency = true)
     {
         if ($order['use_addr'] < 0) {
-	        $extra = $order['order_extra'];
-	    	$params = $extra['delivery'];
-	        if (empty($params)) {
-	            $params = $extra['address'];
+	    	if (!isset($order['order_extra']['delivery'])) {
+	            $params = $order['order_extra']['address'];
 	            $params['request_code'] = 1;
-	        }
+	    	} else {
+	    		$params = $order['order_extra']['delivery'];
+	    	}
         } else {
         	$address = $order->getAddress();
         	$params = array(
@@ -275,10 +297,10 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'RegionTo'    => $params['region_id_to'], // регион получения
             'Volume'      => '1', // кол-во мест
             'Weigth'      => $order->getWeight() ? $order->getWeight() : '1', // вес(кг)
-            'SpecialCode' => isset($params['request_code']) ? : '', // код пункта самовывоза
+            'SpecialCode' => ($params['request_code']) ? : '', // код пункта самовывоза
         );
         $data = $this->postApiRequest(self::URL_API_GETPRICE, $content);
-        return $cost = isset($data['Price']) ? $data['Price'] : 0;
+        return isset($data['Price']) ? $data['Price'] : 0;
     }
 
     /**
@@ -378,7 +400,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      */
     public function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
     {
-        if ($delivery->getTypeObject()->getOption('show_map') != 1) {
+        if (!$delivery->getTypeObject()->getOption('show_map')) {
             return '';
         }
 
@@ -429,18 +451,28 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      */
     public function loadMap(\Shop\Model\Orm\Order $order, $delivery_id, $params)
     {
-        $extra = $order['order_extra'];
+        if ($order->use_addr > 0) {
+        	return $order->addError('Недоступно для этого типа', 'Iml->loadMap');
+		}
+
         $order['delivery'] = $delivery_id;
         $delivery = $order->getDelivery();
         $iml = $delivery->getTypeObject();
+        $extra = $order['order_extra'];
 
         $region_id_from = $iml->getOption('region_id_from');
-        $region_id_to = isset($extra['delivery']['region_id_to']) ? $extra['delivery']['region_id_to'] : $extra['address']['region_id_to'];
+        if (isset($extra['delivery'])) {
+	        $region_id_to = $extra['delivery']['region_id_to'];
+	        $request_code = $extra['delivery']['request_code'];
+        } else {
+	        $region_id_to = $extra['address']['region_id_to'];
+	        $request_code = 1;
+        }
 
         $req_params = array(
             'region_id_from' => $region_id_from,
             'region_id_to'   => $region_id_to,
-            'request_code'   => 1,
+            'request_code'   => $request_code,
             'service_id'     => $iml->getOption('service_id'),
         );
         $cost_array = $iml->getDeliveryCostAjax($order, $delivery_id, $req_params);
@@ -458,6 +490,28 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
                 ) + \RS\Module\Item::getResourceFolders($iml));
 
         return $view->fetch('%imldelivery%/delivery/iml/map.tpl');
+    }
+
+    /**
+     * Возвращает текст, в случае если доставка невозможна.
+     * false - в случае если доставка возможна
+     *
+     * @param \Shop\Model\Orm\Order $order
+     * @param \Shop\Model\Orm\Address $address - Адрес доставки
+     * @return mixed
+     */
+    function somethingWrong(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null) {
+        if ($order->use_addr < 0) { // выбран ПВЗ
+        	if ($this->getOption('address_type') < 0) { // поддерживается
+		        return false;
+        	}
+        }
+        if ($order->use_addr > 0) { // выбран адрес
+        	if ($this->getOption('address_type') > 0) {
+        		return false;
+        	}
+        }
+    	return "Недоступно";
     }
 
     // /**
@@ -481,15 +535,6 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     //     $iml = new Iml;
     //     $list = $iml->getApiRequest(self::URL_HELP_ORDERSTATUS, self::API_LOGIN, self::API_PASS);
     //     return $iml->prepareArray($list);
-    // }
-    // public function getDeliveryCostText(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
-    // {
-    //     $cost = $this->getDeliveryCost($order, $address);
-    //     if ($cost < 0) {
-    //         return '';
-    //     } else {
-    //         return ($cost) ? \RS\Helper\CustomView::cost($cost) . ' ' . $order->getMyCurrency()->stitle : 'бесплатно';
-    //     }
     // }
     // /**
     //  * Возвращает дополнительный HTML для административной части с выбором опций доставки в заказе
@@ -642,8 +687,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      *
      * @return array
      */
-    public function getImlStatuses(array $filters = null)
-    {
+    // public function getImlStatuses(array $filters = null)
+    // {
         // $content = array(
         //     'Test' => 'True',                       // для тестового режима, иначе не указывайте
         //     'CustomerOrder' => '',                 // номер заказа
@@ -659,7 +704,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         //     'CreationDateEnd' => ''                 // фильтр по дате доставки, до указанной даты
         // );
         // return $this->postApiRequest(self::URL_API_STATUS, self::API_LOGIN, self::API_PASS, array_merge($content, $filters));
-    }
+    // }
 
     /**
      * Запрос позволяет получить список заказов по параметрам
@@ -668,8 +713,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      *
      * @return array
      */
-    public function getImlOrders(array $filters = null)
-    {
+    // public function getImlOrders(array $filters = null)
+    // {
         // $content =array(
         //     'Test' => 'True', // для тестового режима, иначе не указывайте
         //     //'CustomerOrder' => '',                 // номер заказа
@@ -685,7 +730,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         //     //'CreationDateEnd' => '2014-07-15'      // до указанной даты
         // );
         // return $this->postApiRequest(self::URL_API_ORDERSLIST, self::API_LOGIN, self::API_PASS, array_merge($content, ilters));
-    }
+    // }
 
     /**
      * Запрос позволяет создать заказ в системе IML.
@@ -694,8 +739,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      *
      * @return array
      */
-    public function createImlOrder(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
-    {
+    // public function createImlOrder(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
+    // {
         // if(!$address) $address = $order->getAddress();
         // $catalog_config = \RS\Config\Loader::byModule('catalog');
         // $currency      = \Catalog\Model\CurrencyApi::getBaseCurrency(); //Базовая валюта
@@ -763,7 +808,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         //     'GoodItems' => $cartItemsArray      //не обязательно, если есть позиции заказа
         // );
         // return $this->postApiRequest(self::URL_API_CREATEORDER, self::API_LOGIN, self::API_PASS, $content);
-    }
+    // }
 
     //  Test – тестовый режим, 'True' для тестового режима, иначе не указывайте
     //  Job – услуга доставки, Code из справочника услуг
@@ -795,8 +840,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      * @param \Shop\Model\Orm\Order   $order   - объект заказа
      * @param \Shop\Model\Orm\Address $address - Объект адреса
      */
-    public function onOrderCreate(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
-    {
+    // public function onOrderCreate(\Shop\Model\Orm\Order $order, \Shop\Model\Orm\Address $address = null)
+    // {
         //     $extra = $order->getExtraInfo();
         //     if (!isset($extra['iml_order_response'])){ // Если заказ не создан
         //         //Создадим заказ
@@ -840,6 +885,6 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         //         ->where(array(
         //             'id' => $order['id']
         //     ))->exec();
-    }
+    // }
 
 }

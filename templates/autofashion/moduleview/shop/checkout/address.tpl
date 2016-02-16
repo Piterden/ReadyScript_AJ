@@ -290,8 +290,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-sm-offset-5 sdAddress{if $order.use_addr != -1} hide{/if}">
-	            {static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'staticGetRegions']}
+            <div class="col-sm-12 col-sm-offset-5 sdAddress hide">
+	            {*static_call var=regions_sd_list callback=['\Imldelivery\Model\DeliveryType\Iml', 'staticGetRegions']}
                 <div class="themeTable">
                     <div class="tableRow">
                         <div class="key">
@@ -306,7 +306,8 @@
                             <input id="sd_region_name" type="hidden" name="order_extra[region_to]" value="{$regions_sd_list[$order_extra.address['region_id_to']]}">
                         </div>
                     </div>
-                </div>
+                </div>*}
+                <input type="hidden" name="order_extra[region_id_to]" value="{$order['order_extra']['delivery']['region_id_to']|default:'САНКТ-ПЕТЕРБУРГ'}">
             </div>
             {if !$is_auth}
                 <div class="col-sm-12 col-sm-offset-5 additional">

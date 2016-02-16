@@ -8,7 +8,7 @@ class Handlers extends \RS\Event\HandlerAbstract
 {
     /**
     * Добавляет подписку на события
-    * 
+    *
     * @return void
     */
     function init()
@@ -17,19 +17,21 @@ class Handlers extends \RS\Event\HandlerAbstract
             ->bind('getroute')  //событие сбора маршрутов модулей
             ->bind('getmenus'); //событие сбора пунктов меню для административной панели
     }
-    
+
     /**
     * Возвращает маршруты данного модуля. Откликается на событие getRoute.
     * @param array $routes - массив с объектами маршрутов
     * @return array of \RS\Router\Route
     */
-    public static function getRoute(array $routes) 
-    {        
+    public static function getRoute(array $routes)
+    {
         $routes[] = new \RS\Router\Route('wishlist-front-wishlist',
-        array(
-            '/wishlist/'
-        ), null, 'Список желаний пользователя');
-        
+        	'/wishlist/', null,
+        	'Список желаний пользователя');
+        $routes[] = new \RS\Router\Route('wishlist-front-wishajax',
+        	'/wishajax/', null,
+        	'AJAX коннектор модуля желаний');
+
         return $routes;
     }
 

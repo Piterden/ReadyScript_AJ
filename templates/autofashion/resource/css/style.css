@@ -3512,11 +3512,14 @@ label[for='changePass'] {
 }
 
 .additionalInfo {
-    position: absolute;
-    top: 0;
-    right: 100px;
+	position: absolute;
+    top: 43px;
+    right: -20px;
 }
 
+.deliveryItem.collapse {
+	opacity: .5;
+}
 /* .additionalInfo .costWrap {
         position: relative;
 } */

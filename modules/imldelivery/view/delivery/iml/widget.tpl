@@ -42,7 +42,7 @@
         "delivery_cost_json":{$delivery_cost_json},
         "service_id":{$service_ids},
         "region_id_from": "{$region_id_from}",
-        "region_id_to": "{$region_id_to|default:'САНКТ-ПЕТЕРБУРГ'}",
+        "region_id_to": "{$region_id_to}",
         "currency":{$currency},
         "select_id": "#selectRegionCombo_{$delivery.id}",
         "list_id": "#sdlist_{$delivery.id}",
@@ -94,7 +94,6 @@
         $('#map_' + IML.imlData.delivery_id).empty();
         IML.ajaxRequest('getSdByRegion', params, IML.getSdByRegionRender);
     }
-    ;
 
     /**
      * Грузит список доступных регионов в select
@@ -118,20 +117,26 @@
     }
 
     /**
-     * Получает пункты самовывоза в одном регионе
-     * Создает HTML карты
-     * @param  {*object*} data response
+     * Получает пункты самовывоза в одном регионе. Создает HTML карты
+     *
+     * @param  object data response
      * @return
      */
     function getSdByRegionRender(data) {
         data = data.data;
-        if (typeof IML.imlData.sd_object == 'undefined' || IML.imlData.region_id_to != data[0].RegionCode) {
-            var r_c = 0;
-        } else {
-            var r_c = getIndexSd(IML.imlData.sd_object.request_code, data);
-        }
+        // console.log();
+        var imlData = IML.imlData,
+        	r_c = 0;
+        // if (IML.imlData.request_code > 0 && IML.imlData.region_id_to) {
+        // 	r_c = getIndexSd(IML.imlData.request_code, data);
+        // 	console.log(r_c);
+        // }
+        // if (IML.imlData.sd_object === undefined || IML.imlData.region_id_to != data[0].RegionCode) {
+        // }
+        // else {
+        //     var r_c = getIndexSd(IML.imlData.sd_object.request_code, data);
+        // }
         IML.imlData.sd_data = [];
-        var imlData = IML.imlData;
 
         //console.log(data);
         $(imlData.list_id).empty();
@@ -146,6 +151,7 @@
             // ObjectManager принимает те же опции, что и кластеризатор.
             gridSize: 32
         });
+        IML.imlData.region_id_to = data[r_c].RegionCode;
         IML.imlData.request_code = data[r_c].RequestCode;
         IML.imlData.sd_object = data[r_c];
         IML.imlData.sd_list = {
@@ -178,16 +184,6 @@
                 }
             });
 
-            //var myPlacemark = new ymaps.Placemark([Number(el.Latitude), Number(el.Longitude)], {
-            //    iconContent: 'IML',
-            //    balloonContent:
-            //}, {
-            //    preset: 'islands#violetStretchyIcon'
-            //});
-
-            // добавление объекта на карту
-            //myMap.geoObjects.add(myPlacemark);
-
             // создание списка пунктов самовывоза рядом с картой
             var active = (i == r_c) ? ' active' : '',
                 li_html = '<li class="selectSd' + active + '" data-code="' + el.RequestCode + '" id="sd_' + imlData.delivery_id + '_' + el.RequestCode + '"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
@@ -211,6 +207,7 @@
 
     /**
      * Сохраняет выбранные данные в экстре заказа
+     * Закрывает карту
      */
     function saveDataToOrder() {
         var params = {
@@ -223,26 +220,25 @@
         }
         ajaxRequest('updateExtraData', params, function(data) {
             if (data.success) {
-                var cost = 0;
                 for (var prop in IML.imlData.delivery_cost_json) {
                     if (IML.imlData.delivery_cost_json.hasOwnProperty(prop)) {
-                        el = IML.imlData.delivery_cost_json[prop];
-                        if (cost == 0) {
-                            cost = !isNaN(el.Price) ? el.Price : 0;
-                        } else {
-                            cost = (cost > el.Price && !isNaN(el.Price))
-                                ? el.Price : cost;
-                        }
+                        var cost_obj = IML.imlData.delivery_cost_json[prop];
                     }
                 }
                 $('input[name="delivery"][value="' + IML.imlData.delivery_id + '"]').trigger('click');
                 $('.deliveryItem').removeClass('hidden');
                 $('.addressOfDelivery').empty().append('<span class="text-capitalize lead">' + IML.imlData.region_id_to + '</span><br>' + IML.imlData.sd_html);
-                $('.priceOfDelivery').empty().append(cost + ' ' + IML.imlData.currency.stitle);
-                var $ib = $('.addressOfDelivery').parents('.infoBlock'),
-                    h = $ib.height();
-                $ib.siblings().height(h);
+                $('.priceOfDelivery').add('#scost_' + IML.imlData.delivery_id + ' .text-success')
+                	.empty().append(cost_obj.Price + ' ' + IML.imlData.currency.stitle);
+                var $aod = $('.addressOfDelivery'),
+                	$inf_blk = $aod.parents('.infoBlock'),
+                	ib_heigth = $inf_blk.height(),
+                    aod_heigth = $aod.height();
+
+                $inf_blk.height(ib_heigth + aod_heigth);
+                $inf_blk.siblings().height(ib_heigth + aod_heigth);
                 $('#mapModal').modal('hide');
+                IML.imlData.map_closed = true;
             }
         });
     }
@@ -349,10 +345,8 @@
         });
 
         $(IML.imlData.select_id).unbind('change').on('change', function() {
-            var region_id_to = $(this).children(':selected').val();
-
             $(IML.imlData.loading).appendTo('.modal-body');
-            initIML_Map(region_id_to);
+            initIML_Map($(this).children(':selected').val());
         });
 
         $(IML.imlData.list_id + ' .selectSd').unbind('click').on('click', function(e) {

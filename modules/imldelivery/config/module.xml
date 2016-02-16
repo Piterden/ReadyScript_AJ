@@ -3,7 +3,7 @@
     <defaultValues>
         <name multilanguage="true">Доставка IML</name>
         <description multilanguage="true">Модуль доставки компании IML</description>
-        <version>1.0.0.0</version>
+        <version>1.0.1.0</version>
         <author>YellowmarkerWS</author>
     </defaultValues>
 </config>
