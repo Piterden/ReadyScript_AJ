@@ -1,1 +1,0 @@
-{$cell->getRow()->getTotalPrice(true, false)}

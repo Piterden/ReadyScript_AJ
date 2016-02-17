@@ -1,1 +1,0 @@
-Ваш заказ на товар с артикулом №{$data->oneclick.product.barcode} принят.

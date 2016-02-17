@@ -1,1 +1,0 @@
-На сайте {$url->getDomainStr()} пополнен баланс на сумму {$data->transaction.cost}. ID:{$data->transaction.id}

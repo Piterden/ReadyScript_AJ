@@ -1,1 +1,0 @@
-На сайте {$url->getDomainStr()} оплачен заказ "{$data->order.order_num}"

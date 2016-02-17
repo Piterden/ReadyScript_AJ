@@ -1,1 +1,0 @@
-{if $cell->getRow('period') == 'forever'}{t}Вечный{/t}{else}{$cell->getValue()|date_format:"%d.%m.%Y %H:%M"}{/if}

@@ -1,1 +1,0 @@
-http://marketplace.readyscript.ru?mod_controller=marketplace-proxy

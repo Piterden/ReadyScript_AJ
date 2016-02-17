@@ -1,1 +1,0 @@
- На сайте {$url->getDomainStr()} инициирован платеж на сумму {$data->transaction.cost}. ID: {$data->transaction.id}
