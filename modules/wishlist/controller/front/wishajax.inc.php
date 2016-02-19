@@ -23,6 +23,10 @@ class Wishajax extends \RS\Controller\AuthorizedFront
      */
     function actionIndex()
     {
+        if ($this->url->isPost()) {
+
+        }
+
         $this->app->title->addSection(t('Список желаемых покупок'));
         $this->app->breadcrumbs->addBreadCrumb(t('Список желаний'));
 

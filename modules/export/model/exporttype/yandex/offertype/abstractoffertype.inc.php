@@ -118,7 +118,9 @@ abstract class AbstractOfferType
     protected function writeElementFromFieldmap(Field $field, ExportProfile $profile, \XMLWriter $writer, Product $product)
     {
         $value = $this->getElementFromFieldmap($field, $profile, $writer, $product);
-        $writer->writeElement($field->name, $value);  
+        if ($value!==null){
+            $writer->writeElement($field->name, $value);      
+        }
     }
     
     /**
@@ -134,6 +136,7 @@ abstract class AbstractOfferType
     {
         // Получаем объект типа экспорта (в нем хранятся соотвествия полей - fieldmap)
         $export_type_object = $profile->getTypeObject();
+        
         if(!empty($export_type_object['fieldmap'][$field->name]['prop_id'])){
             // Идентификатор свойстава товара
             $property_id = (int) $export_type_object['fieldmap'][$field->name]['prop_id'];
@@ -144,7 +147,10 @@ abstract class AbstractOfferType
             // Если яндекс ожидает строку (true|false)
             if($field->type == TYPE_BOOLEAN){
                 // Если значение свойства 1 или непустая строка - выводим 'true', в противном случае 'false'
-                return $value ? "true" : "false";  
+                if (!$value && !$default_value){
+                    return "false";
+                }
+                return "true";
             }
             else{
                 // Выводим значение свойства, либо значение по умолчанию

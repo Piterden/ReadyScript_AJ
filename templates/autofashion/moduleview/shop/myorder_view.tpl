@@ -26,28 +26,31 @@
         <tr>
             <td class="key">Тип доставки</td>
             <td class="value">{$order->getDelivery()->title}</td>
-        </tr>                
+        </tr>
         <tr class="address">
             <td class="key">Адрес получения</td>
             <td class="value">{$order->getAddress()->getLineView()}</td>
-        </tr>                
+        </tr>
         {if $order->contact_person}
             <tr>
                 <td class="key">Контактное лицо</td>
                 <td class="value">{$order->contact_person}</td>
-            </tr>                
+            </tr>
         {/if}
         <tr>
             <td class="key"></td>
             <td class="value"></td>
-        </tr>                
+        </tr>
         {$fm=$order->getFieldsManager()}
         {foreach $fm->getStructure() as $item}
             <tr>
                 <td class="key">{$item.title}</td>
                 <td class="value">{$item.current_val}</td>
             </tr>
-        {/foreach}    
+        {/foreach}
+        <pre>
+        	{$order_data.other|@print_r}
+        </pre>
         {foreach $order_data.other as $item}
             {if $item.cartitem.type != 'coupon'}
                 <tr>
@@ -69,7 +72,7 @@
             <td class="value">
                 <div class="price">{$order_data.total_cost}</div>
             </td>
-        </tr>                                
+        </tr>
     </table>
 </div>
 <div class="actions col-md-4">
@@ -106,7 +109,7 @@
                         <a href="{$product->getUrl()}" class="title">{$item.cartitem.title}</a>
                     </div>
                     <div class="amountWrap">
-                        Количество - 
+                        Количество -
                         <span class="amount">{$item.cartitem.amount}</span>
                         {if $catalog_config.use_offer_unit}
                             {$item.cartitem.data.unit}
@@ -117,7 +120,7 @@
                             {foreach $multioffer_titles as $multioffer}
                                 <div class="offer">{$multioffer.title} - <span class="value">{$multioffer.value}</span></div>
                                 {/foreach}
-                            {/if}                
+                            {/if}
                     </div>
                 </div>
                 <div class="col-md-3 price">

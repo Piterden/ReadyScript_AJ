@@ -61,7 +61,7 @@ $(function() {
 
     // Меняем селекты по нажатию на блок
     $('.moItem').on('click', function() {
-        var value = $(this).text();
+        var value = $(this).text().trim();
         $(this).addClass('active').siblings('.moItem').removeClass('active');
         $(this).parent().prev().val(value).trigger('change');
     });

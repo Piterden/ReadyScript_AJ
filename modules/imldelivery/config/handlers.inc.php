@@ -14,17 +14,17 @@ class Handlers extends \RS\Event\HandlerAbstract
     function init()
     {
         $this
-        	//->bind('initialize')
-            ->bind('orm.init.shop.order')
+        	->bind('initialize')
+            //->bind('orm.init.shop.order')
             ->bind('delivery.gettypes')
             ->bind('getroute')  //событие сбора маршрутов модулей
             ->bind('getmenus'); //событие сбора пунктов меню для административной панели
     }
 
-    // function initialize()
-    // {
-    //     \Shop\Model\DeliveryType\RussianPost::attachClassBehavior(new \Imldelivery\Model\Behavior\RussianPost);
-    // }
+    function initialize()
+    {
+        \Catalog\Model\Orm\Offer::attachClassBehavior(new \Imldelivery\Model\Behavior\Offer);
+    }
 
     /**
     * Возвращает маршруты данного модуля. Откликается на событие getRoute.
@@ -69,8 +69,8 @@ class Handlers extends \RS\Event\HandlerAbstract
         return $list;
     }
 
-    public static function ormInitShopOrder($order)
-    {
+    // public static function ormInitShopOrder($order)
+    // {
 
-    }
+    // }
 }

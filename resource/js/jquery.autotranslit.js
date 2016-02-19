@@ -4,7 +4,8 @@
 (function($){
     $.fn.autoTranslit = function(method) {
         var defaults = {
-            objectIdInputName: 'input[name="id"]',
+            formAction: 'form[action]',
+            addPredicate: '=add',
             targetName: null,
             showUpdateButton: true,
         }, 
@@ -25,8 +26,8 @@
                     data.options.target = $('input[name="'+data.options.targetName+'"]');
                     if (data.options.target) {
                         //Подключаем автоматическую транслитерацию, если происходит создание объекта
-                        var objectId = $this.closest('form').find(data.options.objectIdInputName).val();
-                        if (objectId <= 0) {
+                        var isAdd = $this.closest(data.options.formAction).attr('action').indexOf(data.options.addPredicate) > -1;
+                        if (isAdd) {
                             $this.on('blur', onBlur);
                         }
                         if (data.options.showUpdateButton) {

@@ -123,6 +123,9 @@ address {
 .fa {
     vertical-align: middle;
 }
+pre {
+	max-width: 1200px;
+}
 
 /**                       **/
 
@@ -3108,6 +3111,7 @@ label[for='changePass'] {
 
 .orderTable td.price .price {
     margin-bottom: -4px;
+    white-space: nowrap;
 }
 
 .orderTable td.actions {

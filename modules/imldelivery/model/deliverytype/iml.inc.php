@@ -400,8 +400,8 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      */
     public function getAddittionalHtml(\Shop\Model\Orm\Delivery $delivery, \Shop\Model\Orm\Order $order = null)
     {
-        if (!$delivery->getTypeObject()->getOption('show_map')) {
-            return '';
+        if (!($delivery->getTypeObject()->getOption('show_map'))) {
+	        return null;
         }
 
         if ($order === null) {

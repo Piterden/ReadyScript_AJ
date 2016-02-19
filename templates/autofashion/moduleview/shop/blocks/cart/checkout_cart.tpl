@@ -12,16 +12,16 @@
                 {$item=$item.cartitem}
             {/if}
             {$product=$cart_products[$item.entity_id]}
-            {$main_image=$product->getMainImage()}
+            {$product->fillOffers()}
+            {$offer=$product.offers.items[$item.offer]}
             {$offer_list=$item->getMultiOfferTitles()}
-            {$offer=$item['offer']}
             <div class="row cartItem">
                 <div class="col-sm-2 imageBlock">
-                    <a href="{$product->getUrl()}" title="{$product.title}"><img src="{$main_image->getUrl(72, 72)}" alt="{$main_image.title|default:"{$product.title}"}"/></a>
+                    <a href="{$product->getUrl()}" title="{$product.title}"><img src="{$offer->getMainImage(72, 72)}" alt="{$offer.title|default:"{$product.title}"}"/></a>
                 </div>
                 <div class="col-sm-16 infoBlock">
                     <div class="title h3"><a href="{$product->getUrl()}">{$product.title}</a></div>
-                    <div class="sku">Артикул: {$product->getBarCode($offer)}</div>
+                    <div class="sku">Артикул: {$product->getBarCode($item.offer)}</div>
                     <div class="offer">
                         {foreach $offer_list as $offer_field}
                             <span class="title">{$offer_field.title}: </span>
@@ -37,7 +37,7 @@
 
                         <span class="unit">
                             {if $catalog_config.use_offer_unit}
-                                {$product.offers.items[$item.offer]->getUnit()->stitle}
+                                {$offer->getUnit()->stitle}
                             {else}
                                 {$product->getUnit()->stitle|default:"шт."}
                             {/if}
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="col-sm-3 priceBlock">
-                    {$product->getCost(null, $offer)} {$currency.stitle}
+                    {$product->getCost(null, $item.offer)} {$currency.stitle}
                 </div>
             </div>
         {/foreach}

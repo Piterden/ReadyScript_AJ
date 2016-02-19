@@ -49,7 +49,6 @@
                         <a class="control prev"><i class="fa fa-chevron-left"></i></a>
                         <a class="control next"><i class="fa fa-chevron-right"></i></a>
                         <div class="main">
-                            {* {$images=$product->getImages()} *}
                             {if !$product->hasImage()}
                                 {$main_image=$product->getMainImage()}
                                 <span class="item"><img src="{$main_image->getUrl(350,486,'xy')}" alt="{$main_image.title|default:"{$product.title}"}"/></span>
@@ -171,6 +170,38 @@
                         {$product->fillMultiOffersPhotos()}
                         {* Переберём доступные многомерные комплектации *}
                         {foreach $product.multioffers.levels as $level}
+                            {if !empty($level.values)}
+                                <div class="clearfix"></div>
+                                <div class="multiofferTitle">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
+                                {if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)*}
+                                    <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
+                                        {foreach $level.values as $value}
+                                            <option value="{$value.val_str}">{$value.val_str}</option>
+                                        {/foreach}
+                                    </select>
+                                    <div class="multiofferBlock multiofferBlock{$level.prop_id}">
+                                        {foreach $level.values as $value key=i}
+                                            <div class="moItem{if $i == 1} active{/if}"><div class="moItemInner">{$value.val_str}</div></div>
+                                            {/foreach}
+                                    </div>
+                                    <div class="clearfix"></div>
+                                {else} {* Как фото (цвет) *}
+                                    <div class="multiOfferValues">
+                                        <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
+                                        <div class="multiofferBlock multiofferBlock{$level.prop_id}">
+                                            {foreach $level.values as $value key=i}
+                                                <div class="moItem{if $i == 1} active{/if}">
+                                                    <div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">
+                                                        {$value.val_str}
+                                                    </div>
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                    </div>
+                                {/if}
+                            {/if}
+                        {/foreach}
+                        {* {foreach $product.multioffers.levels as $level}
                             {if !empty($level.values) && $level.title != 'Цвет'}
                                 <div class="multiofferTitle">
                                     {if $level.title}
@@ -179,32 +210,7 @@
                                         {$level.prop_title}
                                     {/if}
                                 </div>
-                                {if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)*}
-                                        <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
-                                            {foreach $level.values as $value}
-                                                <option value="{$value.val_str}">{$value.val_str}</option>
-                                            {/foreach}
-                                        </select>
-                                        <div class="multiofferBlock multiofferBlock{$level.prop_id}">
-                                            {foreach $level.values as $value key=i}
-                                                <div class="moItem{if $i == 1} active{/if}"><div class="moItemInner">{$value.val_str}</div></div>
-                                                {/foreach}
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    {else}
-                                        <div class="multiOfferValues">
-                                            <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
-                                            {foreach $level.values as $value}
-                                                {if isset($level.values_photos[$value.val_str])}
-                                                    <a class="multiOfferValueBlock {if $value@first}sel{/if}" data-value="{$value.val_str}" title="{$value.val_str}"><img src="{$level.values_photos[$value.val_str]->getUrl(40,40,'axy')}"/></a>
-                                                    {else}
-                                                    <a class="multiOfferValueBlock likeString {if $value@first}sel{/if}" data-value="{$value.val_str}" title="{$value.val_str}">{$value.val_str}</a>
-                                                {/if}
-                                            {/foreach}
-                                        </div>
-                                    {/if}
-                                {else if !empty($level.values) && $level.title == 'Цвет'}
-                                    <div class="multiofferTitle">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</div>
+                                {if !$level.is_photo && !isset($level.values_photos)} {* Если отображать не как фото (выпадающим списком)}
                                     <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
                                         {foreach $level.values as $value}
                                             <option value="{$value.val_str}">{$value.val_str}</option>
@@ -212,13 +218,40 @@
                                     </select>
                                     <div class="multiofferBlock multiofferBlock{$level.prop_id}">
                                         {foreach $level.values as $value key=i}
-                                            <div class="moItem{if $i == 1} active{/if}"><div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">{$value.val_str}</div></div>
+                                            <div class="moItem{if $i == 1} active{/if}"><div class="moItemInner">{$value.val_str}</div></div>
                                             {/foreach}
                                     </div>
                                     <div class="clearfix"></div>
+                                {else}
+                                    <div class="multiOfferValues">
+                                        <input type="hidden" name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}"/>
+                                        {foreach $level.values as $value}
+                                            {if isset($level.values_photos[$value.val_str])}
+                                                <a class="multiOfferValueBlock {if $value@first}sel{/if}" data-value="{$value.val_str}" title="{$value.val_str}"><img src="{$level.values_photos[$value.val_str]->getUrl(40,40,'axy')}"/></a>
+                                                {else}
+                                                <a class="multiOfferValueBlock likeString {if $value@first}sel{/if}" data-value="{$value.val_str}" title="{$value.val_str}">{$value.val_str}</a>
+                                            {/if}
+                                        {/foreach}
+                                    </div>
                                 {/if}
-                                {/foreach}
+                            {else if !empty($level.values) && $level.title == 'Цвет'}
+                                <div class="multiofferTitle">
+                                	{if $level.title}{$level.title}{else}{$level.prop_title}{/if}
+                            	</div>
+                                <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
+                                    {foreach $level.values as $value}
+                                        <option value="{$value.val_str}">{$value.val_str}</option>
+                                    {/foreach}
+                                </select>
+                                <div class="multiofferBlock multiofferBlock{$level.prop_id}">
+                                    {foreach $level.values as $value key=i}
+                                        <div class="moItem{if $i == 1} active{/if}"><div class="moItemInner" style="background-color:#fff;background-image: linear-gradient( -45deg, {$colors.colors[$value.val_str].color2} 0%, {$colors.colors[$value.val_str].color2} 50%, {$colors.colors[$value.val_str].color1} 50%, {$colors.colors[$value.val_str].color1} 50%);" title="{$value.val_str}">{$value.val_str}</div></div>
+                                    {/foreach}
                                 </div>
+                                <div class="clearfix"></div>
+                            {/if}
+                        {/foreach} *}
+                    </div>
 
                                 {if $product->isOffersUse()}
                                     {foreach from=$product.offers.items key=key item=offer name=offers}

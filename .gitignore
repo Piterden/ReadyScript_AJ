@@ -1,0 +1,12 @@
+/nbproject/*
+/config.*.php
+/.*
+!/.htaccess
+!/.gitignore
+/sftp-config.json
+*.fuse*
+/cache/*
+*.sublime-workspace
+/cache/
+/nbproject/
+/storage/
