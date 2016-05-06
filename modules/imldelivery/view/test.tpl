@@ -1,0 +1,1 @@
+{t name="imldelivery"}Страница тестового модуля %name{/t}

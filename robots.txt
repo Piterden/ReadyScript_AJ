@@ -1,0 +1,20 @@
+User-agent: *
+Disallow: /
+
+Disallow: /cache/
+Disallow: /core/
+Disallow: /modules/
+Disallow: /resource/
+Disallow: /storage/
+Disallow: /templates/
+
+Disallow: /manager/
+
+Disallow: /my/
+Disallow: /checkout/
+Disallow: /wishlist/
+Disallow: /wishajax/
+Disallow: /cart/
+
+
+Host: 22.groupvm.z8.ru

@@ -1,0 +1,39 @@
+/**
+* Стили таблиц в админю панели
+*/
+
+.rs-table tbody .in-drag .dh,
+.rs-table tbody .in-drag .drag-handle{
+    border-top:1px solid #687280;
+    border-bottom:1px dashed #687280;
+    background-color: #687280;
+}
+
+.rs-table tbody .in-drag .dh a.sort,
+.rs-table tbody .in-drag .drag-handle a.sort {
+    background-position:-30px 0;
+}
+
+
+/**
+* Значки инструментов
+*/
+
+.dh a,
+.drag-handle a {
+    float:left;
+    width:15px;
+    height:16px;
+    margin:0 3px;
+}
+
+.dh a.sort,
+.drag-handle a.sort {
+    background:url(../../img/adminstyle/drag_table.gif) no-repeat top left;
+    cursor:move;
+}
+.over .dh a.sort,
+.over .drag-handle a.sort {
+    background-position:-15px 0;
+    
+}

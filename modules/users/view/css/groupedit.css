@@ -1,0 +1,14 @@
+.switch-site-access {
+    padding:10px; 
+    border-bottom:2px solid #777;
+    background:  #EFCD70; 
+}
+
+.moduleWrapper .rs-table td{
+    font-size:14px;
+}
+
+.treeblock .treebody {
+    overflow:auto;
+    height:400px;    
+}

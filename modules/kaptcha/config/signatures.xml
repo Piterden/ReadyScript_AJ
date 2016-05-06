@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<signatures>
+  <file>
+    <path>config/changelog.txt</path>
+    <sign>23b1c67d42d43e74e0ca89a90a172007f6f0f47f</sign>
+  </file>
+  <file>
+    <path>config/file.inc.php</path>
+    <sign>36ce0c6120e9f01e46db75798617849a62c45f1d</sign>
+  </file>
+  <file>
+    <path>config/handlers.inc.php</path>
+    <sign>756df66c9018da5f1d9b7c8408a33273019c21e0</sign>
+  </file>
+  <file>
+    <path>config/module.xml</path>
+    <sign>c2fa46a8848d201c9fcdd24e9024ee4f5fd3ff94</sign>
+  </file>
+  <file>
+    <path>controller/front/image.inc.php</path>
+    <sign>0d1bf1114a82df16a7ce39aa69abc3f00f1801eb</sign>
+  </file>
+  <file>
+    <path>model/arial.ttf</path>
+    <sign>056d20ac56be76d076480c2cab53811fefb91b73</sign>
+  </file>
+  <file>
+    <path>model/img.inc.php</path>
+    <sign>ca187714f04b47c8d2f60d819e437e5cffa600e0</sign>
+  </file>
+  <file>
+    <path>model/kcaptcha_config.php</path>
+    <sign>56867473685789fc87dde830b7b9b46b401b4853</sign>
+  </file>
+  <masterSign>063e12ed4db1fc6d82ba7b1ab799eb60351098c934c6c19dca306f047437e1f52bda64f7801368c9f3eb7cb51dd219bb4311d7f96285392924a2135cbadb8113ac4271b07f57f72e7ca00c8fcc1314976a0b8ae2197b63196160db78370ce10fc62e5884419e10ffd07900787b323f62760973d9815c7853e07fd41ae28939d7</masterSign>
+</signatures>

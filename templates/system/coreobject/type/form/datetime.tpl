@@ -1,0 +1,1 @@
+<input type="text" name="{$field->getFormName()}" value="{$field->get()}" {if $field->getMaxLength()>0}maxlength="{$field->getMaxLength()}"{/if} {$field->getAttr()} datetime="datetime"/>

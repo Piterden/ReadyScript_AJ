@@ -1,0 +1,77 @@
+.treeblock {
+    overflow:hidden;
+}
+
+.treeblock .label {
+    text-align:center;
+    font-size:14px;
+    padding-top:5px;
+    color: #5f8ab6;
+}
+
+.treeblock .lefttree {
+    width:50%;
+    float:left;
+}
+
+.treeblock .scroll {
+    overflow:auto;
+    height:400px;
+}
+
+.wrap {
+    margin:10px;
+    border:1px dotted #C0C0C0;
+    padding:1px;
+}
+
+.treeblock .righttree {
+    margin-left:51%;
+}
+
+.hrline {
+    margin-bottom: 5px;
+    padding: 5px;
+    text-align:center;
+    background: #aaa;
+    overflow:hidden;
+    zoom:1;
+    color: white;
+}
+
+.linetop {
+    margin-top:20px;
+    border-top:1px solid #C0C0C0;
+}
+
+.fullaccleft {
+    float:left;
+}
+
+.fullaccright {
+    float:right;
+}
+
+.fullaccleft input , .fullaccright input{
+    vertical-align:middle;
+}
+
+.overlay {
+    width:100%; 
+    height:100%; 
+    background:#fafafa; 
+    z-index:20; 
+    position:absolute; 
+    opacity:.7;
+    filter:Alpha(Opacity=70);
+    display:none;
+}
+
+.dialog-window .overlay {
+    background:white;
+}
+
+.moduleWrapper {
+    position:relative; 
+    zoom:1;
+}

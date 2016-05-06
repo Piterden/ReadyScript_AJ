@@ -1,0 +1,1 @@
+<a {if $button->getHref()!=''}href="{$button->getHref()}"{/if} {$button->getAttrLine()}><img src="{$Setup.IMG_PATH}/adminstyle/modoptions.png">{if $button->getTitle()}<span class="lmarg">{$button->getTitle()}</span>{/if}</a>

@@ -1,0 +1,247 @@
+.admin-style .package-tools {
+    border:2px solid #c69d2d;
+    margin-bottom:15px;
+}
+
+.admin-style .package-actions a {
+    line-height:36px;
+    
+}
+
+.admin-style .package-actions .add-package {
+    background: url(../img/plusgreen.gif) no-repeat left center;
+    padding-left:20px;
+    margin-right:20px;
+    margin-left:10px;
+}
+
+.admin-style .package-actions .act span {
+    background: none;
+    color: #42879d;
+}
+
+.admin-style .package-actions {
+    position:relative;
+}
+
+.admin-style .package-actions .success-text {
+    position:absolute;
+    right:0;
+    top:0;
+    height:36px;
+    padding:0 10px;
+    line-height:36px;
+    background: #c69d2d;
+    color: white;
+    display:none;
+}
+    
+
+.admin-style .package-container {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.admin-style .package-container td {
+    vertical-align:middle;
+    padding:10px 0;    
+    text-align:left;
+}
+
+.admin-style .package-container .title-td {
+    padding-left:20px;
+}
+
+.admin-style .package-container .sort-td {
+    padding-left:5px;
+    padding-right:5px;
+    width:15px;
+    cursor:move;
+}
+
+
+.admin-style .package-container .sort {
+    width:15px;
+    height:16px;
+    background: url(../../../../resource/img/adminstyle/drag_table.gif) no-repeat left top;
+}
+
+.admin-style .package-container .over .sort {
+    background-position: -15px 0;
+}
+
+
+.admin-style .package-container .in-drag .sort-td {
+    background: #687280;
+}
+
+.admin-style .package-container .in-drag .sort {
+    background-position: -30px 0;
+}
+
+.admin-style .package-container .over td {
+    background: #b4d9e4;
+}
+
+.admin-style .package-container .vtable td{
+    padding:3px;
+    vertical-align:middle;
+    text-align: left;
+}
+
+.admin-style .package-container .vtable .c2 {
+    border-left:1px solid #ACACAC;
+    white-space:nowrap;
+}
+
+
+.admin-style .package-container .item-tools .edit {
+    background: url(../../../../resource/img/adminstyle/over_tools.gif) no-repeat -15px 0;
+    width:15px;
+    height:14px;
+    display:inline-block;
+    margin-right:7px;
+}
+
+.admin-style .package-container .item-tools a {
+    visibility: hidden;
+    vertical-align:middle;
+}
+
+.admin-style .package-container .over .item-tools a {
+    visibility:visible;
+}
+
+.admin-style .package-container .item-tools .edit:hover {
+    background-position:-15px -14px;
+}
+
+.admin-style .package-container .item-tools .delete {
+    font-size:11px;
+    color: #ca2847;
+    padding:3px;
+}
+
+.admin-style .package-container .item-tools .delete:hover {
+    background: #d13a3a;
+    color: white;
+}
+
+/* Режим редактирования */
+
+.admin-style .now-edit .sort {
+    visibility:hidden;
+}
+
+.admin-style .now-edit .item-tools a {
+    visibility:visible;
+}
+
+.admin-style .now-edit .item-tools .edit {
+    background-image:url("../../../../resource/img/adminstyle/cur_over_tools.gif");    
+}
+
+.admin-style .package-container .edit-form > td{
+    vertical-align:top;
+    padding:0;
+}
+
+.admin-style .package-container .edit-form .bordered{
+    border:3px solid #3f3f3f;
+}
+
+.admin-style .package-container .package-table td {
+    vertical-align:top;
+    padding:7px 0;
+}
+
+
+
+
+
+
+
+.admin-style .formbox .package-table {
+    width:100%;
+}
+
+.admin-style .formbox .package-form {
+    padding:10px;
+}
+
+.admin-style .formbox .package-form .p-title{
+    width:400px;
+}
+   
+.admin-style .formbox .package-table td{
+    vertical-align:top;
+    padding:7px 0;
+}
+
+.admin-style .formbox .package-table .key{
+    text-align:right;
+    font-size:12px;
+    line-height:30px;
+    width:180px;
+    padding-right:15px;
+}
+
+.admin-style .formbox .package-table .p-val-name {
+    width:200px;
+}
+.admin-style .formbox .package-table .p-val-code {
+    width:100px;
+}
+
+.admin-style .formbox .package-table .add {
+    background: #71B422;
+    font-size: 16px;
+    line-height: 33px;
+    margin-right: 10px;
+    padding: 0 10px;
+    color: white;
+    float:left;
+}
+
+.admin-style .formbox .package-table .clean {
+    float:right;
+    color: #f6607d;
+    line-height:33px;
+    font-size:16px;
+    margin-right:10px;
+}
+
+.admin-style .formbox .package-table .close {
+    float:right;
+    line-height:33px;    
+    background: url(../img/collapse.gif) no-repeat right center;
+    padding-right:12px;
+    font-size:16px;
+}
+
+.admin-style .formbox .package-list-items input {
+    height:26px;
+    line-height:26px;
+}
+
+.admin-style .formbox .package-list-items thead td {
+    font-size:11px;
+    padding:0;
+}
+
+.admin-style .formbox .package-list-items td {
+    padding:4px 0;
+    vertical-align: middle;
+}
+
+.admin-style .formbox .package-list-items .del-line {
+    color: #f6607d;
+    font-size:12px;
+    margin-left:10px;
+    padding:3px;
+}
+
+.admin-style .formbox .package-list-items .del-line:hover {
+    background: #d13a3a;
+    color: white;    
+}

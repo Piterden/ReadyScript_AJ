@@ -1,0 +1,2253 @@
+/* Общие стили для режима редактирования и административной панели */
+
+#debug-top-block {
+    position:relative;
+    box-shadow:0 3px 3px #777;
+    z-index:100;
+    height:49px;
+}
+
+.admin-style h3 {
+    font-size:16px;
+    font-weight:bold;
+    margin:16px 0;
+}
+
+.admin-style .inlineError {
+    color:red;
+}
+
+.admin-style .menuline {
+    background: #3f3f3f;
+    height: 49px;
+}
+
+.admin-style .menuline .brand {
+    float:left;
+    background: url(../../img/adminstyle/logo.gif) no-repeat center center;
+    display:block;
+    width: 113px;
+    height:49px;
+    margin-right: 32px;
+}
+
+.admin-style .menuline .menu {
+    float:left;
+    margin:0;
+    padding:0;
+    list-style:none;
+    position:relative;
+    z-index:70;
+}
+
+.admin-style .preloadback {
+    width:0;
+    height:0;
+    font-size:0;
+    background: url(../../img/adminstyle/filterback.png) no-repeat top left;
+}
+
+.admin-style .menuline .menu .separator {
+    height:0;
+    font-size:0;
+    border-bottom:1px solid #c5c9ce;
+}
+
+.admin-style .menuline .menu li {
+    float:left;
+    position:relative;
+}
+
+
+.admin-style .menuline .menu li a {
+    font-size:16px;
+    color: #e1f5fc;
+    text-decoration:none;
+    padding: 0 11px;
+    line-height:49px;
+    display:block;
+}
+
+.admin-style .menuline .menu .home {
+    background: url(../../img/adminstyle/home.png) no-repeat center center;
+    width:16px;
+}
+
+.admin-style .menuline .menu li a:hover {
+    background-color: black;
+}
+
+/* Под меню */
+
+.admin-style .menuline .menu ul {
+    background: url(../../img/adminstyle/filterback.png) repeat top left;
+    position:absolute;
+    display:none;
+    z-index:100;
+    top:100%;
+    left:0;
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.admin-style .menuline .menu ul li {
+    float:none;
+}
+
+.admin-style .menuline .menu ul li a{
+    line-height:30px;
+    font-size:14px;
+    white-space:nowrap;
+    display:block;
+    color: white;
+}
+
+
+.admin-style .menuline .menu ul .node > a{
+    background: url(../../img/adminstyle/node.png) no-repeat right center;
+    padding-right:15px;
+}
+
+.admin-style .menuline .menu ul .node > a:hover {
+    background-color: black;
+}
+
+.admin-style .menuline .menu ul ul {
+    left:100%;
+    top:0;
+    margin-left:1px;
+}
+
+
+.admin-style .menuline .menu .over > a,
+.admin-style .menuline .menu ul .over > a
+{
+    background-color: black;
+}
+
+.admin-style .menuline .action-zone {
+    position:absolute;
+    right:0;
+    background: #3F3F3F;    
+}
+
+.admin-style .menuline .action-zone .action {
+    width:45px;
+    height:49px;
+    float:right;
+}
+
+.admin-style .menuline .action-zone .action:hover {
+    background-color: black;
+}
+
+
+.admin-style .menuline .action-zone .wide-text {
+    display:none;
+    color: white;
+    line-height:49px;
+    white-space:nowrap;
+}
+
+.admin-style .menuline .action-zone .clean-cache {
+    background: url(../../img/adminstyle/update.png) no-repeat center center;  
+}
+
+.admin-style .menuline .action-zone .to-site {
+    background: url(../../img/adminstyle/frontend.png) no-repeat center center;
+}
+
+.admin-style .menuline .action-zone .to-admin {
+    background: url(../../img/adminstyle/backend.png) no-repeat center center;
+}
+
+.admin-style .menuline .action-zone .license-notice-icon {
+    background: url(../../img/adminstyle/alert.png) no-repeat center center;
+}
+
+.admin-style .menuline .action-zone .start-tour {
+    background: url(../../img/adminstyle/tour.png) no-repeat center center;
+}
+
+@media screen and (min-width: 1390px) {
+    .admin-style .menuline .action-zone .wide-text {
+        display:inline;
+    }    
+    .admin-style .menuline .action-zone .wide-element {
+        padding-left:42px;
+        padding-right:16px;
+        width:auto;
+        background-position:16px center;
+    }    
+}
+
+.admin-style .panel-menu {
+    float:right;
+    color: white;
+    position:relative;
+}
+
+.admin-style .panel-menu:hover .drop-down {
+    display:block;
+}
+
+.admin-style .panel-menu .current {
+    white-space:nowrap;
+    line-height:49px;
+    height:49px;
+    background:url(../../img/adminstyle/handle.png) no-repeat right center;
+    cursor:pointer;
+    padding:0 40px 0 15px;
+    color:white;
+}
+
+.admin-style .panel-menu:hover .current {
+    background-color:#333;
+}
+
+
+.admin-style .panel-menu .drop-down {
+    position:absolute;
+    right:0;
+    top:100%;
+    background: url(../../img/adminstyle/filterback.png) repeat top left;
+    margin:0;
+    padding:0;
+    list-style:none;
+    z-index:50;
+    display:none;
+    box-shadow:2px 2px 4px #333;
+}
+
+.admin-style .panel-menu .drop-down li {
+    border-bottom:1px solid #dddfe2;
+}
+
+.admin-style .panel-menu .drop-down li a {
+    height:39px;
+    line-height:39px;
+    padding:0 30px;
+    display:block;
+    white-space:nowrap;
+    color: white;
+}
+
+.admin-style .panel-menu .drop-down .user-section {
+    border-bottom:none;
+}
+
+.admin-style .panel-menu .drop-down .user-section a {
+    color: white;
+}
+
+.admin-style .panel-menu .drop-down li a:hover {
+    background: #333;
+    color: white;
+}
+
+
+/* Нижняя полоса */
+
+.admin-style .bottomToolbar {
+    font-size:16px;
+    background: #3f3f3f;
+    height:60px;
+    clear:both;
+    position:fixed;
+    bottom:0;
+    width:100%;
+}
+
+.admin-style .bottomToolbar .viewport {
+    padding-top:14px;
+}
+
+.admin-style .bottomToolbar .edit .rs-active {
+    line-height:33px;
+    display:inline-block;
+    color: white;
+    padding:0 10px 0 35px;
+    background: #3aabd1 url(../../img/adminstyle/edit.png) no-repeat 10px center;
+    margin-right:2px;
+}
+
+.admin-style .bottomToolbar .edit .rs-dropdown {
+    background: #3AABD1;
+}
+
+.admin-style .bottomToolbar .edit .rs-dropdown li a {
+    color:white;
+}
+
+.admin-style .bottomToolbar .edit .rs-active:hover,
+.admin-style .bottomToolbar .edit .rs-dropdown-handler:hover
+{
+    background-color: #288fb2;
+}
+
+.admin-style .bottomToolbar .edit .rs-dropdown-handler {
+    background-color: #3aabd1;
+}
+
+.admin-style .bottomToolbar .over .rs-dropdown-handler,
+.admin-style .bottomToolbar .over .rs-dropdown-handler:hover {
+    background-color: #e2e2e2;
+}
+
+.admin-style .footerspace {
+    height:70px;
+}
+
+/* Форма редактирования */
+
+.admin-style .formbox select,
+.admin-style .formbox textarea,
+.admin-style .formbox input {
+    border:1px solid #c0c0c0;
+}
+
+.admin-style .formbox input[type=checkbox] {
+    border:none;
+}
+
+.admin-style .formbox label {
+    line-height:22px;
+}
+
+.admin-style .formbox .radio-item {
+    margin-right:10px;
+}
+
+.admin-style .formbox select,
+.admin-style .formbox input {
+    height:30px;
+    line-height:30px;
+    vertical-align:middle;
+}
+
+.admin-style .formbox input[type=radio],
+.admin-style .formbox input[type=checkbox] {
+    height:20px;
+    line-height:20px;
+    margin:0 0 3px;
+}
+
+
+.admin-style .formbox select[multiple] {
+    height:auto;
+}
+
+.admin-style .formbox select {
+    padding:5px 5px 5px 0;
+}
+
+.admin-style .formbox input[type=checkbox] {
+    height:auto;
+}
+
+
+.admin-style .formbox .selectTemplate {
+    display:inline-block;
+    width:19px;
+    height:19px;
+    background: url(../../img/adminstyle/select_template.gif) no-repeat center center;
+    vertical-align:middle;
+    position:relative;
+    left:-30px;
+}
+
+.admin-style .formbox .select-template-input {
+    padding-right:30px;
+}
+
+.admin-style .formbox {
+    padding:15px 0 30px;
+}
+
+.admin-style .formbox .has-error {
+    border-color: #ff5d37;
+}
+
+.admin-style .formbox .multiselect {
+    height:250px;
+}
+
+
+/* Закладки */
+
+.admin-style .tabs .tab-container{
+    padding:0;
+    margin:0;
+    list-style:none;
+    overflow:hidden;
+    margin-bottom:15px;
+}
+
+.admin-style .tabs .tab-container > li {
+    float:left;
+    margin-right:3px;
+    margin-bottom:3px;
+}
+
+.admin-style .tabs .tab-container > li > a {
+    background: #e2e2e2;
+    line-height:33px;
+    display:block;
+    padding:0 13px;
+    font-size:14px;
+}
+
+.admin-style .tabs .tab-container > li > a:hover {
+    background: #C0C0C0;
+    color: black;
+}
+
+.admin-style .tabs .tab-container > li.act > a {
+    background: #000;
+    color: white;
+}
+
+.admin-style .otable > td{
+    width:75%;
+}
+
+.admin-style .no-td-width > td {
+    width:auto;
+}
+
+.admin-style .otable .otitle{
+    font-size:12px;
+    text-align:right;
+    padding-right:15px;
+    padding-left:50px;
+    max-width:300px;
+}
+
+.admin-style .otable .preinput {
+    color: #c0c0c0;
+    font-size: 12px;
+}
+
+.admin-style .otable td {
+    padding:5px 0;
+}
+.admin-style .otable .intable .otitle{
+    color: #c0c0c0;
+    padding-right:12px;
+    padding-left:0;
+}
+
+.admin-style .otable .reg-tab .intable .otitle{
+    color: black; 
+}
+
+.admin-style .otable .intable td {
+    padding:4px 0;
+}
+
+.admin-style .zindex-dlg {
+    z-index:1010;
+}
+   
+.admin-style .nodisp {
+    display:none;
+}
+
+
+/* Кнопки */
+
+.admin-style .button {
+    background:#e2e2e2;
+    line-height:33px;
+    padding: 0 10px;
+    border:none;
+    color: #3f3f3f;
+    font-size:16px;
+    display:inline-block;
+}
+
+.admin-style .button img {
+    vertical-align:middle;
+}
+
+.admin-style .button .lmarg {
+    vertical-align:middle;
+    margin-left:7px;
+}
+
+.admin-style .button:hover {
+    background:#C0C0C0;
+}
+
+.admin-style .button .rs-dropdown-handler {
+    background-color:#e2e2e2;
+}
+
+.admin-style .button.over .rs-dropdown-handler,
+.admin-style .button .rs-dropdown-handler:hover {
+    background-color:#C0C0C0;
+}
+
+.admin-style .button.add {
+    background: #71b422 url(../../img/adminstyle/button_add.gif) no-repeat top left;
+    color: white;
+    padding-left:41px;
+}
+
+.admin-style .button.add:hover {
+    background-color:#66a81a;
+}
+
+.admin-style .button.add .rs-dropdown,
+.admin-style .button.add .rs-dropdown-handler {
+    background-color: #71b422;
+}
+
+.admin-style .button.add .rs-dropdown {
+    margin-top:2px;
+}
+
+.admin-style .button.add .rs-dropdown li a {
+    color: white;
+}
+
+.admin-style .button.add.over .rs-dropdown-handler {
+    background-color: #ACACAC;
+}
+
+.admin-style .button-space:hover,
+.admin-style .button-space {
+    font-size:0;
+    width:5px;
+    padding:0;
+    background:none;
+    vertical-align:top;
+}
+
+
+.admin-style .button.delete {
+    color: #f6607d;
+    background: none;
+}
+
+.admin-style .button.delete:hover {
+    background: #d13a3a;
+    color: white;
+}
+
+
+.admin-style .button.saveform {
+    background:#71b422;
+    color: white;
+}
+
+.admin-style .button.saveform:hover {
+    background: #5a9613;
+}
+
+
+.admin-style .bottomToolbar .save {
+    float:right;
+}
+
+.admin-style .button.save {
+    background:#71b422;
+    color: white;
+}
+
+.admin-style .button.save:hover {
+    background: #5a9613;
+}
+
+.admin-style .button.rs-list-button:hover,
+.admin-style .button.rs-list-button {
+    padding:0;
+    background: none;
+}
+
+.admin-style .button .rs-dropdown-handler {
+    padding: 0 10px;
+    line-height:33px;
+}
+
+.admin-style .button.disabled,
+.admin-style .button.disabled:hover {
+    background-color: #C0C0C0;
+    color: #969696;
+    text-shadow:0 1px 0 #eee;
+    cursor:default;
+}
+
+.admin-style .button.delete.disabled,
+.admin-style .button.delete.disabled:hover {
+    background:none;
+    text-shadow:none;
+}
+
+/* Индикатор загрузки */
+
+.admin-style .loading {
+    line-height:22px;
+    position:fixed;
+    z-index:5000;
+    top:0px;
+    left:50%;
+    margin-left:-45px;
+    padding:5px 7px;
+}
+
+.admin-style .loading .overlay {
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    opacity:0.6;
+    background: black;
+}
+
+.admin-style .loading span {
+    background: url(../../img/adminstyle/loader.gif) no-repeat center left;
+    padding-left:25px;
+    line-height:16px;
+    position:relative;
+    color: white;    
+    z-index:201;    
+}
+
+.admin-style .tinymce {
+    width:620px;
+    height:270px;
+}
+
+/* Ошибки в формах */
+
+.admin-style .error-list {
+    list-style:none;
+    padding:15px 0;
+    margin:0;
+    border-bottom:2px solid #ff5d37;
+}
+
+.admin-style .no-bottom-border {
+    border-bottom:none;
+}
+
+.admin-style .error-list .system,
+.admin-style .error-list .field {
+    background: #ff5d37;
+    position:relative;
+    float:left;
+    padding:7px;
+    color: white;
+    margin-right:14px;
+}
+
+.admin-style .error-list .text {
+    font-size:12px;
+    padding-top:7px;
+}
+
+.admin-style .error-list .system .cor,
+.admin-style .error-list .field .cor {
+    background: url(../../img/adminstyle/error_tip.png) no-repeat top left;
+    position:absolute;
+    right:-5px;
+    top:50%;
+    width:5px;
+    height:12px;
+    margin-top:-6px;
+}
+
+
+.admin-style .error-list .system {
+    background: #969696;
+}
+
+.admin-style .error-list .system .cor {
+    background-image:url(../../img/adminstyle/error_system_tip.png);    
+}
+
+.admin-style .error-list li {
+    overflow:hidden;
+    margin-bottom:4px;
+}
+
+.admin-style .field-error {
+    position:relative;
+    display:none;    
+}
+
+.admin-style .field-error .text {
+    position:absolute;
+    top:8px;
+    left:-4px;
+    background: #ff5d37;
+    width:auto;
+    min-width: 200px;
+    padding:8px;
+    color: white;
+    z-index:20;
+    font-size:11px;
+}
+
+.admin-style .field-error .text .cor {
+    background: url(../../img/adminstyle/error_left_tip.png) no-repeat top left;
+    position:absolute;
+    left:-5px;
+    top:7px;
+    width:5px;
+    height:12px;
+}
+
+.admin-style .field-error.top-corner .text .cor {
+    background: url(../../img/adminstyle/error_top_tip.png) no-repeat top left;
+    position:absolute;
+    left:7px;
+    top:-5px;
+    width:12px;
+    height:5px;    
+}
+
+.admin-style .mceEditor {
+    float:left;
+}
+
+.admin-style .sep-top-form {
+    margin-top:20px;
+}
+
+.admin-style .fieldhelp {
+    font-size:11px;
+    color: #adacac;
+}
+
+
+
+.admin-style .help-icon {
+    background: #e2e2e2;
+    font-size: 11px;
+    font-weight:bold;
+    display:inline-block;
+    vertical-align:middle;
+    text-decoration:none;
+    padding:3px 5px;
+    cursor:help;
+}
+
+
+
+.admin-style .help-icon:hover,
+.admin-style .help-icon.act {
+    background: #efcd70;  
+}
+
+.admin-style .vat .help-icon{
+    vertical-align: top;
+}
+
+
+.admin-style .hasDatepicker {
+    padding-right:25px;
+}
+
+.admin-style .ui-datepicker-trigger {
+    vertical-align:middle;
+    position:relative;
+    left:-20px;
+    top:-1px;
+    cursor:pointer;
+}
+
+.admin-style .pad10{
+    padding: 10px;
+}
+
+.admin-style .hpad10{
+    padding: 0 10px;
+}
+
+.admin-style .vpad10{
+    padding: 10px 0;
+}
+
+.admin-style .tpad10{
+    padding-top: 10px;
+}
+
+.admin-style .bpad10{
+    padding-bottom: 10px;
+}
+
+.admin-style .debug-mode-switcher {
+    float:left;
+    margin-left:10px;
+    height:49px;
+    overflow:hidden;
+    padding-top:
+}
+
+.admin-style .debugmode-text {
+    line-height:49px;
+    float:left;
+    color: white;
+    margin:0 0 0 10px;
+}
+
+.admin-style .debugmode-text br {
+    font-size:0;
+}
+
+.admin-style .debug-mode-switcher .rs-switch {
+    padding-top:19px;
+    float:left;
+}
+
+.admin-style .debug-mode-switcher .rs-switch .rs-border {
+    border-color: white;
+}
+
+.admin-style .debug-mode-switcher .rs-switch .rs-handle {
+    background-color: #3AABD1;
+}
+
+.admin-style .debug-mode-switcher .rs-switch.on .rs-back {
+    background: white;
+}
+
+
+.admin-style .keyvalTable {
+    border-collapse:collapse;
+    width:100%;
+}
+
+.admin-style .keyvalTable input {
+    width:97%;
+}
+
+.admin-style .keyval-container .kv-sort {
+    padding-left:5px;
+    padding-right:5px;
+    width:15px;
+    cursor:move;
+    vertical-align:middle;    
+}
+
+.admin-style .keyval-container .ksort {
+    width:15px;
+    height:16px;
+    background: url(../../img/adminstyle/drag_table.gif) no-repeat left top;    
+}
+
+
+.admin-style .keyvalTable .ksort:hover {
+    background-position: -15px 0;
+}
+
+
+.admin-style .keyvalTable .in-drag .kv-sort {
+    background: #687280;
+}
+
+.admin-style .keyvalTable .in-drag .ksort {
+    background-position: -30px 0;
+}
+
+.admin-style .keyvalTable thead th {
+    font-weight:normal;
+    border-bottom:1px solid #C0C0C0;
+    font-size:12px;
+    background:none;
+}
+
+.admin-style .keyvalTable td{
+    padding:5px 2px 0 !important;
+}
+
+.admin-style .keyvalTable .kv-sort,
+.admin-style .keyvalTable .kv-del {
+    vertical-align:middle;
+}
+
+.admin-style .keyval-container .add-pair {
+    background: url(../../img/adminstyle/add_dark.png) no-repeat left center;
+    padding-left:23px;
+    display:block;
+    margin-top:5px;
+}
+
+.admin-style .keyvalTable .remove {
+    background: url(../../img/adminstyle/del_dark.png) no-repeat center center;
+    width:16px;
+    height:16px;
+    display:block;
+}
+
+.admin-style .inform-block {
+    border:1px solid #c69d2d; 
+    padding:20px;
+}
+
+#debug-top-block.debug-mobile .debug-mode-switcher,
+#debug-top-block.debug-mobile .action.start-tour,
+#debug-top-block.debug-mobile .license-notice-icon,
+#debug-top-block.debug-mobile .panel-menu {
+    display:none;
+}
+
+#debug-top-block.debug-mobile .mode {
+    float:none;
+}
+
+#debug-top-block.debug-mobile .mode a {
+    margin-left:0;
+}
+
+.admin-style .topline .debug-tools {
+    float:right;
+    margin-right:10px;
+}
+
+.admin-style .topline .debug-tools a:hover {
+    opacity:1;  
+}
+
+.admin-style .topline .clean-cache {
+    width:16px;
+    height:16px;
+    display:inline-block;
+    background: url(../../img/adminstyle/cleancache.png) no-repeat top left;
+    opacity:0.8;
+}
+
+.admin-style .relative {
+    position:relative;
+}
+
+/* Менеджер шаблонов */
+
+.admin-style .tmanager .category-filter {
+    white-space: nowrap;
+    height:30px;
+}
+
+.admin-style .tmanager .category-selector {
+    padding-top:0;
+}
+
+.admin-style .tmanager .category-selector .current {
+    color: #555;
+}
+
+.admin-style .tmanager .folderpath {
+    background: #e3e3e3;
+    line-height: 30px;
+    height:30px;
+}
+
+.admin-style .tmanager .folderpath a {
+    color: #2091b7;
+}
+
+.admin-style .tmanager .folderpath .root,
+.admin-style .tmanager .folderpath .root:hover {
+    display:inline-block;
+    width:11px;
+    height:18px;
+    background: url(../../img/adminstyle/root.png) no-repeat center center;
+    vertical-align:middle;
+    border:none;
+}
+
+.admin-style .tmanager .folderpath a:hover {
+    color: black;
+    border-bottom:1px dotted #2091b7;    
+}
+
+.admin-style .tmanager .category-filter {
+    float:left;
+}
+
+.admin-style .margvert10 {
+    margin-top:15px;
+    margin-bottom:15px;
+}
+
+.admin-style .file-list-container {
+    border:1px solid #c3c3c3;
+    padding:15px 0;
+}
+
+.admin-style .file-list {
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.admin-style .file-list > li {
+    width:433px;
+    height:34px;
+    line-height:34px;
+    float:left;
+    cursor:pointer;
+    position:relative;
+}
+
+.admin-style .file-list .tools {
+    position:absolute;
+    right:0;
+    top:0;
+    height:34px;
+    line-height:34px;    
+    display:none;
+    padding-right:5px;
+}
+
+.admin-style .file-list .over .tools {
+    display:block;
+}
+
+
+.admin-style .file-list .dir {
+    background: url(../../img/adminstyle/folder.png) no-repeat 9px center;
+    padding-left: 34px;
+}
+
+.admin-style .file-list .file {
+    background: url(../../img/adminstyle/file.png) no-repeat 9px center;
+    padding-left: 34px;
+}
+
+.admin-style .file-list .current {
+    background-color: #FBEEB3;
+}
+
+.admin-style .file-list .over {
+    background-color: #b4d9e4;
+}
+
+.admin-style .file-list .tpl .ext{
+    color: #57960c;
+    font-weight:bold;
+}
+
+.admin-style .file-list .css .ext{
+    color: #1262a6;
+    font-weight:bold;
+}
+
+.admin-style .file-list .js .ext{
+    color: #bf0808;
+    font-weight:bold;
+}
+
+.admin-style .file-list .jpg .ext{
+    color: #ac6d00;
+    font-weight:bold;
+}
+
+.admin-style .file-list .gif .ext{
+    color: #987100;
+    font-weight:bold;
+}
+
+.admin-style .file-list .png .ext{
+    color: #00a7ad;
+    font-weight:bold;
+}
+
+.admin-style .empty-folder {
+    color: #797979;
+    font-size:40px;
+    text-align:center;
+    padding:180px 0;
+}
+
+.admin-style .select-product-box .empty-folder {
+    padding:80px 0;
+}
+
+.admin-style .folderpath .backcolor {
+    line-height:30px;
+    height:30px;
+    width:10px;
+    display:inline-block;
+    margin-right:5px;
+}
+
+.admin-style .tmanager .list {
+    ackground: #eaeaea;
+}
+
+.admin-style .f-root-ul {
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+
+.admin-style .f-root-ul .themes .name {
+    line-height: 30px;
+    background: #6daec5;
+    padding-left:10px;
+    color: white;
+}
+
+.admin-style .f-root-ul .modules .name {
+    line-height: 30px;
+    background: #6daec5;
+    padding-left:10px;
+    color: white;
+}
+
+.admin-style .f-root-ul ul {
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.admin-style .f-root-ul ul li a {
+    padding-left:20px;
+    height:30px;
+    display:block;
+    line-height:30px;    
+    
+}
+
+.admin-style .f-root-ul ul li a:hover {
+    background: #3f3f3f;
+    color: white;
+}
+
+.admin-style .folderpath .filetypes {
+    font-size:11px;
+}
+
+.admin-style .file-container-text {
+    margin-bottom:7px;
+}
+
+/* Горизонтальный фильтр категорий */
+
+.admin-style .category-filter {
+    height:36px;
+}
+
+.admin-style .category-selector {
+    padding-top:5px;
+    display:inline-block;
+    position:relative;
+}
+
+.admin-style .category-selector .current {
+    border:1px solid #3aabd1;
+    border-right:none;
+    color: #066382;
+    line-height:28px;
+    height:28px;
+    display:block;
+    padding:0 10px;
+    float:left;
+    min-width:300px;
+}
+
+.admin-style .category-selector .dropdown-handler {
+    height:30px;
+    width:30px;
+    background: #3aabd1 url(../../img/adminstyle/framework/dropdown.png) no-repeat center center;
+    display:inline-block;
+}
+
+.admin-style .category-selector.over .dropdown-handler,
+.admin-style .category-selector .dropdown-handler:hover {
+    background-color:#747474;
+}
+
+.admin-style .category-selector.over .list {
+    display:block;
+}
+
+.admin-style .category-selector .list {
+    overflow:auto;
+    min-width:100%;    
+    height:300px;
+    display:none;
+    position:absolute;    
+    top:100%;
+    left:0;
+    background:#b4d9e4;
+    z-index:2;    
+    box-shadow:0 2px 3px -2px #888;    
+}
+
+.admin-style .category-selector .root-ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+
+.admin-style .category-selector .current-inlist > a {
+    background: white;
+}
+
+.admin-style .category-selector .root-ul ul {
+    padding:0;
+    margin:0;
+    list-style:none;
+}
+
+.admin-style .category-selector .root-ul li {
+    line-height:20px;
+    padding:0 10px;
+}
+
+.admin-style .category-selector .root-ul li a {
+    color: #012e3d;
+    padding:3px;
+    display:inline-block;
+}
+
+.admin-style .category-selector .root-ul li a:hover {
+    background: #3aabd1;
+    color: white;
+}
+
+.admin-style .category-filter .cf-tools {
+    display:inline-block;
+    vertical-align:top;
+    padding-top:5px;
+    margin-left:1px;
+}
+
+.admin-style .category-filter .cf-tools a{
+    background: #3aabd1;
+    background-position:center center;
+    background-repeat:no-repeat;
+    width:30px;
+    height:30px;
+    display:block;
+    float:left;
+}
+
+.admin-style .category-filter .cf-tools a:hover {
+    background-color: #1a81a3;
+}
+
+.admin-style .category-filter .cf-tools .add {
+    background-image: url(../../img/adminstyle/add18.png);
+}
+
+.admin-style .category-filter .cf-tools .addspec {
+    background-image: url(../../img/adminstyle/addspec18.png);
+}
+
+.admin-style .category-filter .cf-tools .edit {
+    background-image: url(../../img/adminstyle/edit18.png);
+}
+
+.admin-style .category-filter .cf-tools .delete {
+    background-image: url(../../img/adminstyle/delete18.png);
+}
+
+.admin-style .category-selector .root-ul,
+.admin-style .category-selector .root-ul ul {
+    background-image: url(../../img/adminstyle/tree/line.gif);
+    background-position:top left;
+    background-repeat:repeat-y;
+    background-color:#b4d9e4;
+}
+
+.admin-style .category-selector .root-ul .branch {
+    background:url(../../img/adminstyle/tree/branch.gif) no-repeat top left;
+    padding-left:21px;
+}
+
+.admin-style .category-selector .root-ul .branch-end {
+    background:url(../../img/adminstyle/tree/branch_end.gif) no-repeat top left;
+    padding-left:21px;    
+    background-color:#b4d9e4;
+}
+
+.admin-style .tmanager .backcolor {
+    background: white;
+}
+
+.admin-style .hidden {
+    display:none;
+}
+
+.admin-style .folderpath .rt {
+    float:right;
+    margin-right:10px;
+    line-height:normal;
+    padding-top:6px;
+}
+
+.admin-style .price_row{
+    display: inline-block;
+}
+
+.admin-style .new_price_row{
+    display: none;
+}
+
+.admin-style .close-property{
+    background: url("../../img/adminstyle/collapse.gif") no-repeat scroll right center rgba(0, 0, 0, 0);
+    float: right;
+    font-size: 16px;
+    line-height: 33px;
+    padding-right: 12px;
+}
+
+.multi-prop-del-button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.admin-style .user_cost_row td{
+    padding-bottom: 10px;
+    padding-right: 10px;
+}
+
+.admin-style .feedback_result_form{
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+
+
+.admin-style .feedback_result_form th,
+.admin-style .feedback_result_form td
+{
+    padding: 3px;
+    padding-right:10px;
+    border-bottom: 1px solid silver;
+    vertical-align: top;
+}
+
+.admin-style .feedback_result_form th{
+    text-align: left;
+    padding-bottom:6px;
+}
+
+.admin-style .feedback_result_form .feedback_result_value {
+    max-width: 400px;
+}
+
+.admin-style .editrow .multi_edit_rightcol {
+    position: relative;
+} 
+
+.admin-style .editrow .multi_edit_rightcol .cover {
+    background-color: #fafafa;
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 100;
+    opacity: 0.7;
+    cursor:pointer;
+}
+
+.admin-style .dialog-window .editrow .multi_edit_rightcol .cover {
+    background: white;
+}
+
+.admin-style .editrow .multi_edit_rightcol.coveron .cover{
+    display: block;
+}
+
+.admin-style .editrow .multi_edit_rightcol.coveron .mceEditor{
+    float:none;
+}
+
+.admin-style .deleteMeDir,
+.admin-style .deleteSpecDir {
+    margin-bottom:5px;    
+}
+
+.admin-style .deleteMeDir label,
+.admin-style .deleteSpecDir label {
+    border-bottom:1px solid #aaa;
+    padding-bottom:5px;
+    display:inline-block;
+}
+
+.admin-style .meDirBlock select {
+    min-width:270px;
+}
+
+.admin-style .yaMap{
+    width:500px;
+    height:300px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.admin-style .geoCoorContainer ul.ui-autocomplete{
+    border: 0px;
+    z-index: 100;
+    margin-left: 3px;
+    left:5px;
+    max-width: 410px;
+    box-shadow:0 0 3px gray;
+}
+
+.admin-style .geoCoorContainer ul li{
+    border-bottom: 1px solid silver;
+}
+
+.admin-style .geoCoorContainer ul li a{
+    display: block;
+    padding: 10px;
+    line-height: inherit;
+}
+
+.admin-style .geoCoorContainer ul .ui-state-focus{
+    background-color: #DEF4FE;
+}
+
+.admin-style .geoCoorContainer ul li a:hover{
+    background-color: #DEF4FE;
+}
+
+.admin-style .geoCoorContainer ul li span{
+    display: block;
+    color: black;
+}
+
+
+.admin-style .geoCoorContainer ul li i{
+    display: block;
+    color:gray;
+    font-size: 10px;
+}
+
+.admin-style .menum .label{
+    padding: 0px;
+    margin: 5px 0 3px;
+    padding-top: 10px;
+    font-size: 12px;
+}
+
+.admin-style .deliveryTypeAdditionalHTML{
+    margin-top: 20px;
+    padding-left: 18px;
+    font-size:12px;
+}
+
+.admin-style .deliveryTypeAdditionalHTML li {
+    padding-bottom:5px;
+}
+
+.admin-style .sheeplaStatusDiv,
+.admin-style .sheeplaStatusDivStandart{
+    padding: 10px;
+    min-width:920px;
+    min-height: 500px;
+}
+
+.admin-style .sheeplaStatusDivStandart{
+   min-width: 560px; 
+}
+
+.admin-style .vertMiddle {
+    vertical-align:middle;
+}
+
+.admin-style .orderStatusColor {
+    width:13px; 
+    height:13px; 
+    display:inline-block; 
+    margin-right:7px;
+}
+
+.admin-style .step-list {
+    padding-left:14px;
+}
+
+.admin-style .step-list li {
+    padding:2px 0;
+}
+
+.admin-style .no-vert-padd {
+    padding-top:0;
+    padding-bottom:0;
+}
+
+.admin-style .link-blog a {
+    text-decoration: underline;
+    line-height:25px;
+}
+
+.admin-style .link-blog .main-link {
+    font-size:16px;
+}
+
+.admin-style .templateManager {
+    z-index:1012;
+}
+
+.admin-style .template-edit-win {
+    z-index:1012;
+}
+
+/* Таблицы */
+
+.admin-style .rs-table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.admin-style .rs-table .hl-row td{
+    background: #687280;
+    color: white;
+}
+
+.admin-style .rs-table .inp {
+    font-family:Arial, Tahoma;
+    background: none;
+    border:none;
+    margin:1px;
+    width:97%;
+    height:24px;
+    line-height:24px;
+}
+
+.admin-style .rs-table .empty {
+    height:6px;
+    font-size:0;
+}
+
+.admin-style .rs-table .empty td {
+    padding:0;
+    border:none;
+}
+
+.admin-style .rs-table > thead > tr > th {
+    background: #e2e2e2;
+    height:39px;
+}
+
+.admin-style .rs-table .empty {
+    border:none;
+}
+
+.admin-style .rs-table thead th {
+    padding:0 5px;
+    text-align:left;
+    font-weight:normal;
+    vertical-align:middle;
+}
+
+.admin-style .rs-table thead th a {
+    color: black;
+}
+
+.admin-style .rs-table thead .settings {
+    padding:0;
+}
+
+.admin-style .rs-table .sortable:hover {
+    color: #0180ad;
+    background: none;
+}
+
+.admin-style .rs-table thead .chk {
+    background: #3AABD1;
+    padding:0;
+    width:20px;
+}
+
+.admin-style .rs-table thead .chk.checked-all {
+    background: #71B422;
+}
+
+.admin-style .rs-table thead .chk.chk-over  {
+    background: #3AABD1;
+}
+
+.admin-style .rs-table tbody tr td{
+    border-top:1px solid #e2e2e2;
+    border-bottom:1px solid #e2e2e2;
+}
+
+.admin-style .rs-table tbody .chk {
+    text-align: center;
+    padding:0;
+}
+
+.admin-style .rs-table .over .checked,
+.admin-style .rs-table tbody .checked {
+    background: #3AABD1;
+}
+
+.admin-style .rs-table tbody td {
+    padding:10px 5px;
+    font-size:16px;
+}
+
+.admin-style .rs-table .sortable {
+    background: url(../../img/adminstyle/dot.gif) repeat-x bottom left;
+    cursor:pointer;
+} 
+
+
+.admin-style .rs-table .sortable.sortdot,
+.admin-style .rs-table .sortable.sortdot:hover
+{
+    background: none;
+    width: 9px;
+    height: 9px;
+    padding: 0px;
+}   
+
+
+.admin-style .rs-table .sortable.sortdot span{
+    background: url(../../img/adminstyle/sort_dot.png) repeat-x bottom left;
+    background-repeat: no-repeat;
+    background-position: top left;
+    opacity:0.5;
+    filter:Alpha(50);
+    width:9px;
+    height:9px;
+    display: block;
+    vertical-align: middle;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.admin-style .rs-table .sortable.asc.sortdot span{
+    opacity:1;
+    filter:Alpha(100);
+}
+
+.admin-style .rs-table .desc,
+.admin-style .rs-table .desc:hover {
+    background: url(../../img/adminstyle/sort_desc.gif) no-repeat right center;
+    padding-right:10px;
+}
+
+.admin-style .rs-table .asc,
+.admin-style .rs-table .asc:hover {
+    background: url(../../img/adminstyle/sort_asc.gif) no-repeat right center;
+    padding-right:10px;
+}
+
+.admin-style .rs-table .cell-sbold,
+.admin-style .rs-table .cell-sbold * {
+    font-size:12px;
+    font-weight:bold;
+}
+
+.admin-style .rs-table .cell-sgray,
+.admin-style .rs-table .cell-sgray * {
+    font-size:10px;
+    color: #acacac;
+}
+
+.admin-style .rs-table .cell-mgray,
+.admin-style .rs-table .cell-mgray * {
+    font-size:12px;
+    color: #acacac;    
+}
+
+.admin-style .rs-table .cell-small,
+.admin-style .rs-table .cell-small * {
+    font-size:12px;
+}
+
+.admin-style .rs-table .tools {
+    visibility:hidden;
+    white-space: nowrap;
+}
+
+.admin-style .rs-table .tools .rs-list-button .rs-dropdown-handler,
+.admin-style .rs-table .tools .tool {
+    background-image: url(../../img/adminstyle/table_tools.gif);
+    background-repeat: no-repeat;
+    background-position: top left;
+    display:inline-block;
+    width:15px;
+    height:14px;
+}
+
+.admin-style .rs-table .tools .edit:hover{
+    background-position:0 -14px;
+}
+
+.admin-style .rs-table .tools .decbalance {
+    background-position:-45px 0;
+}
+
+.admin-style .rs-table .tools .decbalance:hover {
+    background-position:-45px -14px;
+}
+
+.admin-style .rs-table .tools .incbalance{
+    background-position:-30px 0;
+}
+
+.admin-style .rs-table .tools .incbalance:hover {
+    background-position:-30px -14px;
+}
+
+.admin-style .rs-table .tools .rs-list-button {
+    height:16px;
+}
+
+.admin-style .rs-table .tools .rs-list-button .rs-dropdown {
+    background: #f2f2f2;
+    border:1px solid #aaa;;
+    box-shadow:none;
+}
+
+.admin-style .rs-table .tools .rs-list-button .rs-dropdown-handler {
+    background-position:-15px 0;
+}
+
+.admin-style .rs-table .tools .rs-list-button .rs-dropdown-handler:hover {
+    background-position:-15px -14px;
+}
+
+.admin-style .rs-table .tools .over .rs-dropdown-handler,
+.admin-style .rs-table .tools .over .rs-dropdown-handler:hover
+{
+    background:url(../../img/adminstyle/table_act_tools.gif) no-repeat top left;
+}
+
+.admin-style .rs-table .options {
+    background: url(../../img/adminstyle/options.png) no-repeat center center;
+    display:block;
+    height:39px;
+}
+
+.admin-style .rs-table .options:hover {
+    background-color: #d4d2d2;
+}
+
+/* Выделенная строка */
+
+.admin-style .rs-table .over td{
+    background: #b4d9e4;
+}
+
+.admin-style .rs-table .over .tools {
+    visibility:visible;
+}
+
+.admin-style .rs-table .over .inp {
+    background: white;
+    border:1px solid #e2e2e2;
+    margin:0;
+}
+
+.admin-style .rs-table .cell-image {
+    border:1px solid #ccc;
+    display:inline-block;
+}
+
+.admin-style .rs-table .cell-image img {
+    vertical-align:bottom;
+}
+
+.admin-style .rs-table tbody .in-drag .dh,
+.admin-style .rs-table tbody .in-drag .drag-handle,
+.admin-style .rs-table tbody .in-drag .drag-nonactive
+{
+    background-color: #687280;
+}
+
+.admin-style .rs-table tbody .in-drag .dh a.sort,
+.admin-style .rs-table tbody .in-drag .drag-handle a.sort
+{
+    background-position:-30px 0;
+} 
+
+.admin-style .rs-table tbody .in-drag.nodrag .drag-handle {
+    background:none;
+}
+
+.admin-style .rs-table tbody .nodrag .drag-handle a.sort {
+    background-position:0 0;
+    cursor:default;
+    opacity:0.4;
+    filter:Alpha(40);    
+}
+
+.admin-style .chkhead-block {
+    position:relative;
+    height:39px;
+    line-height:39px;
+    text-align:center;
+}
+
+.admin-style .chkhead-block .onover {
+    position:absolute;
+    display:none;
+    left:100%;
+    top:0;
+    height:39px;
+    line-height:39px;
+    background: #71B422;
+    border-left:1px solid #e2e2e2;
+    width:26px;
+    z-index: 2;
+    box-shadow:2px 0px 3px -2px #999;
+}
+
+.admin-style .chk-over .chkhead-block .onover {
+    display:block;
+}
+
+
+/* Пагинатор */
+
+.admin-style .paginator,
+.admin-style .paginator .text,
+.admin-style .paginator .total {
+    line-height:30px;
+}
+
+.admin-style .paginator {
+    margin-top:16px;
+    overflow:hidden;
+    zoom:1;
+}
+
+.admin-style .paginator .text {
+    float:left;
+    margin:0 3px;
+}
+
+.admin-style .paginator .prev {
+    border:2px solid #e2e2e2;
+    width:24px;
+    height:24px;
+    display:block;
+    float:left;
+    margin-right:3px;
+    vertical-align: middle;
+    background: url(../../img/adminstyle/prev.gif) no-repeat center center;
+}
+
+.admin-style .paginator .next {
+    border:2px solid #e2e2e2;    
+    width:24px;
+    height:24px;    
+    display:block;
+    float:left;
+    margin-right:3px;
+    
+    vertical-align: middle;
+    background: url(../../img/adminstyle/next.gif) no-repeat center center;
+}
+
+.admin-style .paginator .next:hover {
+    background: #3f3f3f url(../../img/adminstyle/next_act.gif) no-repeat center center;    
+    border:2px solid #3f3f3f;    
+}
+
+.admin-style .paginator .prev:hover {
+    background: #3f3f3f url(../../img/adminstyle/prev_act.gif) no-repeat center center;    
+    border:2px solid #3f3f3f;    
+}
+
+.admin-style .paginator .page {
+    border:2px solid #e2e2e2;
+    padding:1px;
+    width:30px;
+    height:22px;
+    line-height:22px;
+    display:block;
+    float:left;
+    margin-right:3px;    
+    vertical-align: middle;
+    text-align:center;    
+}
+
+.admin-style .paginator .total {
+    float:right;
+    color: #969696;
+}
+.admin-style .paginator .perpage_block {
+    margin-left:30px;
+    float:left;
+}
+
+.admin-style .paginator .perpage {
+    border:2px solid #e2e2e2;
+    padding:1px;    
+    width:50px;
+    height:22px;
+    line-height:22px;    
+    display:block;
+    vertical-align: middle;
+    text-align:center;   
+    float:left;
+    margin-right:3px;
+}
+
+.admin-style .paginator .ok {
+    height:28px;
+    line-height:24px;    
+    border:2px solid #e2e2e2;
+    display:block;
+    float:left;
+    vertical-align: middle;    
+    cursor:pointer;
+    padding:0 6px;
+}
+
+.admin-style .paginator .ok:hover {
+    background: #3f3f3f;
+    border-color: #3f3f3f;
+    color: white;
+}
+
+.admin-style .beforetable-line .paginator {
+    float:right;
+    margin:7px 0 6px;
+    height:30px;
+    position:relative;
+    z-index:2;
+}
+
+/* Фильтр */
+
+.admin-style .openfilter {
+    background: url(../../img/adminstyle/find.png) no-repeat left center;
+    padding-left:24px;
+    line-height:43px;
+    margin-left:8px;
+    cursor:pointer;
+}
+
+.admin-style .openfilter span{
+    background: url(../../img/adminstyle/dot.gif) repeat-x bottom left;
+}
+
+.admin-style .openfilter:hover span {
+    background: none;
+}
+
+/* Инструменты в строке */
+
+.admin-style .tools .rs-list-button {
+    line-height:normal;
+}
+
+.admin-style .tools .rs-list-button .rs-dropdown-handler,
+.admin-style .tools .tool {
+    background: url(../../img/adminstyle/over_tools.gif) no-repeat top left;
+    width:15px;
+    height:14px;
+    display:inline-block;
+    margin-right:3px;
+}
+
+
+.admin-style .tools .edit {
+    background-position: -15px 0;
+}
+
+.admin-style .tools .rs-list-button .rs-dropdown-handler {
+    background-position: -30px 0;
+} 
+
+.admin-style .tools .add:hover {
+    background-position: 0 -14px;
+}
+
+.admin-style .tools .edit:hover {
+    background-position: -15px -14px;
+}
+
+.admin-style .tools .rs-list-button.over .rs-dropdown-handler {
+    background-image: url(../../img/adminstyle/over_tools.gif);
+    background-position: -30px -14px;
+}
+
+.admin-style .tools .rs-list-button .rs-dropdown-handler:hover {
+    background-position: -30px -14px;
+}
+
+/* Сортировочная колонка */
+
+.admin-style .dh a,
+.admin-style .drag-handle a,
+.admin-style .drag-handle-nonactive a
+ {
+    float:left;
+    width:15px;
+    height:16px;
+    margin:0 3px;
+}
+
+.admin-style .dh a.sort,
+.admin-style .drag-handle a.sort, 
+.admin-style .drag-handle-nonactive a.sort
+{
+    background:url(../../img/adminstyle/drag_table.gif) no-repeat top left;
+    cursor:move;
+} 
+
+.admin-style .drag-handle-nonactive a.sort{
+    opacity:0.4;
+    filter:Alpha(40);
+    cursor: default;
+}
+
+
+
+.admin-style .over .dh a.sort,
+.admin-style .over .drag-handle a.sort {
+    background-position:-15px 0;
+    
+}   
+
+.admin-style .over .drag-handle a.sort, 
+.admin-style .over .drag-handle-nonactive a.sort.notActive 
+{
+    background-position:0 0;
+}
+
+.admin-style .ochk {
+    text-align:center;
+}
+
+/* Таблица которая редактируется */
+
+.admin-style .editable-table {
+    width:100%;
+    border-collapse:collapse;
+}
+
+.admin-style .editable-table .now-edit td {
+    background: #3f3f3f none repeat scroll 0 0;
+    color: #e2e2e2;
+}
+
+.admin-style .editable-table .now-edit .actions .icon {
+    background-image: url("../../../../resource/img/adminstyle/cur_over_tools.gif");
+}
+
+.admin-style .editable-table .now-edit .actions a {
+    visibility:visible;
+}
+
+.admin-style .rs-table.editable-table tr th,
+.admin-style .rs-table.editable-table tr td {
+    border:none;
+}
+
+.admin-style .editable-table > tbody > tr:hover {
+    background: #b4d9e4;
+}
+
+.admin-style .editable-table > tbody > tr.edit-form:hover {
+    background:none;
+}
+
+.admin-style .editable-table > thead > tr > th {
+    background: #e2e2e2;
+}
+
+.admin-style .editable-table .edit-form td {
+    padding:0;
+}
+
+.admin-style .editable-table .table-inline-edit td {
+    padding: 7px 0;
+    vertical-align: top;
+}
+.admin-style .editable-table .table-inline-edit .key {
+    font-size: 12px;
+    line-height: 30px;
+    padding-right: 15px;
+    text-align: right;
+    width: 180px;
+}
+
+.admin-style .editable-table .icon {
+    background: url("../../../../resource/img/adminstyle/over_tools.gif") no-repeat;
+    display: inline-block;
+    height: 14px;
+    margin-right: 7px;
+    width: 15px;
+}
+
+.admin-style .editable-table .actions {
+    white-space:nowrap;
+}
+
+.admin-style .editable-table .actions a {
+    vertical-align: middle;
+    visibility: hidden;
+}
+
+.admin-style .editable-table > tbody > tr:hover .actions a {
+    visibility: visible;
+}
+
+.admin-style .editable-table .i-edit {
+    background-position:-15px 0;
+}
+
+.admin-style .editable-table .i-edit:hover {
+    background-position: -15px -14px;
+}
+
+.admin-style .editable-table .i-download {
+    background-position: -47px 0;
+}
+
+.admin-style .editable-table .i-download:hover {
+    background-position: -47px -14px;
+}
+
+.admin-style .editable-table .delete {
+    color: #ca2847;
+    font-size: 11px;
+    padding: 3px;
+}
+.admin-style .editable-table .delete:hover {
+    background: #d13a3a none repeat scroll 0 0;
+    color: white;
+}
+
+.admin-style .editable-table .actions .loader {
+    background:url(../../../../resource/img/adminstyle/loader.gif) no-repeat center center;
+    display:inline-block;
+    width:16px;
+    height:16px;
+    margin-right:5px;
+    visibility:hidden;
+    vertical-align:middle;
+}
+
+.admin-style .editable-table .load .actions .loader {
+    visibility:visible;
+}
+
+.admin-style .edit-form .bordered {
+    border: 3px solid #3f3f3f;
+}
+
+.admin-style .edit-form .loader {
+    background:url(../../../../resource/img/adminstyle/small-loader.gif) no-repeat center center;
+    height:100px;
+}
+
+.admin-style .edit-form .error-list {
+    padding-left:20px;
+    padding-right:20px;
+}
+
+
+.admin-style .clickable {
+    cursor:pointer;
+}
+
+.admin-style .table-inline-edit .label {
+    margin:7px 0 4px;
+    font-size:12px;
+}
+
+.admin-style .editable-table .me_info {
+    background: #3f3f3f none repeat scroll 0 0;
+    color: white;
+    padding: 10px 5px;
+}
+
+.admin-style .editable-table .me_info * {
+    color: white;
+}
+
+.admin-style .hint {
+    background: none repeat scroll 0 0 #E2E2E2;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 5px;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor:help;
+}
+
+.admin-style .hint:hover {
+    background: #efcd70;
+}
+
+
+.admin-style .upload-block .dragzone {
+    border:1px dashed #acacac;
+    height:56px;
+    line-height:56px;    
+    margin-right:158px;
+    text-align:center;
+    color: #acacac;
+}
+
+.admin-style .upload-block .add {
+    background: #57960c;
+    line-height:56px;
+    height:58px;
+    width:150px;
+    color: white;
+    display:block;
+    float:right;
+    font-size:16px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.admin-style .upload-block .add .fileinput {
+    position:absolute;
+    cursor: pointer;
+    direction: ltr;
+    font-size: 23px;
+    margin: 0;
+    opacity:0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(-300px, 0px) scale(4);
+}
+
+.admin-style .upload-block .delete-list {
+    width:100px;
+    height:58px;
+    font-size:16px;
+    line-height:56px;
+    color: white;
+    background: #d13a3a;
+    border:none;
+    cursor:pointer;
+    float:right;
+    margin-right:2px;
+    display:none;
+}
+
+.admin-style .upload-block .apply-offers-list {
+    width:120px;
+    height:58px;
+    font-size:16px;
+    line-height:56px;
+    color: white;
+    background: #FF8000;
+    border:none;
+    cursor:pointer;
+    float:right;
+    margin-left:2px;
+    margin-right:2px;
+    display:none;
+}
+
+.admin-style .themeManager {
+    z-index:1003;
+}

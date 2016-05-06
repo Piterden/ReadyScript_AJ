@@ -1,0 +1,445 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"get",
+				"getDelivery	(iml.inc.php)"
+			],
+			[
+				"h",
+				"height	Attr"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"pro",
+				"product"
+			],
+			[
+				"car",
+				"cart_items"
+			],
+			[
+				"Оце",
+				"оценочная"
+			],
+			[
+				"cos",
+				"cost_id	(orderctrl.inc.php)"
+			],
+			[
+				"def",
+				"default"
+			],
+			[
+				"pur",
+				"purchase"
+			],
+			[
+				"ite",
+				"item_values"
+			],
+			[
+				"prod",
+				"product"
+			],
+			[
+				"getC",
+				"getCost	(orderctrl.inc.php)"
+			],
+			[
+				"ord",
+				"ordered_products"
+			],
+			[
+				"pr",
+				"price_response"
+			],
+			[
+				"sd",
+				"sd_arr"
+			],
+			[
+				"regi",
+				"region_id"
+			],
+			[
+				"del",
+				"delivery_id"
+			],
+			[
+				"reg",
+				"region_code"
+			],
+			[
+				"re",
+				"region"
+			],
+			[
+				"ex",
+				"ex_r"
+			],
+			[
+				"ser",
+				"services"
+			],
+			[
+				"staticG",
+				"staticGetRegions"
+			],
+			[
+				"st",
+				"static"
+			],
+			[
+				"Region",
+				"RegionCode"
+			],
+			[
+				"for",
+				"foreach	foreach …"
+			],
+			[
+				"json",
+				"json_decode"
+			],
+			[
+				"serv",
+				"service_id"
+			],
+			[
+				"ovx",
+				"ovx-h	overflow-x: hidden;"
+			],
+			[
+				"mo",
+				"mouseY"
+			],
+			[
+				"wi",
+				"windowWidth"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/den/projects/hlebozrel/sftp-config.json",
+			"settings":
+			{
+				"buffer_size": 1442,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "pack",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: List Packages"
+			],
+			[
+				"enab",
+				"Package Control: Enable Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"jva",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"sql",
+				"Set Syntax: SQL"
+			]
+		],
+		"width": 656.0
+	},
+	"console":
+	{
+		"height": 349.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/den/projects/hlebozrel",
+		"/home/den/projects/hlebozrel/template"
+	],
+	"file_history":
+	[
+		"/home/den/projects/hlebozrel/template/design.inc",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/css/style.css",
+		"/home/den/projects/rs_autojack/modules/shop/model/orm/order.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/deliverytype/manual.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/deliverytype/myself.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/deliverytype/fixedpay.inc.php",
+		"/home/den/projects/rs_autojack/templates/autofashion/moduleview/catalog/product.tpl",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/js/product.js",
+		"/home/den/projects/rs_autojack/modules/imldelivery/view/js/iml.js",
+		"/home/den/projects/rs_autojack/templates/autofashion/moduleview/shop/checkout/confirm.tpl",
+		"/home/den/projects/rs_autojack/modules/shop/model/deliverytype/abstracttype.inc.php",
+		"/home/den/projects/rs_autojack/modules/imldelivery/model/deliverytype/iml.inc.php",
+		"/home/den/projects/rs_autojack/modules/imldelivery/view/delivery/iml/widget.tpl",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/js/jquery.autocomplete.js",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/js/jquery.ajaxpagination.js",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/js/common.js",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/js/theme.js",
+		"/home/den/projects/rs_autojack/templates/autofashion/resource/css/style-j.css",
+		"/home/den/projects/rs_autojack/templates/autofashion/wrapper.tpl",
+		"/home/den/projects/rs_autojack/modules/shop/controller/admin/orderctrl.inc.php",
+		"/home/den/.config/sublime-text-3/Packages/User/SublimeLinter.sublime-settings",
+		"/home/den/projects/rs_autojack/templates/autofashion/moduleview/shop/blocks/cart/checkout_cart.tpl",
+		"/home/den/projects/rs_autojack/modules/shop/model/paymenttype/yandexmoney.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/orm/payment.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/paymentapi.inc.php",
+		"/home/den/projects/rs_autojack/templates/autofashion/moduleview/shop/myorder_view.tpl",
+		"/home/den/projects/rs_autojack/modules/shop/model/paymenttype/abstracttype.inc.php",
+		"/home/den/projects/rs_autojack/core/smarty/Smarty.class.php",
+		"/home/den/projects/rs_autojack/core/rs/config/abstractsetup.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/addressapi.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/discountapi.inc.php",
+		"/home/den/projects/rs_autojack/modules/catalog/model/orm/offer.inc.php",
+		"/home/den/projects/rs_autojack/core/system/constants.inc.php",
+		"/home/den/projects/rs_autojack/core/system/autoload.inc.php",
+		"/home/den/projects/rs_autojack/core/system/exceptions.inc.php",
+		"/home/den/projects/rs_autojack/core/system/sessions.inc.php",
+		"/home/den/projects/rs_autojack/core/rs/config/changelog.txt",
+		"/home/den/projects/rs_autojack/core/system/licenser.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/paymenttype/resultexception.inc.php",
+		"/home/den/projects/rs_autojack/modules/shop/model/orm/region.inc.php",
+		"/home/den/projects/volna/milk/includes/footer.php",
+		"/home/den/projects/volna/milk/includes/nav.php",
+		"/home/den/projects/volna/milk/projects/neubau.php",
+		"/home/den/projects/volna/milk/css/volna.css",
+		"/home/den/projects/volna/milk/p5js/volna.js",
+		"/home/den/projects/volna/milk/sftp-config.json",
+		"/home/den/projects/volna/milk/keine-angst.html",
+		"/home/den/projects/volna/milk/neubau.html",
+		"/home/den/projects/volna/milk/shafted.html",
+		"/home/den/projects/volna/milk/tba.html",
+		"/home/den/projects/volna/milk/keine-angst.css",
+		"/home/den/projects/volna/milk/neubau.css",
+		"/home/den/.config/sublime-text-3/Packages/HTML-CSS-JS Prettify/HTMLPrettify.sublime-settings"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"/home/den/projects/rs_autojack"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"staticGetRegions",
+			"arr",
+			"getExeptionsByService",
+			"getExeptions",
+			"delivery_api",
+			"URL_EXCEPTIONSERVICEREGION",
+			"prepareArray",
+			"<",
+			"\"",
+			"<",
+			"assign var=",
+			"/projects",
+			"or",
+			"#",
+			"id=",
+			"footer",
+			"png",
+			"!important",
+			";\n            var ",
+			"window.",
+			"mouseX",
+			"maxspeed",
+			"amty",
+			"amtx",
+			"windowHeight",
+			"windowWidth",
+			"height",
+			"width",
+			";\n    var "
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/den/projects/hlebozrel/sftp-config.json",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1442,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								1442
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 336.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 131.0
+	},
+	"pinned_build_system": "",
+	"project": "hlebozrel.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/projects/tatoo.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 239.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

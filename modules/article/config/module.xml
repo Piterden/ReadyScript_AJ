@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+    <defaultValues>
+        <name multilanguage="true">Статьи</name>
+        <description multilanguage="true">Добавление, редактирование статей, категорий</description>        
+        <version>2.0.0.48</version>
+        <author>ReadyScript lab.</author>
+        <is_system>1</is_system>
+        <preview_list_pagesize>10</preview_list_pagesize>
+    </defaultValues>
+</config>

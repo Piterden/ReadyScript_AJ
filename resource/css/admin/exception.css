@@ -1,0 +1,40 @@
+BODY {
+    font-family: Arial, Tahoma;
+    font-size:12px;    
+    margin:0;
+    padding:0;
+}
+
+.exception {
+    text-align:center;
+}
+
+.exception .centered {
+    width:308px;
+    margin:0 auto;
+    background: #f2f2f2;
+    padding:10px;
+}
+
+.exception .code {
+    font-size:100px;
+    font-family:Arial;
+    color: #666;
+}
+
+.exception .message {
+    color: #666;
+    background: url(../../../img/adminstyle/dotsep.gif) repeat-x bottom left;
+    padding-bottom:25px;
+    margin-bottom:15px;
+}
+
+.exception a {
+    font-size:18px;
+    color: #026885;
+    text-decoration: none;
+}
+
+.exception a:hover {
+    text-decoration: underline;
+}

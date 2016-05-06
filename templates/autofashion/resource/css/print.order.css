@@ -1,0 +1,39 @@
+@media print {
+    a[href]:after {
+        content: "";
+    }
+    abbr[title]:after {
+        content: "";
+    }
+    .searchFormWrap form,
+    .topMenuNav,
+    .catalogLine,
+    .titleLine,
+    .userMenu,
+    .backToOrders,
+    .printOrder,
+    .actions,
+    .preFooter,
+    footer,
+    footer .item {
+    	display: none;
+    }
+    .logoBlock {
+    	float: left;
+    	width: 50%;
+    }
+    .phoneBlock {
+    	float: right;
+    	width: 50%;
+    }
+    .slogan {
+    	font-size: 12px;
+    	text-align: center;
+    }
+    .orderInfo .picCell {
+    	width: 20%;
+    }
+    .orderInfo .value {
+		width: 35%;
+    }
+}

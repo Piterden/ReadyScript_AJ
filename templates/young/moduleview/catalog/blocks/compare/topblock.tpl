@@ -1,0 +1,4 @@
+{addjs file="jquery.compare.js"}
+<div class="compareBlock{if !$this_controller->api->getCount()} hidden{/if}" id="compareBlock" data-compare-url='{ "add":"{$router->getUrl('catalog-block-compare', ["cpmdo" => "ajaxAdd", "_block_id" => $_block_id])|escape}", "remove":"{$router->getUrl('catalog-block-compare', ["cpmdo" => "ajaxRemove", "_block_id" => $_block_id])|escape}", "removeAll":"{$router->getUrl('catalog-block-compare', ["cpmdo" => "ajaxRemoveAll", "_block_id" => $_block_id])|escape}", "compare":"{$router->getUrl('catalog-front-compare')}" }'>
+    <a class="doCompare">Сравнить товары (<span class="compareItemsCount">{$this_controller->api->getCount()}</span>)</a> <a class="removeAll" title="Очистить список сравнения">&times;</a>
+</div>

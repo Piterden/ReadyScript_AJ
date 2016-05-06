@@ -1,0 +1,635 @@
+.selector {
+    list-style:none;
+    padding:0;
+    margin-top:15px;
+}
+
+.selector .title {
+    font-size:12px;
+    background: none;
+    border:none;
+    color: gray;
+}
+
+.selector > li {
+    background: #e2e2e2;
+    line-height:33px;
+    height:33px;
+    display:block;
+    margin-right:3px;
+    margin-bottom:3px;
+    padding:0 5px 0 13px;
+    font-size:14px;    
+    float:left;
+}
+
+.selector > li:hover {
+    background-color: #c0c0c0;
+}
+
+.selector > li.act:hover,
+.selector .act {
+    background: #000;
+    color: white;
+}
+
+.selector > li a {
+    color: black;    
+    font-size:12px;
+    text-decoration:none;
+}
+
+.selector .act a {
+    color: white;
+}
+
+.bigtools {
+    overflow:hidden;
+    zoom:1;
+    margin-bottom:10px;
+}
+
+.bigtools .right a {
+    display:block;
+    background: #f2f2f2;
+    padding:5px 10px;
+    float:right;
+    text-decoration:none;
+    color: black;
+    border-radius:3px;
+}
+
+.breadcrumbs {
+    padding:0;
+    margin:0;
+    list-style:none;
+    font-size:13px;
+    float:left;    
+}
+
+.breadcrumbs li {
+    float:left;
+    background: url(../img/arrow.gif) no-repeat left center;    
+    padding-right:7px;
+    padding-left:16px;    
+    font-size:14px;
+}
+
+.breadcrumbs li a {
+    color: #808080;
+    text-decoration:underline;    
+}
+
+.breadcrumbs .first {
+    background:none;
+    padding-left:0;
+}
+
+.gs-manager {
+    padding:0 0 10px;
+}
+
+.gs-manager .clearfix-after {
+    position:absolute;
+    top:0;
+    bottom:0;
+    border-right:1px dashed #000;
+    right:-7px;
+}
+
+.bootstrap .gs-manager .clearfix-after {
+    right:7px;    
+}
+
+.bootstrap .gs-manager .area.row > .clearfix-after {
+    right:-5px;
+}
+
+.gs-manager .workarea {
+    min-height:100px;
+}
+
+.bootstrap .gs-manager .workarea:before,
+.bootstrap .gs-manager .workarea:after {
+  content:"";
+  display:table;
+}
+.bootstrap .gs-manager .workarea:after {
+  clear:both;
+}
+.gs-manager .workarea {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
+
+.gs-manager .area .workarea {
+    background: url(../img/grid_bg.png) repeat top left;    
+}
+
+.gs-manager .commontools {
+    line-height:32px;
+    height:32px;
+    background: #d7d7d7;
+    color: #9b9b9b;
+    font-weight:bold;
+    padding:0 3px;
+}
+
+.gs-manager.container > .commontools {
+    margin-left:-15px;
+    margin-right:-15px;
+}
+
+.gs-manager .workarea .commontools {
+    background: #687482;
+    color: #a7bcc2;
+}
+
+.gs-manager .workarea .row > .commontools {
+    background:#7f7f7f;
+}
+
+.gs-manager .drag-handler {
+    background: url(../img/s_drag.gif) repeat-y top left;
+    height:22px;
+    width:4px;
+    margin:5px 0;
+    float:right;
+    display:block;
+    cursor:move;
+}
+
+.gs-manager .sortable-placeholder {
+    background: #b4d9e4;
+    position:relative;
+}
+
+.gs-manager .sortable-placeholder .border{
+    border:1px dashed #3aabd1;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}   
+
+.gs-manager .block {
+    background: white;
+    border:1px solid #687482;
+    padding:2px 12px 2px 2px;
+    margin:3px 1px;
+    position:relative;
+    font-size: 12px;
+    border-radius:2px;
+}
+
+.gs-manager .block .drag-block-handler {
+    background: url(../img/b_drag.gif) repeat-y top left;
+    position:absolute;
+    right:4px;
+    top:0;
+    height:22px;
+    width:4px;
+    margin:5px 0;
+    float:right;
+    display:block;
+    cursor:move;    
+}
+
+.gs-manager > .commontools > .drag-handler {
+    background: url(../img/bl_drag.gif) repeat-y top left;
+}
+
+.gs-manager .block .help {
+    background: none repeat scroll 0 0 #E2E2E2;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 5px;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor:help;
+}
+
+.gs-manager .block .tools {
+    overflow:hidden;
+    padding:5px 0;
+}
+
+.gs-manager .block .tools a {
+    float:left;
+    margin-left:5px;
+}
+
+.gs-manager .block.wide .title-small,
+.gs-manager .block .title-wide {
+    display:none;
+}
+
+.gs-manager .block.wide .title-wide {
+    display:block;
+}
+
+.gs-manager .alignleft {
+    float:left;
+}
+.gs-manager .alignright {
+    float:right;
+}
+
+.gs-manager .commontools .buttons{
+    position:absolute;
+}
+
+.gs-manager.sourceContainer {
+    opacity:0.5;
+}
+
+.gs-manager.destinationContainer {
+    position:relative;
+}
+
+.gs-manager.destinationContainer .dstOverlay {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:2;
+    border:1px dashed #3aabd1;
+    background: #b4d9e4;
+    opacity:0.5;
+}
+
+
+.col16 {
+    background: url(../img/16_col.gif) repeat-y top left;
+}
+
+.col12 {
+    background: url(../img/12_col.gif) repeat-y top left;
+}
+
+.bs_col12 {
+    background: url(../img/12_col_bootstrap.png) repeat-y top left;
+}
+
+.area {
+    margin:10px 0;
+    position:relative;
+}
+
+.area.row {
+    margin-top:1px;
+}
+
+.area.row .area.row {
+    margin-left:0;
+    margin-right:0;
+}
+
+.gs-sep {
+    border-bottom:1px dotted #ccc;
+    padding-bottom:20px;
+    margin-bottom:20px;
+}
+
+.pageview {
+    background: white;
+    box-shadow:0 0 10px #eaeaea;
+    -moz-box-shadow:0 0 10px #eaeaea;
+    -webkit-box-shadow:0 0 10px #eaeaea;
+    padding: 15px 9px;
+        
+    width:960px;
+    margin:0 auto;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+}
+
+.bootstrap .pageview {
+    width:970px;
+}
+
+.bg {
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-top:10px;
+}
+
+.bg.bootstrap {
+    margin-top:0;    
+    padding-top:0;
+}
+
+.edit-page {
+    width:11px;
+    height:11px;
+    display:inline-block;
+    background: url(../img/edittools.png) no-repeat top left;
+}
+
+.sepline .block-link a.block-link-options {
+    background: url(../img/edittools.png) no-repeat top left;
+    width:11px;
+    height:11px;
+    vertical-align:middle;
+}
+
+.sepline .block-link a.block-link-options:hover {
+    background-position:0 -11px;
+}
+
+.selector .act .edit-page {
+    background-position:0 -22px;
+}
+
+.selector .edit-page:hover {
+    background-position:0 -11px;
+}
+
+.selector .rs-list-button{
+    line-height: normal;
+}
+
+.selector .rs-list-button a {
+    color:black;
+}
+
+.selector .rs-list-button .rs-dropdown-handler {
+    width:11px;
+    height:11px;
+    background: url(../img/edittools.png) no-repeat -22px 0;
+    display:inline-block;
+}
+
+.selector .act .rs-list-button .rs-dropdown-handler {
+    background-position: -22px -22px;
+}
+
+.selector .rs-list-button .rs-dropdown-handler:hover {
+    background-position: -22px -11px;
+}
+
+.selector .rs-list-button.over .rs-dropdown-handler {
+    background: url(../img/edittools.png) no-repeat -22px -11px;
+}
+
+.pageview .rs-list-button.over .rs-dropdown-handler,
+.pageview .rs-list-button .rs-dropdown-handler:hover  {
+    background: url(../img/ddown_act.png) no-repeat center center;
+}
+
+.pageview .rs-list-button .rs-dropdown-handler {
+    background: url(../img/c_ddown.png) no-repeat center center;
+}
+
+.pageview .rs-list-button .rs-dropdown-handler {
+    background: url(../img/s_ddown.png) no-repeat center center;
+    width:20px;
+}
+
+.pageview .rs-list-button .rs-dropdown {
+    border:2px solid #3d4754;
+    background: white;
+}
+
+.pageview .rs-list-button .rs-dropdown a {
+    margin:0;
+}
+.pageview .rs-list-button .rs-dropdown a:hover {
+    background: none;    
+}
+
+.pageview .rs-list-button .rs-dropdown .itool {
+    padding:0;
+    padding:3px 0 3px 7px;
+}
+
+.pageview .rs-list-button .rs-dropdown {
+    right:auto;
+    left:-7px;
+}
+
+.itool i {
+    background-image: url(../img/section_tools.png);
+    background-repeat:no-repeat;
+    display:block;
+    width:19px;
+    height:19px;
+    margin-right:5px;
+    opacity:0.7;
+}
+
+.itool i:hover {
+    opacity:1;
+}
+
+.iplus i{ background-position:-20px -20px; }
+.iplusrow i{ background-position:0 -20px;}
+.iplusmodule i{ background-position:-40px -20px; }
+.isettings i{ background-position:-60px -20px;}
+.iremove i{ background-position:-80px -20px;}
+.iswitch i{ background-position:-120px -20px; }
+.block.on .iswitch i{ background-position:-100px -20px; }
+
+.inherit .make-container {
+    color: green;
+    border-bottom:1px dotted green;
+}
+
+/* Правила для инструментов в одну строку */
+
+.wide > .commontools .rs-list-button .rs-dropdown-handler,
+.wide > .rs-list-button .rs-dropdown-handler {
+    display:none;
+}
+
+.wide > .commontools .rs-list-button .rs-dropdown,
+.wide > .rs-list-button .rs-dropdown {
+    position:static;
+    display:inline-block;
+    vertical-align:middle;
+    border:none;
+    background:none;
+    box-shadow:none;
+    margin-left:10px;
+}
+
+.wide > .rs-list-button .rs-dropdown {
+    margin-left:14px;
+}
+
+.wide > .commontools .rs-list-button .rs-dropdown li,
+.wide > .rs-list-button .rs-dropdown li {
+    display:inline-block;
+    vertical-align:middle;    
+}
+
+.wide > .commontools .rs-list-button .rs-dropdown li a,
+.wide > .rs-list-button .rs-dropdown li a {
+    border:none;
+}
+
+.wide > .commontools .rs-list-button .itool,
+.pageview .wide > .rs-list-button .itool {
+    padding:0;
+}
+
+.wide > .commontools .section-tools .iplus i{ background-position:-20px 0; }
+.wide > .commontools .section-tools .iplusrow i{ background-position:0 0;}
+.wide > .commontools .section-tools .iplusmodule i{ background-position:-40px 0; }
+.wide > .commontools .section-tools .isettings i{ background-position:-60px 0;}
+.wide > .commontools .section-tools .iremove i{ background-position:-80px 0;}
+
+.wide > .commontools .rs-list-button {
+    visibility:hidden;
+    opacity:0;
+    transition: opacity 0.2s ease;
+}
+
+.wide > .commontools:hover .rs-list-button {
+    visibility:visible;
+    opacity:1;
+}
+
+.no_block_options {
+    font-size:18px;
+    text-align:center;
+    color: #969696;
+    padding:30px;
+}
+
+.container-tools {
+    text-align:center;
+}
+
+.device-selector {
+    margin: 20px auto 0;
+    width: 990px;
+    overflow:hidden;
+    list-style:none;
+    padding:0;
+}
+
+.device-selector li {
+    float:left;
+    height:44px;
+    line-height:44px;    
+    width:25%;
+    text-align:center;
+    border-left:1px solid white;
+    background: #dfeadd;
+    cursor:pointer;
+    box-sizing:border-box;
+    font-size:12px;
+    position:relative;
+}
+
+.device-selector li:first-child {
+    border-left:none;
+    border-radius:5px 0 0 0;
+    -moz-border-radius:5px 0 0 0;
+    -webkit-border-radius:5px 0 0 0;
+}
+
+.device-selector li:last-child {
+    border-radius:0 5px 0 0;
+    -moz-border-radius:0 5px 0 0;
+    -webkit-border-radius:0 5px 0 0;
+}
+
+.device-selector li:hover {
+    background:#cfdacd;
+}
+
+.device-selector li.act {
+    background:#aed0a8;
+}
+
+.device-selector li i {
+    background:url(../img/devices.png) no-repeat;
+    display:inline-block;
+    vertical-align:middle;
+    margin-right:7px;
+}
+
+.device-selector li .device-xs {
+    width:15px;
+    height:26px;
+}
+
+.device-selector li .device-sm {
+    background-position:-18px 0;
+    width:21px;
+    height:28px;
+}
+
+.device-selector li .device-md {
+    background-position:-42px 0;
+    width:30px;
+    height:30px;
+}
+
+.device-selector li .device-lg {
+    background-position:-75px 0;
+    width:32px;
+    height:32px;
+}
+
+.admin-style .otable .bootstrap-multi-values input {
+    width:40px;
+    text-align:center;
+}
+
+.admin-style .otable .bootstrap-multi-values td {
+    text-align:center;
+    padding:0 5px 0 0;
+}
+
+.admin-style .bootstrap-subtext {
+    font-size:10px;
+}
+
+.admin-style .bootstrap-subtext .act {
+    font-weight:bold;
+}
+
+.admin-style .bootstrap-multi-values .act input {
+    border-color: black;
+    
+}
+
+.gs-manager .grid-switcher {
+    float:right;
+    width:24px;
+    height:24px;
+    background:url(../img/grid_switcher.png) no-repeat;
+    cursor:pointer;
+    margin-top:4px;
+    margin-right:10px;
+}
+
+.gs-manager .grid-switcher:hover {
+    opacity:0.7;
+}
+
+.gs-manager .grid-switcher.off {
+    background-position:-24px 0;
+}
+
+.gs-manager.grid-disabled .area {
+    width:auto !important; 
+    float:none !important; 
+    position:static !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    padding:0 !important;
+}
+
+.pageview-text {
+    padding:20px;
+}
