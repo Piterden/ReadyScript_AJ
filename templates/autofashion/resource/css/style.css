@@ -3282,6 +3282,11 @@ footer .copyright {
 .suggestions-suggestions {
 	z-index: 90;
 }
+.costsWrapper {
+    position: absolute;
+    left: 50px;
+    width: 400px;
+}
 
 /* Large Devices, Wide Screens */
 

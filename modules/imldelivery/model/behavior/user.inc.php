@@ -17,7 +17,7 @@ class User extends \RS\Behavior\BehaviorAbstract {
             ->objects();
 
         if (count($first_address) > 0) {
-			return $first_address[0];
+        	return $first_address[0];
         }
 
         return false;

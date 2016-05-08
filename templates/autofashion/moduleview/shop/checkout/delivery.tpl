@@ -22,7 +22,7 @@
         	{$delivery_type=$item->getTypeObject()}
             {$something_wrong=$delivery_type->somethingWrong($order)}
             {if $order['order_extra']['delivery'] && $order['use_addr'] < 0}
-            	{$sd_choosed=$order['order_extra']['delivery']}
+            	{$selected_sd=$order['order_extra']['delivery']}
             {/if}
             <li class="deliveryItem row{if $item@first} first{/if}{if $something_wrong} collapse{/if}" id="delivery_{$item.id}" data-delivery-id="{$item.id}" role="tabpanel">
                 <div class="radio col-sm-8">
@@ -40,12 +40,12 @@
                         <label for="dlv_{$item.id}" class="title h3">{$item.title}</label>
                     </div>
                     <div class="clearfix"></div>
-                    {if ($item->getTypeObject()->getOption('address_type') * 1) < 0 && !$something_wrong}
+                    {if ($delivery_type->getOption('address_type') * 1) < 0 && !$something_wrong}
                         <div class="addressBlock">
                             <div class="h4">Выберите пункт выдачи заказа</div>
                         </div>
 	                    <div class="additionalInfo">{$item->getAddittionalHtml()}</div>
-                        {if $sd_choosed}
+                        {if $selected_sd}
                         	<span class="text-capitalize">{$order.order_extra.delivery.region_id_to|lower}</span><br>
 	                        {$order.order_extra.delivery.sd_html|replace:'&lt;':'<'|replace:'&gt;':'>'|replace:'&quot;':'"'}
                         {/if}

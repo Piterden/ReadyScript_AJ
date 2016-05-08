@@ -87,36 +87,36 @@
 </table>
 <script type="text/javascript">
     $(document).ready(function(){
-        var imlTable = $(".imlTable");
+        var imlTable = $(".imlTable"),
 
 
-        function checkImlServiceVisibility(){
-            //Проверим есть ли назначенный хоть один тариф
-            if ($(".servicesList option",$(".imlTable")).length==0){
-               $(".inlineError",$(".imlTable")).css('visibility','visible');
-            }else{
-               $(".inlineError",$(".imlTable")).css('visibility','hidden');
-            }
-        }
+	        checkImlServiceVisibility = function() {
+	            //Проверим есть ли назначенный хоть один тариф
+	            if ($(".servicesList option",$(".imlTable")).length==0){
+	               $(".inlineError",$(".imlTable")).css('visibility','visible');
+	            }else{
+	               $(".inlineError",$(".imlTable")).css('visibility','hidden');
+	            }
+	        },
 
-        /**
-        * Удяляет варианты уже выбранные из общего списка
-        *
-        */
-        function shiftServiceSelectRowPresent(){
-            var selected = [];
-            {if !empty($selected)}
-                {foreach $selected as $k=>$code}
-                   selected[{$k}] = "{$code}";
-                {/foreach}
-            {/if}
+	        /**
+	        * Удяляет варианты уже выбранные из общего списка
+	        *
+	        */
+	        shiftServiceSelectRowPresent = function() {
+	            var selected = [];
+	            {if !empty($selected)}
+	                {foreach $selected as $k=>$code}
+	                   selected[{$k}] = "{$code}";
+	                {/foreach}
+	            {/if}
 
-            if (selected.length>0){
-                for(var i=0;i<selected.length;i++){
-                    $(".right select option[value='"+selected[i]+"']",imlTable).remove();
-                }
-            }
-        }
+	            if (selected.length>0){
+	                for(var i=0;i<selected.length;i++){
+	                    $(".right select option[value='"+selected[i]+"']",imlTable).remove();
+	                }
+	            }
+	        };
 
 
         /**

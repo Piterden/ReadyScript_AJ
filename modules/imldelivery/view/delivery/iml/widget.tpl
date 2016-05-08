@@ -3,7 +3,27 @@
 <div class="imlContainer_{$delivery.id}">
     <button id="showMap_{$delivery.id}" class="btn btn-primary show-map spacing">Выбрать пункт самовывоза</button>
 </div>
+{* <pre>
+::::::::region_id_to:::::::
+{$region_id_to|print_r}
+::::::::region_id_from:::::::
+{$region_id_from|print_r}
+::::::::service_ids:::::::
+{$service_ids|print_r}
+::::::::delivery_cost_json:::::::
+{$delivery_cost_json|print_r}
+::::::::delivery_cost:::::::
 {$delivery_cost|print_r}
+::::::::order:::::::
+{$order|print_r}
+::::::::currency:::::::
+{$currency|print_r}
+::::::::delivery:::::::
+{$delivery|print_r}
+::::::::user:::::::
+{$user|print_r}
+
+</pre> *}
 <!-- Modal -->
 <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel">
     <div class="modal-dialog modal-lg" role="document">
@@ -36,7 +56,7 @@
      * Начальные значения. Подгружаются через Smarty.
      * @type {*Object*}
      */
-    var defaultData = {
+    var loadedData = {
         "url": "{$router->getUrl('shop-front-checkout', ['Act' => 'userAct'])}",
         "delivery_id": "{$delivery.id}",
         "delivery_cost_json":{$delivery_cost_json},
@@ -53,7 +73,7 @@
      * @type {*Object*}
      */
     IML = {
-        imlData: defaultData,
+        imlData: loadedData,
         showMapModal: showMapModal,
         initIML_Map: initIML_Map,
         loadRegions: loadRegions,
@@ -239,7 +259,7 @@
             request_code: IML.imlData.request_code
         };
         $(IML.imlData.loading).appendTo('.modal-footer');
-        ajaxRequest('getDeliveryCostAjax', params, priceUpdateRender);
+        ajaxRequest('getImlDeliveryCost', params, priceUpdateRender);
     }
     /**
      * Callback после обновления цен
