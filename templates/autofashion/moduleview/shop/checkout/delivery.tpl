@@ -94,16 +94,3 @@
         </div>
     </div>
 </form>
-<script>
-	jQuery(document).ready(function($) {
-		{if $order->delivery==7 && isset($order->order_extra['delivery']['request_code'])}
-        	IML.imlData.request_code = "{$order->order_extra['delivery']['request_code']}";
-        {/if}
-		$('#order-form').on('submit', function() {
-			if (IML.imlData.delivery_id == 7 && !IML.imlData.request_code) {
-				showError('Выберите, пожалуйста, пункт выдачи заказа!');
-				return false;
-			}
-		});
-	});
-</script>

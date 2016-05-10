@@ -190,7 +190,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
             'RegionTo'    => $this->getCity($order), // регион получения
             'Volume'      => '1', // кол-во мест
             'Weigth'      => ($order->getWeight()) ?: '1', // вес(кг)
-            'SpecialCode' => ($extra['request_code']) ?: 1, // код пункта самовывоза
+            'SpecialCode' => isset($extra['request_code']) ? $extra['request_code'] : 1, // код пункта самовывоза
         );
         $api_response = $this->imlApiRequest(self::URL_API_GETPRICE, $request_params, true);
 
@@ -235,6 +235,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
 
         $view = new \RS\View\Engine();
         $view->assign(array(
+            'request_code'		 => $request_code,
             'region_id_to'       => $region_id_to, //Регион куда
             'region_id_from'     => $region_id_from, //Регион откуда
             'service_ids'        => json_encode($active_services), //Услуги этогй доставки
@@ -379,7 +380,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     	}
 
     	foreach ($regions as $region_code => $region_name) {
-    		$sd_arr = $iml->getSdByRegion($order, $delivery_id, array('region_id' => $region_code));
+    		$sd_arr = $iml->getSdListByRegion($order, $delivery_id, array('region_id' => $region_code));
     		if (count($sd_arr) < 1) {
     			unset($regions[$region_code]);
     		}
@@ -397,7 +398,7 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
      *
      * @return array
      */
-    static function getSdByRegion(\Shop\Model\Orm\Order $order, $delivery_id, $params) // from AJAX
+    static function getSdListByRegion(\Shop\Model\Orm\Order $order, $delivery_id, $params) // from AJAX
     {
         $delivery = new \Shop\Model\Orm\Delivery($delivery_id);
 		$iml = $delivery->getTypeObject();
@@ -597,33 +598,6 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         }
         return $arr;
     }
-
-    /**
-     * Основной GET запрос к API. Вернет массив объектов.
-     *
-     * @param string $url
-     * @return array
-     */
-    // private function imlApiRequest($url)
-    // {
-    //     $cache_key = md5($url);
-    //     if (!isset($this->cache_api_requests[$cache_key])) {
-    //         $login = $this->getOption('secret_login', '');
-    //         $pass = $this->getOption('secret_pass', '');
-
-    //         $curl = curl_init($url);
-    //         curl_setopt($curl, CURLOPT_HEADER, false);
-    //         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    //         curl_setopt($curl, CURLOPT_USERPWD, $login.':'.$pass);
-    //         curl_setopt($curl, CURLOPT_SSLVERSION, 3);
-    //         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-    //         $response = curl_exec($curl);
-    //         curl_close($curl);
-
-    //         $this->cache_api_requests[$cache_key] = json_decode($response, true);
-    //     }
-    //     return $this->cache_api_requests[$cache_key];
-    // }
 
     /**
      * Основной POST запрос к API. Вернет массив объектов.
