@@ -181,24 +181,23 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     {
     	$this->order = $order;
 
-    	if (!$address) $address = $order->getAddress();
-    	$extra = $this->getExtra();
-
         $request_params = array(
             'Job'         => $this->getOption('service_id')[0], // услуга
             'RegionFrom'  => $this->getOption('region_id_from'), // регион отправки
-            'RegionTo'    => $this->getCity($order), // регион получения
+            'RegionTo'    => $order->getExtraKeyPair('region_id_to') ?: $this->getCity($order), // регион получения
             'Volume'      => '1', // кол-во мест
             'Weigth'      => ($order->getWeight()) ?: '1', // вес(кг)
-            'SpecialCode' => isset($extra['request_code']) ? $extra['request_code'] : 1, // код пункта самовывоза
+            'SpecialCode' => $order->getExtraKeyPair('request_code') ?: 1, // код пункта самовывоза
+            // 'SpecialCode' => isset($extra['request_code']) ? $extra['request_code'] : 1, // код пункта самовывоза
         );
         $api_response = $this->imlApiRequest(self::URL_API_GETPRICE, $request_params, true);
 
-    	if (!$cost_iml = ($api_response['Price'])) {
-    		$cost_iml = 0;
+    	if (!array_key_exists('Price', $api_response)) {
     		$this->addError(serialize($api_response));
+    		// return print_r($request_params);
     		return $api_response['Mess'];
     	}
+		$cost_iml = $api_response['Price'];
     	$cost = $this->applyDeliveryTaxes($delivery, $cost_iml);
 
         return ($cost<0) ? 0 : $cost;
@@ -221,15 +220,15 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $extra = $this->getExtra();
         $active_services = $this->getActiveServices();
         $region_id_from = $this->getOption('region_id_from', 'САНКТ-ПЕТЕРБУРГ');
-
-        $region_id_to = $this->getCity();
-        $request_code = isset($extra['request_code']) ? $extra['request_code'] : '1';
+        $region_id_to = $this->order->getExtraKeyPair('region_id_to') ?: $this->getCity();
+        $request_code = $this->order->getExtraKeyPair('request_code') ?: '1';
 
         $req_params = array(
             'region_id_from' => $region_id_from,
             'region_id_to'   => $region_id_to,
             'request_code'   => $request_code,
             'service_id'     => $active_services,
+            'update'		 => false
         );
         $cost_array = $this->getImlDeliveryCost($this->order, $delivery->id, $req_params);
 
@@ -297,63 +296,12 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
     			t('Наценка') => $order->getExtraKeyPair('extra_discount'),
 				t('Страховка') => $order->getExtraKeyPair('insurance_tax_cost'),
 				t('Итого') => $sum
-		)));
+			),
+			// 'delivery' => $order->getDelivery()
+    	));
 
     	return $view->fetch('%imldelivery%/delivery/iml/simple_cost.tpl');
     }
-
-    /**
-     * [[from AJAX]] Возвращает адреса пунктов самовывоза для карты.
-     *
-     * @param \Shop\Model\Orm\Order $order
-     * @param int                   $delivery_id
-     * @param array                 $params
-     *
-     * @return string html
-     */
-    static function loadMap(\Shop\Model\Orm\Order $order, $delivery_id, $params)
-    {
-        if ($order->use_addr > 0) {
-        	return $order->addError(t('Недоступно для этого типа услуг'));
-		}
-
-		$delivery = new \Shop\Model\Orm\Delivery($delivery_id);
-		$iml = $delivery->getTypeObject();
-		$iml->order = $order;
-
-		if (!array_key_exists('delivery', $order['order_extra'])) {
-            $extra = $order['order_extra']['address'];
-        } else {
-	        $extra = $order['order_extra']['delivery'];
-        }
-
-        $region_id_from = $iml->getOption('region_id_from');
-        $region_id_to = $iml->getCity();
-        $request_code = isset($extra['request_code']) ? $extra['request_code'] : '';
-
-        $req_params = array(
-            'region_id_from' => $region_id_from,
-            'region_id_to'   => $region_id_to,
-            'request_code'   => $request_code,
-            'service_id'     => $iml->getOption('service_id'),
-        );
-        $cost_array = $iml->getImlDeliveryCost($order, $delivery_id, $req_params);
-
-        $view = new \RS\View\Engine();
-        $view->assign(array(
-            // 'region_id_to'       => $extra['region_id_to'], //Регион куда
-            // 'service_ids'        => json_encode($iml->getOption('service_id')), //Услуги этой доставки
-            // 'delivery_cost_json' => json_encode($cost_array), //Текущий объект цены доставки
-            // 'delivery_cost'      => $cost_array, //Текущий объект цены доставки
-            // 'order'              => $order, //Текущий недоофрмленный заказ
-            'delivery'           => $delivery, //Текущий объект доставки
-            // 'delivery_type'      => $iml, //Текущий объект типа доставки
-            // 'user'               => \RS\Application\Auth::getCurrentUser(), //Текущий объект пользователя
-                ))/* + \RS\Module\Item::getResourceFolders($iml)*/;
-
-        return $view->fetch('%imldelivery%/delivery/iml/map.tpl');
-    }
-
 
     /**
      * [[from AJAX]] Получает массив регионов, в которых есть пункты самовывоза.
@@ -431,23 +379,41 @@ class Iml extends \Shop\Model\DeliveryType\AbstractType
         $delivery = new \Shop\Model\Orm\Delivery($delivery_id);
 		$iml = $delivery->getTypeObject();
 		$iml->order = $order;
-
         $active_services = $params['service_id'];
+
+        $request = array(
+            'Job'         => $active_services, // услуга
+            'RegionFrom'  => $params['region_id_from'], // регион отправки
+            'RegionTo'    => $params['region_id_to'], // регион получения
+            'Volume'      => '1', // кол-во мест
+            'Weigth'      => $order->getWeight() ? $order->getWeight() : '1', // вес(кг)
+            'SpecialCode' => $params['request_code'], // код пункта самовывоза
+        );
         $out = array();
-        foreach ($active_services as $code => $description) {
-            $request = array(
-                'Job'         => $code, // услуга
-                'RegionFrom'  => $params['region_id_from'], // регион отправки
-                'RegionTo'    => $params['region_id_to'], // регион получения
-                'Volume'      => '1', // кол-во мест
-                'Weigth'      => $order->getWeight() ? $order->getWeight() : '1', // вес(кг)
-                'SpecialCode' => $params['request_code'], // код пункта самовывоза
-            );
-            $response = $iml->imlApiRequest(self::URL_API_GETPRICE, $request, true);
-            if (array_key_exists('Price', $response) ) {
-            	$response['Price'] = $iml->applyDeliveryTaxes($delivery, $response['Price']);
-            }
-            $out[$code] = $response;
+
+        if (is_array($active_services)) {
+	        foreach ($active_services as $code => $description) {
+	            $request['Job'] = $code;
+	            $response = $iml->imlApiRequest(self::URL_API_GETPRICE, $request, true);
+		        if (array_key_exists('Price', $response) ) {
+		        	$response['imlPrice'] = $response['Price'];
+		        	$response['Price'] = $iml->applyDeliveryTaxes($delivery, $response['Price']);
+		        }
+		        $out[$code] = $response;
+	        }
+        } else {
+        	$response = $iml->imlApiRequest(self::URL_API_GETPRICE, $request, true);
+	        if (array_key_exists('Price', $response) ) {
+	        	$response['imlPrice'] = $response['Price'];
+	        	$response['Price'] = $iml->applyDeliveryTaxes($delivery, $response['Price']);
+	        }
+	        $out[$active_services] = $response;
+        }
+
+        if ($params['update']) {
+        	foreach ($params as $key => $value) {
+        		$order->addExtraKeyPair($key, $value);
+        	}
         }
 
         return $out;

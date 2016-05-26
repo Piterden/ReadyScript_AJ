@@ -55,7 +55,6 @@
                         {else}
                             <span class="help"></span>
                             {static_call var=currencyLiter callback=['\Catalog\Model\CurrencyApi', 'getCurrecyLiter']}
-                            <span>300 {$order->getMyCurrency()->stitle|replace:'р.':'<i class="fa fa-rub"></i>'}</span>
                         {/if}
                     </div>
                 </div>
@@ -68,4 +67,14 @@
         </div>
     </div>
 </form>
-
+{literal}
+<script>
+$('#order-form').unbind('submit')
+    .on('submit', function(e) {
+        if ($('[name="payment"]:checked').length == 0) {
+            showError('Выберите, пожалуйста, способ оплаты!');
+            return false;
+        }
+});
+</script>
+{/literal}

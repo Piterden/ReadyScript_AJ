@@ -10,14 +10,14 @@
     <input type="hidden" name="delivery" value="0">
     <div class="formSection">
         <span class="formSectionTitle">Доставка</span>
-    </div>    
+    </div>
     <table class="formTable">
             {foreach from=$delivery_list item=item}
-                {assign var=something_wrong value=$item->getTypeObject()->somethingWrong($order)} 
+                {assign var=something_wrong value=$item->getTypeObject()->somethingWrong($order)}
                 <tr class="row">
                     <td class="value fixedRadio topPadd" width="40">
                         <input type="radio" name="delivery" value="{$item.id}" id="dlv_{$item.id}" {if $order.delivery==$item.id}checked{/if} {if $something_wrong}disabled="disabled"{/if}>
-                    </td>                    
+                    </td>
                     <td class="value marginRadio topPadd" colspan="2">
                         {if !empty($item.picture)}
                            <img class="logoService" src="{$item.__picture->getUrl(100, 100, 'xy')}" alt="{$item.title}"/>
@@ -32,10 +32,10 @@
                             {if $something_wrong}
                                 <span style="color:red;">{$something_wrong}</span>
                             {else}
-                            
-                                <span class="help">{$order->getDeliveryExtraText($item)}</span>                             
-                                {assign var=dcost value=$order->getDeliveryCostText($item)}
-                                {if $dcost>0}                        
+
+                                <span class="help">{$order->getDeliveryExtraText($item)}</span>
+                                {* {assign var=dcost value=$order->getDeliveryCostText($item)} *}
+                                {if $dcost>0}
                                     <span id="scost_{$item.id}" class="scost">{$dcost}</span>
                                 {else}
                                     {$dcost}

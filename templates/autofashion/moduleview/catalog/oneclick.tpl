@@ -1,25 +1,32 @@
 {assign var=catalog_config value=$this_controller->getModuleConfig()}
-
-111
-
 <div class="oneClickWrapper">
     {if $success}
         <div class="authorization reserveForm">
-            <h1 data-dialog-options='{ "width": "400" }'>Заказ принят</h1>
-            <div class="infotext white">
+            <h1 data-dialog-options='{ "width": "360" }'>Заказ принят</h1>
+            <div class="infotext success">
                 <p class="title">{$product.title}<br>
                     Артикул:{$product.barcode}</p>
-                В ближайшее время с Вами свяжется наш менеджер
+                В ближайшее время с вами свяжется наш менеджер
             </div>
         </div>
     {else}
         <form enctype="multipart/form-data" method="POST" action="{$router->getUrl('catalog-front-oneclick',["product_id"=>$product.id])}" class="authorization formStyle reserveForm">
             {$this_controller->myBlockIdInput()}
             <input type="hidden" name="product_name" value="{$product.title}"/>
-            <h1 data-dialog-options='{ "width": "400" }'>Купить в один клик</h1>
+            <h1 data-dialog-options='{ "width": "360" }'>Купить в один клик</h1>
             <p class="infotext">
-                Оставьте Ваши данные и наш консультант с вами свяжется.
+                Оставьте  свой номер телефона и наш менеджер свяжется с вами для уточнения деталей заказа.
             </p>
+
+            <div class="formLine">
+                <label class="fieldName">Ваше имя</label>
+                <input type="text" class="inp {if $error_fields}has-error{/if}" value="{if $request->request('name','string')}{$request->request('name','string')}{else}{$click.name}{/if}" maxlength="100" name="name" placeholder="Ваше имя">
+            </div>
+            <div class="formLine">
+                <label class="fieldName">Телефон</label>
+                <input type="text" class="inp {if $error_fields}has-error{/if}" value="{if $request->request('phone','string')}{$request->request('phone','string')}{else}{$click.phone}{/if}" maxlength="20" name="phone" placeholder="Телефон">
+            </div>
+
             <div class="forms">
                 {if $error_fields}
                     <div class="pageError">
@@ -31,12 +38,12 @@
                     </div>
                 {/if}
                 {if $product->isMultiOffersUse()}
-                    <div class="formLine">
+                    {* <div class="formLine">
                         {$product.offer_caption|default:'Комплектация'}
-                    </div>
+                    </div> *}
                     {assign var=offers_levels value=$product.multioffers.levels}
                     {foreach $offers_levels as $level}
-                        <div class="formLine">
+                        <div class="formLine hidden">
                             <label class="fieldName">{if $level.title}{$level.title}{else}{$level.prop_title}{/if}</label>
                             <select name="multioffers[{$level.prop_id}]" data-prop-title="{if $level.title}{$level.title}{else}{$level.prop_title}{/if}">
                                 {foreach $level.values as $value}
@@ -59,24 +66,15 @@
                     {/if}
                 {elseif $product->isOffersUse()}
                     {assign var=offers value=$product.offers.items}
-                    <div class="formLine">
+                    {* <div class="formLine">
                         <label class="fieldName">{$product.offer_caption|default:'Комплектация'}</label>
-                        <select name="offer">
+                        <select name="offer"> *}
                             {foreach $offers as $offer}
                                 <option value="{$offer.title}" {if $catalog_config.dont_buy_when_null && $offer.num<=0}disabled{/if} {if $offer_fields.offer == $offer.title || $key == $offer_val}selected="selected"{/if}>{$offer.title}</option>
                             {/foreach}
-                        </select>
-                    </div>
+                        {* </select>
+                    </div> *}
                 {/if}
-
-                <div class="formLine">
-                    <label class="fieldName">Ваше имя</label>
-                    <input type="text" class="inp {if $error_fields}has-error{/if}" value="{if $request->request('name','string')}{$request->request('name','string')}{else}{$click.name}{/if}" maxlength="100" name="name">
-                </div>
-                <div class="formLine">
-                    <label class="fieldName">Телефон</label>
-                    <input type="text" class="inp {if $error_fields}has-error{/if}" value="{if $request->request('phone','string')}{$request->request('phone','string')}{else}{$click.phone}{/if}" maxlength="20" name="phone">
-                </div>
                 {foreach $oneclick_userfields->getStructure() as $fld}
                     <div class="formLine">
                         <label class="fieldName">{$fld.title}</label>
@@ -85,13 +83,13 @@
                 {/foreach}
                 {if !$is_auth}
                     <div class="formLine captcha">
-                        <label class="fieldName">Введите код, указанный на картинке</label>
+                        <label class="fieldName">Введите код c картинки</label>
                         <img height="42" width="100" src="{$router->getUrl('kaptcha', ['rand' => rand(1, 9999999)])}" alt=""/>
                         <input type="text" name="kaptcha" class="kaptcha">
                     </div>
                 {/if}
                 <div class="buttons">
-                    <input type="submit" value="Купить">
+                    <button type="submit" class="button cornered">Купить</button>
                     <span class="unobtainable">Нет в наличии</span>
                 </div>
             </div>

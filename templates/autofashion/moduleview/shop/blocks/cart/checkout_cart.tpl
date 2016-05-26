@@ -1,6 +1,3 @@
-{* <div class="wrap">use_addr: <pre>{$order.use_addr}</pre></div>
-<div>extra: <pre>{$order.order_extra|@print_r}</pre></div>
-<div>address: <pre>{$order->getAddress()|@print_r}</pre></div> *}
 {assign var=catalog_config value=ConfigLoader::byModule('catalog')}
 <div class="row">
     <div class="titleWrap col-md-24 text-center">
@@ -11,10 +8,10 @@
             {if $url->request('Act', $smarty.const.TYPE_STRING)=='finish'}
                 {$item=$item.cartitem}
             {/if}
-            {$product=$cart_products[$item.entity_id]}
-            {$product->fillOffers()}
-            {$offer=$product.offers.items[$item.offer]}
-            {$offer_list=$item->getMultiOfferTitles()}
+            {assign var="product" value=$cart_products[$item.entity_id]}
+            <!-- {$product->fillOffers()} -->
+            {assign var="offer" value=$product.offers.items[$item.offer]}
+            {assign var="offer_list" value=$item->getMultiOfferTitles()}
             <div class="row cartItem">
                 <div class="col-sm-2 imageBlock">
                     <a href="{$product->getUrl()}" title="{$product.title}"><img src="{$offer->getMainImage(72, 72)}" alt="{$offer.title|default:"{$product.title}"}"/></a>
@@ -47,7 +44,8 @@
                     </div>
                 </div>
                 <div class="col-sm-3 priceBlock">
-                    {$product->getCost(null, $item.offer)} {$currency.stitle}
+                    <span class="itemCost">{$product->getCost(null, $item.offer)}</span>
+                    <span class="currency">{$currency.stitle}</span>
                 </div>
             </div>
         {/foreach}
@@ -71,13 +69,19 @@
                     {if $order.use_addr > 0 && $order->getAddress()->valid()}
                         {$order->getAddress()->getLineView()}
                     {elseif $order.use_addr < 0}
-                        <span class="text-capitalize">{$order.order_extra.delivery.region_id_to|lower}</span><br>
-                        {$order.order_extra.delivery.sd_html|replace:'&lt;':'<'|replace:'&gt;':'>'|replace:'&quot;':'"'}
+						{if $order->getExtraKeyPair('update') == true}
+							<div class="sdInfoWrap">
+						    	<span class="text-capitalize">{$order->getExtraKeyPair('region_id_to')|lower}</span><br>
+						        {$order->getExtraKeyPair('sd_info')|replace:'&lt;':'<'|replace:'&gt;':'>'|replace:'&quot;':'"'}
+							</div>
+						{/if}
                     {/if}
                 </address>
             </div>
             <div class="col-sm-6 priceBlock priceOfDelivery">
-                {$delivery->getDeliveryCostText($order)}
+                {if $delivery}
+                    <span class="itemCost">{$delivery->getDeliveryCost($order, null, $delivery)}</span> <span class="currency">{$currency.stitle}</span>
+                {/if}
             </div>
         </div>
 
@@ -103,7 +107,7 @@
                 </div>
             {/if}
             <div class="col-sm-6 priceBlock">
-                {$order->getTotalPrice()}
+                {* {$order->getTotalPrice()} *}
             </div>
         </div>
 
@@ -122,22 +126,33 @@
                 Итого:
             </div>
             <div class="col-sm-3 priceBlock priceAllBlock">
-                {$cart->getCustomOrderPrice()|number_format:0:".":" "} {$currency.stitle}
+                <span id="t-cost"></span> <span class="currency">{$currency.stitle}</span>
             </div>
         </div>
+        <pre>
+        {$order|@print_r}
+        </pre>
     </div>
 </div>
+{literal}
 <script>
     jQuery(document).ready(function($) {
+
+    	var cost = 0;
+
         $('.checkout .cartList .row').each(function() {
             var maxHeight = 65,
                 $childrens = $(this).children('div');
+
             $childrens.each(function() {
-                //console.log($(this).height())
-                maxHeight = (maxHeight > $(this).height())
-                    ? maxHeight : $(this).height();
+                maxHeight = (maxHeight > $(this).height()) ? maxHeight : $(this).height();
             });
             $childrens.height(maxHeight);
+
+            cost += new Number($(this).find('.itemCost').text().replace(/\s/g, ''));
         });
+
+        $('#t-cost').text(cost);
     });
 </script>
+{/literal}

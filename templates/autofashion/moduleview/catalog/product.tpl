@@ -108,7 +108,7 @@
                 будет изменяться и отображение остатков *}
                 {$product->fillOffersStockStars()}
                 {*Подгружаем цвета*}
-                {modulegetvars name="\Colors\Controller\BlockValues" var="colors"}
+                {* {modulegetvars name="\Colors\Controller\BlockValues" var="colors"} *}
                 {modulegetvars name="\Materials\Controller\BlockValues" var="materialsdata"}
                 {modulegetvars name="\Optlists\Controller\BlockValues" var="optionsdata"}
 
@@ -177,7 +177,7 @@
                             {if in_array(2, array_keys($path))}
                                 {assign var=anchor value='#womansizes'}
                             {/if}
-                            <a href="{$sizeGridLink|cat:$anchor}">Как узнать свой размер?</a>
+                            <a href="{$sizeGridLink|cat:$anchor}" target="_blank">Как узнать свой размер?</a>
                         </div>
                         {* Подгрузим у многомерных комплектаций фото к их вариантам *}
                         {* {$product->fillMultiOffersPhotos()} *}

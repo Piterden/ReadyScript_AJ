@@ -289,6 +289,7 @@
                  */
                 checkEmptyOffers = function(selected) {
                     // Из массива выбранного делаем объекты данных для каждой хар-ки отдельно
+                    console.log(selected);
                     selected.forEach(function(el, i) {
                         // Исключаем выбранное значение из возможных
                         var t = selected.filter(function(v, idx) {
@@ -347,6 +348,7 @@
                         s.value = getValue(s.title, s.info);
                         return s.num < 1;
                     });
+                    if ($items === undefined) return;
                     $items.removeClass('empty').each(function() {
                         $(this).attr('title', $(this).data('value'));
                     });
@@ -504,6 +506,14 @@ $(function() {
                         rel: 'bigphotos',
                         className: 'titleMargin',
                         opacity: 0.2
+                    });
+                    // Colorbox материалов и функций
+                    $('#materials .title').add('#functions .title').colorbox({
+                        width: 770,
+                        opacity: 0.4,
+                        html: function() {
+                            return $(this).next('.description').clone().show();
+                        }
                     });
                 }
             }

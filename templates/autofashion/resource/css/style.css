@@ -1826,24 +1826,26 @@ ul.topMenu {
     margin-top: 13px;
     font-weight: bold;
 }
+
 /*.multiOffers [name^='multioffers['] {
     display: none;
 }*/
+
 .multiOffers .title {
-	margin-top: 10px;
-	margin-bottom: 4px;
-	letter-spacing: 2.5px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    letter-spacing: 2.5px;
     text-transform: uppercase;
     font-size: 14px;
     font-weight: bold;
 }
 .multiOfferValueBlock {
-	border: 2px solid transparent;
+    border: 2px solid transparent;
     display: block;
     float: left;
 }
 .multiOfferValueBlock.sel {
-	border: 2px solid #3769ba;
+    border: 2px solid #3769ba;
 }
 .multiofferTitle {
     margin-top: 24px;
@@ -2435,6 +2437,12 @@ ul.topMenu {
     font-size: 22px;
 }
 
+/* ONE CLICK MODAL */
+
+.reserveForm {
+    width: 345px;
+}
+
 /* Profile */
 
 .profile h1 {
@@ -2913,6 +2921,7 @@ label[for='changePass'] {
 .checkout .buttons a.cornered:before {
     width: 132px;
 }
+
 /*.checkout .sod_select {
     width: 100%;
     border: none;
@@ -2933,6 +2942,7 @@ label[for='changePass'] {
     width: 100%;
     border-color: #ebebeb;
 }*/
+
 .checkoutBox .radio {
     padding: 0 27px 0 0;
     text-align: right;
@@ -3251,18 +3261,23 @@ footer .copyright {
 [data-prop-title="Размер"],
 .multiofferBlock3,
 .multiofferBlock1 {
-	display: none;
+    display: none;
+}
+.notAvaliable .multiOffers .sod_list .sod_option.active:before,
+.notAvaliable .multiOffers .sod_list .sod_option.selected:before,
+.sod_list .sod_option.empty:before {
+    left: -100px;
 }
 .sod_select .sod_list_wrapper {
-	color: #333;
+    color: #333;
 }
-.notAvaliable .multiOffers .active.empty,
+.notAvaliable .multiOffers .active,
 .notAvaliable .multiOffers .selected,
 .multiOffers .empty {
-	position: relative;
-	color: #D2D2D2;
+    position: relative;
+    color: #D2D2D2;
 }
-.notAvaliable .multiOffers .active.empty:before,
+.notAvaliable .multiOffers .active:before,
 .notAvaliable .multiOffers .selected:before,
 .multiOffers .empty:before {
     content: '';
@@ -3276,16 +3291,54 @@ footer .copyright {
     transform: rotate(-30deg);
 }
 .notAvaliable .active,
-.notAvaliable .selected {
-
-}
+.notAvaliable .selected {}
 .suggestions-suggestions {
-	z-index: 90;
+    z-index: 90;
 }
 .costsWrapper {
     position: absolute;
     left: 50px;
     width: 400px;
+}
+.overlay {
+    position: relative;
+}
+
+/*.overlay:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(158, 158, 158, 0.35);
+    z-index: 1;
+}*/
+
+.overlay:before {
+    content: '';
+    border: 5px solid #333;
+    border-radius: 30px;
+    height: 30px;
+    left: 50%;
+    margin: -15px 0 0 -15px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    animation: pulsate 1s ease-out;
+    animation-iteration-count: infinite;
+}
+@keyframes pulsate {
+    0% {
+        transform: scale(.1);
+        opacity: 0.0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
 }
 
 /* Large Devices, Wide Screens */

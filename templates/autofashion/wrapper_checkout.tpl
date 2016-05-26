@@ -179,9 +179,5 @@
             </div>
         </div>
     </footer>
-            <!-- Address<pre>{$order->getAddress()|@print_r}</pre>
-            Extra<pre>{$order.order_extra|@print_r}</pre>
-            Session<pre>{$order->getFromSession()|@print_r}</pre>
-            Order<pre>{$order->getValues()|@print_r}</pre> -->
 </div>
 </div>

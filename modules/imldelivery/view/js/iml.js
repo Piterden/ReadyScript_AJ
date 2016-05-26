@@ -6,15 +6,15 @@
  * 		http://api-maps.yandex.ru/2.1/?lang=ru_RU
  *
  * Original author: @piterden
+ * efremov.a.denis@gmail.com
  *
  */
-;
-(function($, window, document, ymaps, undefined) {
+;(function($, window, document, ymaps, undefined) {
 
     'use strict';
+    // console.log(ymaps);
 
     var pluginName = 'Iml',
-
         /**
          * Default options
          * @type {Object}
@@ -22,69 +22,63 @@
         defaults = {
             url: '/', // AJAX request url
             delivery_id: 1, // RS_Param
-            context_var: 'delivery_', // Map instance wrapper prefix
 
-            /**
-             * CSS mappings
-             */
-            el_id: { // Ids of elements
-                modal: 'mapModal',
-                map: 'map',
-                combo_select: 'selectRegionCombo',
-                combo_list: 'sdlist',
-            },
-            cls: { // Classes of elements
-                overlay: 'loading',
-                map_container: 'mapContainer',
-                map_wrapper: 'mapWrapper',
-                map_ymaps: 'ymaps-2-1-31-map ymaps-2-1-31-i-ua_js_yes ymaps-2-1-31-map-ru',
-                combo_select: 'selectRegion',
-            },
-            style: { // Styles of elements
-                map_map: 'height:400px; width:70%; float:left;',
-                map_ymaps: 'width: 70%; height: 400px;',
-                map_li_wrap: 'overflow: auto; height:400px; width:30%; padding:0; font-size:12px;',
-            },
-
-            /**
-             * Map settings
-             */
+            /** Map settings */
             map: {
                 clusterize: true,
-                gridSize: 32,
+                grid_size: 32,
             },
 
-            /**
-             * Request params
-             */
+            /** Request params */
             request: {
                 Job: 'С24',
                 RegionFrom: 'САНКТ-ПЕТЕРБУРГ',
                 RegionTo: 'САНКТ-ПЕТЕРБУРГ',
                 Volume: '1',
                 Weigth: '1',
-                SpecialCode: '1',
+                // SpecialCode: '1',
             },
 
+            /** CSS mappings */
+            id_el: { // Ids of elements
+                modal: 'mapModal',
+                map: 'map',
+                region_list: 'selectRegionCombo',
+                sd_list: 'sdlist',
+            },
+            cls: { // Classes of elements
+                overlay: 'loading',
+                map_container: 'mapContainer',
+                map_wrapper: 'mapWrapper',
+                map_ymaps: 'ymaps-2-1-31-map ymaps-2-1-31-i-ua_js_yes ymaps-2-1-31-map-ru',
+                region_list: 'selectRegion',
+            },
+            style: { // Styles of elements
+                map_map: 'height:400px; width:70%; float:left;',
+                map_ymaps: 'width: 70%; height: 400px;',
+                map_li_wrap: 'position:relative; overflow: auto; height:400px; width:30%; padding:0; font-size:12px;',
+            },
+
+            /** Templates */
             templates: {
-                loading: function(o) {
+                overlay: function(o) {
                     return $('<div/>', { class: o.cls.overlay });
                 },
                 map: function(o) {
                     var d_id = o.delivery_id,
                         c = o.cls,
-                        i = o.id,
+                        i = o.id_el,
                         s = o.style;
                     return $('<div/>', { class: c.map_container }).append(
-                        $('<select/>', { 'id': i.combo_select + '_' + d_id, 'class': c.combo_select }).data('size', '8')).append(
+                        $('<select/>', { 'id': i.region_list + '_' + d_id, 'class': c.region_list }).data('size', '8')).append(
                         $('<div/>', { 'class': c.map_wrapper }).append(
                             $('<div/>', { 'id': i.map + '_' + d_id, 'style': s.map_map }).append(
                                 $('<ymaps/>', { 'class': c.map_ymaps, 'style': s.map_ymaps })))).append(
-                        $('<div/>', { 'style': s.map_li_wrap }).append(
-                            $('<ul/>', { 'id': i.combo_list + '_' + d_id })));
+                        $('<div/>', { 'style': s.map_li_wrap, 'class': 'scrollParent' }).append(
+                            $('<ul/>', { 'id': i.sd_list + '_' + d_id })));
                 },
                 modal: function(o) {
-                    return $('<div/>', { 'class': 'modal fade', 'id': +o.id.modal, 'tabindex': '-1', 'role': 'dialog', 'aria-labelledby': 'mapModalLabel' }).append(
+                    return $('<div/>', { 'class': 'modal fade', 'id': o.id_el.modal, 'tabindex': '-1', 'role': 'dialog', 'aria-labelledby': 'mapModalLabel' }).append(
                         $('<div/>', { 'class': 'modal-dialog modal-lg', 'role': 'document' }).append(
                             $('<div/>', { 'class': 'modal-content' }).append(
                                 $('<div/>', { 'class': 'modal-header' }).append(
@@ -102,23 +96,46 @@
                                         .data('dismiss', 'modal'))))));
                 }
             },
-
+            chunks: {
+                balloon: function(el, o) {
+                    return $('<div/>').append($('<span/>', { 'style': 'font-weight: bold;' }).html(el.Name)).append('<br/>')
+                        .append($('<span/>').html(el.Address)).append('<br/>')
+                        .append($('<span/>').html('Телефон: ' + el.Phone)).append('<br/>')
+                        .append($('<span/>').html('Оплата картой: ' + el.PaymentCard)).append('<br/>')
+                        .append($('<span/>').html('Примерочная: ' + el.fitting)).append('<br/>')
+                        .append($('<span/>').html('Время работы: ' + el.WorkMode)).append('<br/>')
+                        .append($('<button/>', {
+                                'class': 'balloonSelectSd',
+                                'id': 'bal_sd_' + o.delivery_id + '_' + el.RequestCode,
+                                // 'onclick': 'this.submitModal("' + o.request.RegionTo + '","' + el.RequestCode + '");'
+                                'onclick': '$("#sd_");$(".modal").modal("hide");$("#region_id_to").val("' +
+                                    o.request.RegionTo + '");$("#request_code").val("' +
+                                    el.RequestCode + '").trigger("change");'
+                            })
+                            // .data('rc', el.RequestCode)
+                            // .data('rt', el.RegionTo)
+                            .html('Выбрать'));
+                },
+                sd_list_item: function(el, o) {
+                    return $('<li/>', { 'class': 'selectSd' + el.active, 'id': 'sd_' + o.delivery_id + '_' + el.RequestCode })
+                        .data('code', el.RequestCode).append(
+                            $('<span/>', { 'style': 'font-weight: bold;' }).html(el.Name)).append('<br/>')
+                        .append($('<span/>').html(el.Address)).append('<br/>')
+                        .append($('<span/>').html('Телефон: ' + el.Phone)).append('<br/>')
+                        .append($('<span/>').html('Оплата картой: ' + el.PaymentCard)).append('<br/>')
+                        .append($('<span/>').html('Примерочная: ' + el.fitting)).append('<br/>')
+                        .append($('<span/>').html('Время работы: ' + el.WorkMode)).append('<br/>');
+                }
+            }
         },
 
-        currState = {}, // App state storage
-        html = {}, // DOM elements storage
-
-        //<<<<<<<// 			Defaults End 		  //>>>>>>>>//
-
+        html = {},
 
         /********************
-         *
          * Plugin body
-         *
          * ******************
+         * @type {Object}
          */
-
-        /** @type {Object} [description] */
         Iml = {
             /**
              * Конструктор здесь
@@ -133,40 +150,33 @@
                 this.o = $.extend(true, {}, defaults, op);
                 this._defaults = defaults;
                 this._name = pluginName;
-                this.currency = op.currency || {};
-                this.delivery_cost_json = op.delivery_cost_json || {};
-                this.service_id = op.service_id || {};
+                this.ctx = '#delivery_' + this.o.delivery_id;
+
+                this.currency = this.o.currency || {};
+                this.delivery_cost_json = this.o.delivery_cost_json || {};
+                this.service_id = this.o.service_id || {};
 
                 // construct chain
-                this._build()._bindInitEvents();
+                this._build();
+                this._bindInitEvents();
 
-
-                /**********
+                // this.;
+                /**********`
                  * @public
                  */
-                return {
-                    /**
-                     * Получает данные по выбранному ПВЗ
-                     * @param {number}  RequestCode
-                     * @return {json} 	Sd Data
-                     */
-                    getCurrentSdData: function(rc) {
-                    	return rc;
-                    },
-
-                };
+                return;
             },
-
 
             /***********
              * @private
              */
-            /** Генерируем HTML разметку */
+            /** Генерирует HTML разметку */
             /** Building HTML and caching it */
             _build: function() {
+                this.html = this.html || {};
                 for (var tpl in this.o.templates) {
                     if (this.o.templates.hasOwnProperty(tpl)) {
-                        this.o.html[tpl] = this.o.templates[tpl].call(this, this.o);
+                        this.html[tpl] = this.o.templates[tpl].call(this, this.o);
                     }
                 }
                 return this;
@@ -176,26 +186,41 @@
              * Вешаем обработчики при загрузке страницы
              */
             _bindInitEvents: function() {
-                var self = this;
+                var _this = this;
 
                 $('#order-form').unbind('submit')
-                    .on('submit', function() {
-                        if (self.o.delivery_id == 7 && self.o) {
+                    .on('submit', function(e) {
+                        if ($('#sd_is_selected').val() == 0) {
                             showError('Выберите, пожалуйста, пункт выдачи заказа!');
                             return false;
                         }
                     });
 
-                this.$el.unbind('click')
+                $('#request_code').unbind('change')
+                    .on('change', function() {
+                        var $this = $(this),
+                            rc = $this.val(),
+                            rt = $this.prev().val();
+                        _this.updateInfo(rt, rc);
+                        $('#sd_is_selected').val(1);
+                    });
+
+                $(this.el).unbind('click')
                     .on('click', function(e) {
-                        // console.log(self);
-                        // console.log('BindInit', e);
-                        // return false;
                         e.preventDefault();
+                        var $body = $('body'),
+                            $mapBl = $(_this.html.map[0]),
+                            $modBl = $(_this.html.modal[0]);
 
                         $(this).addClass('map-open');
-                        $(self.html.loading).appendTo('body');
-                        self._ajaxRequest('loadMap', {}, self._showModalProcess);
+                        $modBl.appendTo($body).modal('show');
+
+                        $modBl.find('.modal-content').addClass('overlay');
+                        $modBl.find('.modal-body').append($mapBl);
+                        $modBl.find('.modal-header').css('height', '56px');
+
+                        _this._loadRegions();
+                        _this._initMap(false);
                     });
                 return this;
             },
@@ -204,249 +229,190 @@
              * Вешаем обработчики при открытии карты
              */
             _bindMapEvents: function() {
-                var self = this;
+                var _this = this,
+                    o = this.o;
 
-                $('#' + o.el_id.combo_select).unbind('change')
+                $('#' + o.id_el.region_list + '_' + o.delivery_id).unbind('change')
                     .on('change', function() {
                         $(o.cls.overlay).appendTo('.modal-body');
-                        self._initMap($(this).children('option:selected').val());
+                        _this._initMap($(this).children('option:selected').val());
                     });
 
-                $('#' + o.el_id.combo_list + ' .selectSd').unbind('click')
-                    .on('click', function(e) {
-                        e.preventDefault();
-                        self.toggleActive($.data(this, 'code'));
+                $('#' + o.id_el.sd_list + '_' + o.delivery_id).unbind('click')
+                    .on('click', '.selectSd', function() {
+                        _this._toggleSd(this);
                     });
 
-                $('#' + o.el_id.modal).unbind('hide.bs.modal')
+                $('#' + o.id_el.modal).unbind('hide.bs.modal')
                     .on('hide.bs.modal', function() {
                         $(this).closest('.modal-body').empty();
                     });
 
                 $('button.submitModal').unbind('click')
                     .on('click', function() {
-                        self._saveDataPrepare();
-                        return false;
+                        _this.submitModal(o.request.RegionTo, o.request.RequestCode);
                     });
+
+                return this;
             },
 
             /**
-             * [AJAX Callback]
-             * Показывает модальное окно с картой. Подгружает API Ya.Maps.
-             *
-             * @param  object 	response
-             */
-            _showModalProcess: function(data) {
-                var $mb = $('.modal-body');
-
-                $('body').children('.' + this.o.cls.loading).remove();
-                $(this.html.loading).appendTo($mb);
-                $('#' + this.o.id.modal_id).modal('show');
-                $mb.append($(data.data));
-                this._loadRegions();
-                this._initMap();
-            },
-
-            /**
-             * Чистит контейнер карты и делает запрос
-             * по одному региону.
+             * Делает запрос ПВЗ по одному региону. Переключает карту.
              * @param  string 	Код региона
              */
             _initMap: function(reg) {
-                $('#' + this.o.id.map + '_' + this.o.delivery_id).empty();
-                this._ajaxRequest('getSdListByRegion', { region_id: this.o.reg }, this._getSdListByRegionProcess);
-            },
+                var _this = this,
+                    o = _this.o,
+                    sd_id = o.request.RequestCode || false;
+                if (reg) sd_id = false;
+                o.request.RegionTo = reg || o.request.RegionTo;
 
-            /** Запрос списка доступных регионов */
-            _loadRegions: function() {
-                this._ajaxRequest('getSdRegions', [], _createSelect);
-            },
+                $('#' + o.id_el.map + '_' + o.delivery_id).empty();
 
-            /** Генерирует селект с городами */
-            _createSelect: function(data) {
-                // console.log(data);
-                var $sel = $(self.o.cls.combo_select);
-                $.each(data.data, function(id, val) {
-                    $sel.append($('<option/>', { 'value': id }).html(val));
-                });
-                $sel.val(self.o.region_id_to);
-            },
+                this._ajaxRequest('getSdListByRegion', {
+                    region_id: o.request.RegionTo
+                }, function(data) {
 
-            /**
-             * Получает индекс указанного ПВЗ
-             *
-             * @param  number
-             * @param  array
-             * @return number
-             */
-            _getIndexSdById: function(code, data) {
-                for (var i = data.length - 1; i >= 0; i--) {
-                    if (data[i].request_code == code) return i;
-                }
-            },
+                    data = data.data || data;
+                    sd_id = sd_id || data[0].RequestCode;
+                    o.sd_data = {};
 
-            /**
-             * [AJAX Callback]
-             * Получает ПВЗ в одном регионе
-             *
-             * @param  object 	response
-             */
-            _getSdListByRegionProcess: function(data) {
-                var o = this.o,
-                    sd_id = 0,
-                    // Чтобы метки начали кластеризоваться, выставляем опцию.
-                    // ObjectManager принимает те же опции, что и кластеризатор.
-                    om = new ymaps.ObjectManager({ clusterize: true, gridSize: 32 }),
-                    list = { 'type': 'FeatureCollection', 'features': [] },
-                    store = {};
-                data = data.data;
+                    var $sd_list = $('#' + o.id_el.sd_list + '_' + o.delivery_id).empty(),
+                        // $sd_list,
+                        om = new ymaps.ObjectManager({ clusterize: o.map.clusterize, gridSize: o.map.grid_size }),
+                        cluList = { 'type': 'FeatureCollection', 'features': [] }; // коллекция для карты
 
-                $('.' + o.cls.combo_list).empty();
-                window['myMap'] = new ymaps.Map(o.id.map + '_' + o.delivery_id, {
-                    center: [Number(data[sd_id].Latitude), Number(data[sd_id].Longitude)],
-                    zoom: 10
-                });
+                    data.forEach(function(el, i) {
+                        el.i = i;
+                        el.fitting = el.FittingRoom ? 'есть' : 'нет';
+                        el.active = (el.RequestCode == sd_id) ? ' active' : '';
+                        el.balloon = _this.o.chunks.balloon.call(this, el, o);
+                        el.li_html = _this.o.chunks.sd_list_item.call(this, el, o);
 
-                store.sd_data = [];
-                store.region_id_to = data[sd_id].RegionCode;
-                store.request_code = data[sd_id].RequestCode;
-                store.sd_object = data[sd_id];
+                        // Map points
+                        cluList.features.push({
+                            type: 'Feature',
+                            id: el.RequestCode,
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [el.Latitude, el.Longitude]
+                            },
+                            properties: {
+                                balloonContent: el.balloon.html(),
+                                clusterCaption: 'Пункты самовывоза',
+                                hintContent: 'Пункт самовывоза' + (el.Name) ? el.Name : '№' + el.RequestCode
+                            }
+                        });
 
-                $.each(data, function(i, el) {
-                    var fitting = el.FittingRoom ? 'есть' : 'нет';
-                    _el = el;
-                    list.features.push({
-                        'type': 'Feature',
-                        'id': el.RequestCode,
-                        'geometry': {
-                            type: 'Point',
-                            coordinates: [el.Latitude, el.Longitude]
-                        },
-                        'properties': {
-                            balloonContent: '<span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
-                                el.Address + '<br />' +
-                                'Телефон: ' + el.Phone + '<br />' +
-                                'Оплата картой: ' + el.PaymentCard + '<br />' +
-                                'Примерочная: ' + fitting + '<br />' +
-                                'Время работы: ' + el.WorkMode +
-                                '<br /><button class="balloonSelectSd" onclick="Iml.submitModal(event, ' + el.RequestCode +
-                                ');" id="bal_sd_' + o.delivery_id + '_' + el.RequestCode + '">Выбрать</button>',
-                            clusterCaption: 'Пункты самовывоза',
-                            hintContent: 'Пункт самовывоза' + (el.Name) ? el.Name : '№' + el.RequestCode
-                        }
+                        // SD list
+                        $sd_list.append(el.li_html);
+
+                        // Store
+                        o.sd_data[el.RequestCode] = el;
                     });
-                    // создание списка пунктов самовывоза рядом с картой
-                    var active = (i == sd_id) ? ' active' : '',
-                        li_html = '<li class="selectSd' + active + '" data-code="' + el.RequestCode + '" id="sd_' + s.delivery_id + '_' + el.RequestCode + '"><span style="font-weight: bold">' + el.Name + '</span>' + '<br />' +
-                        el.Address + '<br />' +
-                        'Телефон: ' + el.Phone + '<br />' +
-                        'Оплата картой: ' + el.PaymentCard + '<br />' +
-                        'Примерочная: ' + fitting + '<br />' +
-                        'Время работы: ' + el.WorkMode + '<br /></li>';
-                    $(list).append(li_html);
+                    o.sd_object = o.sd_data[sd_id];
+                    o.request.RequestCode = sd_id;
+
+                    window['myMap'] = new ymaps.Map(o.id_el.map + '_' + o.delivery_id, {
+                        center: [Number(o.sd_object.Latitude), Number(o.sd_object.Longitude)],
+                        zoom: 10
+                    });
+
+                    om.objects.options.set('preset', 'islands#greenDotIcon');
+                    om.clusters.options.set('preset', 'islands#greenClusterIcons');
+                    om.add(cluList);
+                    myMap.geoObjects.add(om);
+
+                    setTimeout(function() {
+                        $('#sdlist_' + o.delivery_id).parent()
+                            .scrollTop($('.selectSd.active').offset().top - $('.selectSd').eq(0).offset().top);
+                        _this._bindMapEvents();
+                        $('.overlay').removeClass('overlay');
+                        _this._moveMap(o.sd_object.Latitude, o.sd_object.Longitude);
+                    }, 400);
                 });
-                this.o.sd_data[el.RequestCode]
 
-                om.objects.options.set('preset', 'islands#greenDotIcon');
-                om.clusters.options.set('preset', 'islands#greenClusterIcons');
-                myMap.geoObjects.add(om);
-                om.add(o.cls.combo_list);
-                $('.modal-body > .loading').remove();
-                this._updatePricesPrepare();
-                this.bindEvents();
-            },
-            /**
-             * Готовит запрос к сохранению
-             */
-            _saveDataPrepare: function() {
-                var o = this.o,
-                    params = {
-                        service_id: o.service_id,
-                        region_id_from: o.region_id_from,
-                        region_id_to: o.region_id_to,
-                        request_code: o.request_code,
-                        sd_data: o.sd_object,
-                        sd_html: o.sd_html
-                    };
-                this._ajaxRequest('updateExtraData', params, this._saveDataProcess);
+
+                return this;
             },
 
             /**
-             * Сохраняет выбранные данные в экстре заказа
-             * @param  {Object} data ответ сервера
-             * @return {[type]}
+             * Запрос списка доступных регионов
+             * @return {[type]} [description]
              */
-            _saveDataProcess: function(data) {
-                if (data.success) {
-                    var cost_obj;
-                    for (var prop in self.o.delivery_cost_json) {
-                        if (self.o.delivery_cost_json.hasOwnProperty(prop)) {
-                            cost_obj = self.o.delivery_cost_json[prop];
+            _loadRegions: function() {
+                var o = this.o;
+
+                this._ajaxRequest('getSdRegions', {}, function(data) {
+                    var $s = $('#' + o.id_el.region_list + '_' + o.delivery_id),
+                        d = data.data;
+                    for (var r in d) {
+                        if (d.hasOwnProperty(r)) {
+                            $s.append($('<option/>', { 'value': r }).html(d[r]));
                         }
                     }
-                    $('input[name="delivery"][value="' + self.o.delivery_id + '"]').trigger('click');
-                    $('.deliveryItem').removeClass('hidden');
-                    $('.addressOfDelivery').empty().append('<span class="text-capitalize lead">' + self.o.region_id_to + '</span><br>' + self.o.sd_html);
-                    $('.priceOfDelivery').add('#scost_' + self.o.delivery_id + ' .text-success')
-                        .empty().append(cost_obj.Price + ' ' + self.o.currency.stitle);
-                    var $aod = $('.addressOfDelivery'),
-                        $inf_blk = $aod.parents('.infoBlock'),
-                        ib_heigth = $inf_blk.height(),
-                        aod_heigth = $aod.height();
-                    $inf_blk.height(ib_heigth + aod_heigth);
-                    $inf_blk.siblings().height(ib_heigth + aod_heigth);
-                    $('#' + self.o.id.modal_id).modal('hide');
-                    self.o.map_closed = true;
-                }
+                    $s.val(o.request.RegionTo);
+                });
+
+                return this;
             },
+
             /**
-             * Обновление цен. Подготовка запроса.
+             * Переключает ПВЗ на карте
+             * @param  {object} el Нажатый элемент
              */
-            _updatePricesPrepare: function() {
-                var o = this.o,
-                    params = {
-                        service_id: o.service_id,
-                        region_id_from: o.region_id_from,
-                        region_id_to: o.region_id_to,
-                        request_code: o.request_code
-                    };
-                // $(o.loading).appendTo('.modal-footer');
-                this._ajaxRequest('getImlDeliveryCost', params, this._updatePricesProcess);
+            _toggleSd: function(el) {
+                $(el).addClass('active').siblings().removeClass('active');
+
+                this.o.request.RequestCode = $.data(el, 'code');
+                this.o.sd_object = this.o.sd_data[this.o.request.RequestCode];
+
+                this._moveMap(this.o.sd_object.Latitude, this.o.sd_object.Longitude);
+                return this;
             },
+
+            submitModal: function(reg, code) {
+                $('.modal').modal('hide');
+                $('#region_id_to').val(reg);
+                $('#request_code').val(code).trigger('change');
+            },
+
             /**
-             * Callback после обновления цен.
-             * @param  {Object} 	Ответ сервера.
+             * Обновляет инфо о ценах после выбора пункта ПВЗ пользователем
+             * @param  {string} rt регион куда
+             * @param  {string} rc код пункта
              */
-            _updatePricesProcess: function(data) {
-                self.o.delivery_cost_json = data.data;
-                self.o.sd_html = $('.selectSd.active').html();
-                $('.modal-footer .loading').fadeOut('fast', function() {
-                    $.each(data.data, function(i, v) {
-                        var $priceBlock = $('.priceText[data-code="' + i + '"]', $('#delivery_' + self.o.delivery_id));
-                        $priceBlock.removeClass('text-info text-warning text-danger');
-                        if (v.Price) {
-                            $priceBlock.addClass('text-info').html(v.Price + ' ' + self.o.currency.stitle.replace('р.', '<i class="fa fa-rub"></i>'));
-                        } else if (v.Code && v.Mess) {
-                            $priceBlock.addClass('text-warning').attr({
-                                dataErrorCode: v.Code,
-                                dataErrorMess: v.Mess
-                            }).text('Цена отсутствует.');
-                        } else {
-                            $priceBlock.addClass('text-danger').text('Неизвестная ошибка!');
-                        }
-                    });
-                    $(this).remove();
+            updateInfo: function(rt, rc) {
+                var _this = this,
+                    o = _this.o,
+                    $sdInfo = $('<div/>', {'class': 'sdInfo'}).html(o.sd_object.li_html[0].innerHTML),
+                    $sdInfoWrap = $('.sdInfoWrap', _this.ctx).empty(),
+                    $costBlock = $('.total-cost', _this.ctx);
+
+                $sdInfoWrap.append($('<div/>', {'class': 'text-capitalize'}).html(o.sd_object.RegionCode.toLowerCase()));
+                $sdInfoWrap.append($sdInfo);
+                $costBlock.css('color', 'transparent').addClass('overlay');
+
+                this._ajaxRequest('getImlDeliveryCost', {
+                    service_id: o.request.Job,
+                    region_id_from: o.request.RegionFrom,
+                    region_id_to: rt,
+                    request_code: rc,
+                    update: true,
+                    sd_info: $sdInfo[0].outerHTML
+                }, function(data) {
+                    _this.delivery_cost_json = data.data;
+                    var cost = _this.delivery_cost_json[o.request.Job].Price;
+                	$costBlock.html(cost).removeClass('overlay').attr('style', '');
                 });
             },
 
             /**
-             * [moveMap description]
-             * @param  {[type]} la   [description]
-             * @param  {[type]} lo   [description]
-             * @param  {[type]} code [description]
-             * @return {[type]}      [description]
+             * Двигает карту
+             * @param  {float} 	la   широта
+             * @param  {float} 	lo   долгота
              */
-            moveMap: function(la, lo, code) {
+            _moveMap: function(la, lo) {
                 myMap.panTo([la, lo], {
                     duration: 600,
                     timingFunction: 'ease-out',
@@ -455,61 +421,44 @@
                     }
                 });
             },
+
             /**
              * Контроллер AJAX
-             * @param  {*string*}   action   Имя вызываемого PHP метода.
-             *          Класс - \Imldelivery\Model\DeliveryType\Iml::action()
-             * @param  {*array*|*object*}   params   Параметры, передающиеся методу
-             * @param  {*Function*} callback
+             * @param  {string}   		action   Имя вызываемого PHP метода.
+             * @param  {object}   params   Параметры, передающиеся методу
+             * @param  {Function} 		callback
              * @return
              */
             _ajaxRequest: function(action, params, callback) {
-                var imlData = self.o;
-                $.ajax({
-                    url: imlData.url,
+                var _this = this,
+                    o = this.o;
+                return $.ajax({
+                    url: o.url,
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         module: 'Imldelivery',
-                        typeObj: 0, //Доставка
-                        typeId: imlData.delivery_id,
+                        typeObj: 0,
+                        typeId: o.delivery_id,
                         'class': 'Iml',
                         userAct: action,
                         params: params
                     },
-                    success: callback
+                    success: callback,
+                    error: _this._errCallback,
+                    complete: _this._doneCallback
                 });
+
             },
 
-            /**
-             * [toggleActive description]
-             * @param  {[type]} e    [description]
-             * @param  {[type]} code [description]
-             * @return {[type]}      [description]
-             */
-            toggleActive: function(code) {
-                $this = $('#sd_' + self.o.delivery_id + '_' + code);
-                $this.addClass('active').siblings('.selectSd').removeClass('active');
-                self.o.request_code = code;
-                self.o.sd_object = self.o.sd_data[code];
-                this.moveMap(self.o.sd_object.Latitude, self.o.sd_object.Longitude);
-                this._updatePricesPrepare();
+            _errCallback: function(res) {
+                // console.log(res);
             },
 
-            /**
-             * [toggleActive description]
-             * @param  {[type]} e    [description]
-             * @param  {[type]} code [description]
-             * @return {[type]}      [description]
-             */
-            submitModal: function(e, code) {
-                e.preventDefault();
-                self.o.request_code = code;
-                self.o.sd_object = self.o.sd_data[code];
-                this._saveDataPrepare();
-            }
-
-        }; //<<<<<<<// 			Plugin End 			//>>>>>>>>//
+            _doneCallback: function(res) {
+                // console.log(res);
+            },
+        };
 
     // Make sure Object.create is available in the browser (for our prototypal inheritance)
     // console.log(typeof Object.create);
@@ -522,7 +471,6 @@
     }
 
     // $(element).defaultPluginName('functionName', arg1, arg2)
-    // $(document).ready(function() {
     $.fn[pluginName] = function(options) {
         if (options === undefined || typeof options === 'object') {
             var args = arguments,
@@ -535,13 +483,12 @@
                 return this.each(function() {
                     var I = Object.create(Iml);
                     I.init(options, this);
-                    $.data(this, 'speaker', I);
+                    $.data(this, 'plugin_' + pluginName, I);
                 });
             }
 
         } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
             var returns;
-
             this.each(function() {
                 var instance = $.data(this, 'plugin_' + pluginName);
                 if (instance instanceof Iml && typeof instance[options] === 'function') {
@@ -551,20 +498,9 @@
                     $.data(this, 'plugin_' + pluginName, null);
                 }
             });
+
             return returns !== undefined ? returns : this;
         }
     };
-    // });
 
 })(jQuery, window, document, ymaps);
-
-
-
-
-// while (l--) {
-//     returns.push(I);
-//     if (l = 1) {
-
-//         // return returns || I;
-//     };
-// }
